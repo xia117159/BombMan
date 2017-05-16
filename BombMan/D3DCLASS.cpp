@@ -1,12 +1,8 @@
 #include"D3DCLASS.h"
-static const WCHAR sc_helloWorld[] = L"Œ“ «À≠!";
 
 D3DCLASS::D3DCLASS( ) : driverType_( D3D_DRIVER_TYPE_NULL ), featureLevel_( D3D_FEATURE_LEVEL_11_0 ),
                                 d3dDevice_( 0 ), d3dContext_( 0 ), swapChain_( 0 ), backBufferTarget_( 0 ),
-								pDWriteFactory_(NULL),pTextFormat_(NULL),
-								wszText_(NULL),cTextLength_(NULL),
-								pD2DFactory_(NULL),pRT_(NULL),
-								pBlackBrush_(NULL)
+								pD2DFactory_(NULL),pRT_(NULL)
 {
 
 }
@@ -20,7 +16,6 @@ D3DCLASS::~D3DCLASS( )
 
 bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
 {
-	CreateDeviceIndependentResources();
 
     hInstance_ = hInstance;
     hwnd_ = hwnd;
@@ -71,6 +66,8 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
     HRESULT result;
     unsigned int driver = 0;
 
+	D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pD2DFactory_);
+
     for( driver = 0; driver < totalDriverTypes; ++driver )
     {
         result = D3D11CreateDevice(0,driverTypes[driver],0,
@@ -106,7 +103,6 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
 		result = swapChain_->GetBuffer(0,IID_PPV_ARGS(&pBackBuffer));
 	}
 
-
 	FLOAT dpiX;
 	FLOAT dpiY;
 	pD2DFactory_->GetDesktopDpi(&dpiX,&dpiY);
@@ -123,16 +119,41 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
 		&props,
 		&pRT_);
 
-	result = pRT_->CreateSolidColorBrush(
-            D2D1::ColorF(D2D1::ColorF::Red),
-            &pBlackBrush_
-            );
-
-	return true;
+	return LoadContent(hwnd);;
 }
 
+bool D3DCLASS::CompileD3DShader( char* filePath, char* entry, char* shaderModel, ID3DBlob** buffer )
+{
+    DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 
-bool D3DCLASS::LoadContent( )
+#if defined( DEBUG ) || defined( _DEBUG )
+    shaderFlags |= D3DCOMPILE_DEBUG;
+#endif
+
+    ID3DBlob* errorBuffer = 0;
+    HRESULT result;
+
+    result = D3DX11CompileFromFile( filePath, 0, 0, entry, shaderModel,
+        shaderFlags, 0, 0, buffer, &errorBuffer, 0 );
+
+    if( FAILED( result ) )
+    {
+        if( errorBuffer != 0 )
+        {
+            OutputDebugStringA( ( char* )errorBuffer->GetBufferPointer( ) );
+            errorBuffer->Release( );
+        }
+
+        return false;
+    }
+    
+    if( errorBuffer != 0 )
+        errorBuffer->Release( );
+
+    return true;
+}
+
+bool D3DCLASS::LoadContent(HWND hwnd)
 {
     return true;
 }
@@ -148,13 +169,10 @@ void D3DCLASS::Shutdown( )
     UnloadContent( );
 	SafeRelease(&backBufferTarget_);
 	SafeRelease(&swapChain_);
-	SafeRelease(&pDWriteFactory_);
 	SafeRelease(&d3dContext_);
 	SafeRelease(&d3dDevice_);
-	SafeRelease(&pTextFormat_);
 	SafeRelease(&pD2DFactory_);
 	SafeRelease(&pRT_);
-	SafeRelease(&pBlackBrush_);
 }
 
 void D3DCLASS::Update( float dt )
@@ -165,51 +183,4 @@ void D3DCLASS::Update( float dt )
 
 void D3DCLASS::Render( )
 {
-    if( d3dContext_ == 0 )
-        return;
-
-    float clearColor[4] = { 0.0f, 0.0f, 0.25f, 1.0f };
-    d3dContext_->ClearRenderTargetView( backBufferTarget_, clearColor );
-    swapChain_->Present( 0, 0 );
-}
-
-HRESULT D3DCLASS::CreateDeviceIndependentResources()
-{
-
-	static const WCHAR msc_fontName[] = L"Verdana";
-    static const FLOAT msc_fontSize = 50;
-	HRESULT hr;
-
-    hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pD2DFactory_);
-
-	if (SUCCEEDED(hr))
-    {
-        hr = DWriteCreateFactory(
-            DWRITE_FACTORY_TYPE_SHARED,
-            __uuidof(pDWriteFactory_),
-            reinterpret_cast<IUnknown **>(&pDWriteFactory_)
-            );
-    }
-
-	if (SUCCEEDED(hr))
-    {
-        hr = pDWriteFactory_->CreateTextFormat(
-            msc_fontName,
-            NULL,
-            DWRITE_FONT_WEIGHT_NORMAL,
-            DWRITE_FONT_STYLE_NORMAL,
-            DWRITE_FONT_STRETCH_NORMAL,
-            msc_fontSize,
-            L"en-us", 
-            &pTextFormat_
-            );
-    }
-
-	if (SUCCEEDED(hr))
-    {
-        pTextFormat_->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
-        pTextFormat_->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
-
-    }
-	return true;
 }

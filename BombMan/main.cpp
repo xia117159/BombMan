@@ -1,6 +1,6 @@
 #include<Windows.h>
 #include<memory>
-#include"D3DCLASS.h"
+#include"GameStateInterface.h"
 
 
 LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam );
@@ -36,7 +36,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine
 
     ShowWindow( hwnd, cmdShow );
 
-    D3DCLASS demo;
+    GameStateInterface demo("decal.dds");
 
     // Demo Initialize
     bool result = demo.Initialize( hInstance, hwnd );
