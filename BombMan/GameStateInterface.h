@@ -27,7 +27,7 @@ private:
     ID3D11SamplerState* colorMapSampler_;
 	ID3D11Buffer* vertexBuffer_;
 
-	XMMATRIX viewMatrix_;
-	XMMATRIX projMatrix_;
+	ID3D11VertexShader* solidColorVS_;
+    ID3D11PixelShader* solidColorPS_;
 };
 

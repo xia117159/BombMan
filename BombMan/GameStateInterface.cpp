@@ -7,7 +7,9 @@ struct VertexPos
     XMFLOAT2 tex0;
 };
 
-GameStateInterface::GameStateInterface(LPCSTR path)
+GameStateInterface::GameStateInterface(LPCSTR path) : effect_(0),depthTexture_(0),depthStencilView_(0),
+													inputLayout_(0),colorMap_(0),colorMapSampler_(0),
+													vertexBuffer_(0),solidColorVS_(0),solidColorPS_(0)
 {
 	ImagePath = path;
 }
@@ -48,40 +50,8 @@ bool GameStateInterface::LoadContent(HWND hwnd)
         DXTRACE_MSG( "Failed to create the render target view!" );
         return false;
     }
-	//纹理细节
-	D3D11_TEXTURE2D_DESC depthTexDesc;
-    ZeroMemory( &depthTexDesc, sizeof( depthTexDesc ) );
-    depthTexDesc.Width = width;
-    depthTexDesc.Height = height;
-    depthTexDesc.MipLevels = 1;
-    depthTexDesc.ArraySize = 1;
-    depthTexDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depthTexDesc.SampleDesc.Count = 1;
-    depthTexDesc.SampleDesc.Quality = 0;
-    depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
-    depthTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    depthTexDesc.CPUAccessFlags = 0;
-    depthTexDesc.MiscFlags = 0;
-
-    result = d3dDevice_->CreateTexture2D( &depthTexDesc, NULL, &depthTexture_ );
-	if( FAILED( result ) )
-    {
-        DXTRACE_MSG( "CreateTexture2D 失败!" );
-        return false;
-    }
-	//创建深度/模板视图
-	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-    ZeroMemory( &descDSV, sizeof( descDSV ) );
-    descDSV.Format = depthTexDesc.Format;
-    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    descDSV.Texture2D.MipSlice = 0;
 	
-	result = d3dDevice_->CreateDepthStencilView( depthTexture_, &descDSV, &depthStencilView_ );
-	if( FAILED( result ) )
-    {
-        DXTRACE_MSG( "CreateDepthStencilView 失败!" );
-        return false;
-    }
+	
 	d3dContext_->OMSetRenderTargets( 1, &backBufferTarget_, depthStencilView_ );
 
     D3D11_VIEWPORT viewport;
@@ -143,9 +113,73 @@ bool GameStateInterface::LoadContent(HWND hwnd)
         DXTRACE_MSG( "Error creating the input layout!" );
         return false;
     }
+	/*ID3DBlob* vsBuffer = 0;
+
+    bool compileResult = CompileD3DShader( "TextureMap.fx", "VS_Main", "vs_5_0", &vsBuffer );
+
+    if( compileResult == false )
+    {
+        DXTRACE_MSG( "Error compiling the vertex shader!" );
+        return false;
+    }
+
+    HRESULT d3dResult;
+
+    d3dResult = d3dDevice_->CreateVertexShader( vsBuffer->GetBufferPointer( ),
+        vsBuffer->GetBufferSize( ), 0, &solidColorVS_ );
+
+    if( FAILED( d3dResult ) )
+    {
+        DXTRACE_MSG( "Error creating the vertex shader!" );
+
+        if( vsBuffer )
+            vsBuffer->Release( );
+
+        return false;
+    }
+
+    D3D11_INPUT_ELEMENT_DESC solidColorLayout[] =
+    {
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+    };
+
+    unsigned int totalLayoutElements = ARRAYSIZE( solidColorLayout );
+
+    d3dResult = d3dDevice_->CreateInputLayout( solidColorLayout, totalLayoutElements,
+        vsBuffer->GetBufferPointer( ), vsBuffer->GetBufferSize( ), &inputLayout_ );
+
+    vsBuffer->Release( );
+
+    if( FAILED( d3dResult ) )
+    {
+        DXTRACE_MSG( "Error creating the input layout!" );
+        return false;
+    }
+
+    ID3DBlob* psBuffer = 0;
+
+    compileResult = CompileD3DShader( "TextureMap.fx", "PS_Main", "ps_5_0", &psBuffer );
+
+    if( compileResult == false )
+    {
+        DXTRACE_MSG( "Error compiling pixel shader!" );
+        return false;
+    }
+
+    d3dResult = d3dDevice_->CreatePixelShader( psBuffer->GetBufferPointer( ),
+        psBuffer->GetBufferSize( ), 0, &solidColorPS_ );
+
+    psBuffer->Release( );
+
+    if( FAILED( d3dResult ) )
+    {
+        DXTRACE_MSG( "Error creating pixel shader!" );
+        return false;
+    }*/
 
 	result = D3DX11CreateShaderResourceViewFromFile( d3dDevice_,
-        ImagePath, 0, 0, &colorMap_, 0 );
+        "decal.dds", 0, 0, &colorMap_, 0 );
 
     if( FAILED( result ) )
     {
@@ -187,9 +221,6 @@ bool GameStateInterface::LoadContent(HWND hwnd)
         return false;
     }
 
-	viewMatrix_ = XMMatrixIdentity( );
-    projMatrix_ = XMMatrixPerspectiveFovLH( XM_PIDIV4, 1000.0f / 600.0f, 0.01f, 100.0f );
-
     return true;
 }
 
@@ -205,41 +236,88 @@ bool GameStateInterface::DrawButton( )
         return false;
     }
 
-    // Point to our vertex buffer's internal data.
+	    // Char's width on screen.
+    float charWidth = 400.0f / 1000.0f;
+
+    // Char's height on screen.
+    float charHeight = 170.0f / 600.0f;
+    
+    // Char's texel width.
+    float texelWidth = 1.0f;
+
+	float startX= 0.0f;
+	float startY= 0.0f;
+
     VertexPos *spritePtr = ( VertexPos* )mapResource.pData;
-	for( int i = 0; i < 6; ++i )
-    {
-        float thisStartY = 100 + ( 170 * static_cast<float>( i ) );
+	/*for( int i = 0; i < 6; ++i )
+    {*/
+ /*       float thisStartY = 100 + ( 170 * static_cast<float>( 0 ) );
         float thisEndX = 600;
         float thisEndY = 270;
-		float thisStartX = 210;
+		float thisStartX = 210;*/
+
+
+		float thisStartX = startX;
+        float thisEndX = thisStartX + charWidth;
+		float thisStartY = startY + ( charHeight * static_cast<float>( 0 ) );
+        float thisEndY = startY + charHeight;
 
         spritePtr[0].pos = XMFLOAT3( thisEndX,   thisEndY, 1.0f );
-        spritePtr[1].pos = XMFLOAT3( thisEndX,   thisStartY,   1.0f );
-        spritePtr[2].pos = XMFLOAT3( thisStartX, thisStartY,   1.0f );
-        spritePtr[3].pos = XMFLOAT3( thisStartX, thisStartY,   1.0f );
+        spritePtr[1].pos = XMFLOAT3( thisEndX,   startY,   1.0f );
+        spritePtr[2].pos = XMFLOAT3( thisStartX, startY,   1.0f );
+        spritePtr[3].pos = XMFLOAT3( thisStartX, startY,   1.0f );
         spritePtr[4].pos = XMFLOAT3( thisStartX, thisEndY, 1.0f );
         spritePtr[5].pos = XMFLOAT3( thisEndX,   thisEndY, 1.0f );
 
-        
-        float tuStartU = 0.0f + ( 390 * static_cast<float>( i ) );
+        /*spritePtr[0].pos = _XMSHORT2( thisEndX,   thisEndY );
+        spritePtr[1].pos = _XMSHORT2( thisEndX,   thisStartY);
+        spritePtr[2].pos = _XMSHORT2( thisStartX, thisStartY);
+        spritePtr[3].pos = _XMSHORT2( thisStartX, thisStartY);
+        spritePtr[4].pos = _XMSHORT2( thisStartX, thisEndY);
+        spritePtr[5].pos = _XMSHORT2( thisEndX,   thisEndY);*/
+
+		//spritePtr[0].pos = _XMSHORT2( 1.0f, 0.0f);
+  //      spritePtr[1].pos = _XMSHORT2( 1.0f, 1.0f);
+  //      spritePtr[2].pos = _XMSHORT2( 0.0f, 1.0f);
+  //      spritePtr[3].pos = _XMSHORT2( 0.0f, 1.0f);
+  //      spritePtr[4].pos = _XMSHORT2( 0.0f, 0.0f);
+  //      spritePtr[5].pos = _XMSHORT2( 1.0f, 0.0f);
+  //      
+        float tuStartU = 0.0f + ( 390 * static_cast<float>( 0 ) );
         float tuEndU = tuStartU + 390;
 
-		float tuStartV = 0.0f + ( 170 * static_cast<float>( i ) );
+		float tuStartV = 0.0f + ( 170 * static_cast<float>( 0 ) );
         float tuEndV = tuStartV + 170;
 
-        spritePtr[0].tex0 = XMFLOAT2( tuEndU, 0.0f );
-        spritePtr[1].tex0 = XMFLOAT2( tuEndU, 1.0f );
-        spritePtr[2].tex0 = XMFLOAT2( tuStartU, 1.0f );
-        spritePtr[3].tex0 = XMFLOAT2( tuStartU, 1.0f );
-        spritePtr[4].tex0 = XMFLOAT2( tuStartU, 0.0f );
-        spritePtr[5].tex0 = XMFLOAT2( tuEndU, 0.0f );
+		float tuStart = 0.0f + ( texelWidth * static_cast<float>( 0 ) );
+        float tuEnd = tuStart + texelWidth;
 
-        spritePtr += 6;
-    }
+        spritePtr[0].tex0 = XMFLOAT2( tuEnd, 0.0f );
+        spritePtr[1].tex0 = XMFLOAT2( tuEnd, 1.0f );
+        spritePtr[2].tex0 = XMFLOAT2( tuStart, 1.0f );
+        spritePtr[3].tex0 = XMFLOAT2( tuStart, 1.0f );
+        spritePtr[4].tex0 = XMFLOAT2( tuStart, 0.0f );
+        spritePtr[5].tex0 = XMFLOAT2( tuEnd, 0.0f );
+
+        /*spritePtr[0].tex0 = _XMSHORT2( tuEndU, 0.0f );
+        spritePtr[1].tex0 = _XMSHORT2( tuEndU, 1.0f );
+        spritePtr[2].tex0 = _XMSHORT2( tuStartU, 1.0f );
+        spritePtr[3].tex0 = _XMSHORT2( tuStartU, 1.0f );
+        spritePtr[4].tex0 = _XMSHORT2( tuStartU, 0.0f );
+        spritePtr[5].tex0 = _XMSHORT2( tuEndU, 0.0f );*/
+
+		//spritePtr[0].tex0 = _XMSHORT2( 1.0f, 0.0f );
+  //      spritePtr[1].tex0 = _XMSHORT2( 1.0f, 1.0f );
+  //      spritePtr[2].tex0 = _XMSHORT2( 0.0f, 1.0f );
+  //      spritePtr[3].tex0 = _XMSHORT2( 0.0f, 1.0f );
+  //      spritePtr[4].tex0 = _XMSHORT2( 0.0f, 0.0f );
+  //      spritePtr[5].tex0 = _XMSHORT2( 1.0f, 0.0f );
+
+        //spritePtr += 6;
+    //}
 
 	d3dContext_->Unmap( vertexBuffer_, 0 );
-    d3dContext_->Draw( 6 * 6, 0 );
+    d3dContext_->Draw( 6, 0 );
 }
 
 void GameStateInterface::UnloadContent( )
@@ -257,7 +335,7 @@ void GameStateInterface::Render()
 
     float clearColor[4] = { 0.0f, 0.0f, 0.25f, 1.0f };
     d3dContext_->ClearRenderTargetView( backBufferTarget_, clearColor );
-    d3dContext_->ClearDepthStencilView( depthStencilView_, D3D11_CLEAR_DEPTH, 1.0f, 0 );
+    //d3dContext_->ClearDepthStencilView( depthStencilView_, D3D11_CLEAR_DEPTH, 1.0f, 0 );
 
     unsigned int stride = sizeof( VertexPos );
     unsigned int offset = 0;
@@ -266,10 +344,6 @@ void GameStateInterface::Render()
     d3dContext_->IASetVertexBuffers( 0, 1, &vertexBuffer_, &stride, &offset );
     d3dContext_->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
-    XMMATRIX rotationMat = XMMatrixRotationRollPitchYaw( 0.0f, 0.0f, 0.0f );
-    XMMATRIX translationMat = XMMatrixTranslation( 0.0f, 0.0f, 0.0f );
-    XMMATRIX worldMat = rotationMat * translationMat;
-
     ID3DX11EffectShaderResourceVariable* colorMap;
     colorMap = effect_->GetVariableByName( "colorMap" )->AsShaderResource( );
     colorMap->SetResource( colorMap_ );
@@ -277,18 +351,6 @@ void GameStateInterface::Render()
     ID3DX11EffectSamplerVariable* colorMapSampler;
     colorMapSampler = effect_->GetVariableByName( "colorSampler" )->AsSampler( );
     colorMapSampler->SetSampler( 0, colorMapSampler_ );
-
-    ID3DX11EffectMatrixVariable* worldMatrix;
-    worldMatrix = effect_->GetVariableByName( "worldMatrix" )->AsMatrix( );
-    worldMatrix->SetMatrix( ( float* )&worldMat );
-
-    ID3DX11EffectMatrixVariable* viewMatrix;
-    viewMatrix = effect_->GetVariableByName( "viewMatrix" )->AsMatrix( );
-    viewMatrix->SetMatrix( ( float* )&viewMatrix_ );
-
-    ID3DX11EffectMatrixVariable* projMatrix;
-    projMatrix = effect_->GetVariableByName( "projMatrix" )->AsMatrix( );
-    projMatrix->SetMatrix( ( float* )&projMatrix_ );
 
     ID3DX11EffectTechnique* colorInvTechnique;
     colorInvTechnique = effect_->GetTechniqueByName( "ColorInversion" );
@@ -306,6 +368,17 @@ void GameStateInterface::Render()
             DrawButton();
         }
     }
+
+	/*d3dContext_->IASetInputLayout( inputLayout_ );
+    d3dContext_->IASetVertexBuffers( 0, 1, &vertexBuffer_, &stride, &offset );
+    d3dContext_->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+
+    d3dContext_->VSSetShader( solidColorVS_, 0, 0 );
+    d3dContext_->PSSetShader( solidColorPS_, 0, 0 );
+    d3dContext_->PSSetShaderResources( 0, 1, &colorMap_ );
+    d3dContext_->PSSetSamplers( 0, 1, &colorMapSampler_ );
+
+	DrawButton();*/
 
     swapChain_->Present( 0, 0 );
 }

@@ -1,29 +1,5 @@
-/*
-    Beginning DirectX 11 Game Programming
-    By Allen Sherrod and Wendy Jones
-
-    Color Inversion Shader
-*/
-
-
 Texture2D colorMap : register( t0 );
 SamplerState colorSampler : register( s0 );
-
-
-cbuffer cbChangesEveryFrame : register( b0 )
-{
-    matrix worldMatrix;
-};
-
-cbuffer cbNeverChanges : register( b1 )
-{
-    matrix viewMatrix;
-};
-
-cbuffer cbChangeOnResize : register( b2 )
-{
-    matrix projMatrix;
-};
 
 
 struct VS_Input
@@ -42,20 +18,16 @@ struct PS_Input
 PS_Input VS_Main( VS_Input vertex )
 {
     PS_Input vsOut = ( PS_Input )0;
-    vsOut.pos = mul( vertex.pos, worldMatrix );
-    vsOut.pos = mul( vsOut.pos, viewMatrix );
-    vsOut.pos = mul( vsOut.pos, projMatrix );
+    vsOut.pos = vertex.pos;
     vsOut.tex0 = vertex.tex0;
 
     return vsOut;
 }
 
-
 float4 PS_Main( PS_Input frag ) : SV_TARGET
 {
     return colorMap.Sample( colorSampler, frag.tex0 );
 }
-
 
 technique11 ColorInversion
 {

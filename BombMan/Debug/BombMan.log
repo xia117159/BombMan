@@ -1,10 +1,11 @@
-﻿生成启动时间为 5/16/2017 11:01:49 AM。
+﻿生成启动时间为 5/16/2017 11:02:10 PM。
      1>项目“E:\directx练习\BombMan\BombMan\BombMan.vcxproj”在节点 2 上(build 个目标)。
      1>InitializeBuildStatus:
          正在创建“Debug\BombMan.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
        ClCompile:
-         E:\vs2010\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
-         main.cpp
+         E:\vs2010\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt GameStateInterface.cpp
+         GameStateInterface.cpp
+     1>e:\directx练习\bombman\bombman\gamestateinterface.cpp(321): warning C4715: “GameStateInterface::DrawButton”: 不是所有的控件路径都返回值
        ManifestResourceCompile:
          所有输出均为最新。
        Link:
@@ -25,4 +26,4 @@
 
 生成成功。
 
-已用时间 00:00:05.21
+已用时间 00:00:08.53
