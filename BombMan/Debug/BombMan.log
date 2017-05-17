@@ -1,29 +1,30 @@
-﻿生成启动时间为 5/16/2017 11:02:10 PM。
-     1>项目“E:\directx练习\BombMan\BombMan\BombMan.vcxproj”在节点 2 上(build 个目标)。
+﻿生成启动时间为 5/17/2017 11:34:33 AM。
+     1>项目“F:\BombMan\BombMan\BombMan.vcxproj”在节点 2 上(build 个目标)。
      1>InitializeBuildStatus:
          正在创建“Debug\BombMan.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
        ClCompile:
-         E:\vs2010\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt GameStateInterface.cpp
+         E:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt GameStateInterface.cpp
          GameStateInterface.cpp
-     1>e:\directx练习\bombman\bombman\gamestateinterface.cpp(321): warning C4715: “GameStateInterface::DrawButton”: 不是所有的控件路径都返回值
+     1>f:\bombman\bombman\gamestateinterface.cpp(228): warning C4715: “GameStateInterface::DrawButton”: 不是所有的控件路径都返回值
        ManifestResourceCompile:
          所有输出均为最新。
        Link:
-         E:\vs2010\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\directx练习\BombMan\Debug\BombMan.exe" /INCREMENTAL /NOLOGO Effects11.lib d2d1.lib Dwrite.lib dxerr.lib d3d11.lib d3dx11.lib d3dcompiler.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\BombMan.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"E:\directx练习\BombMan\Debug\BombMan.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\directx练习\BombMan\Debug\BombMan.lib" /MACHINE:X86 Debug\BombMan.exe.embed.manifest.res
+         E:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\BombMan\Debug\BombMan.exe" /INCREMENTAL /NOLOGO Effects11.lib d2d1.lib Dwrite.lib dxerr.lib d3d11.lib d3dx11.lib d3dcompiler.lib lua51.lib lua5.1.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\BombMan.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"F:\BombMan\Debug\BombMan.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\BombMan\Debug\BombMan.lib" /MACHINE:X86 Debug\BombMan.exe.embed.manifest.res
          Debug\D3DCLASS.obj
          Debug\GameStateInterface.obj
+         Debug\luaClass.obj
          Debug\main.obj
        Manifest:
-         c:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\BombMan.exe.embed.manifest" /manifest Debug\BombMan.exe.intermediate.manifest
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\BombMan.exe.embed.manifest" /manifest Debug\BombMan.exe.intermediate.manifest
          所有输出均为最新。
        LinkEmbedManifest:
          所有输出均为最新。
-         BombMan.vcxproj -> E:\directx练习\BombMan\Debug\BombMan.exe
+         BombMan.vcxproj -> F:\BombMan\Debug\BombMan.exe
        FinalizeBuildStatus:
          正在删除文件“Debug\BombMan.unsuccessfulbuild”。
          正在对“Debug\BombMan.lastbuildstate”执行 Touch 任务。
-     1>已完成生成项目“E:\directx练习\BombMan\BombMan\BombMan.vcxproj”(build 个目标)的操作。
+     1>已完成生成项目“F:\BombMan\BombMan\BombMan.vcxproj”(build 个目标)的操作。
 
 生成成功。
 
-已用时间 00:00:08.53
+已用时间 00:00:01.02

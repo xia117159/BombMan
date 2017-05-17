@@ -1,12 +1,8 @@
 #ifndef _D3DCLASS_H_
 #define _D3DCLASS_H_
 
-#include <d3d11.h>
-#include <d3dx11.h>
-#include <DxErr.h>
-#include <D2D1.h>  
-#include <DWrite.h>
-#include<D3Dcompiler.h>
+#include "include.h"
+
 
 
 template<class Interface>

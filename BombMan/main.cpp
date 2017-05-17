@@ -1,14 +1,55 @@
-#include<Windows.h>
-#include<memory>
-#include"GameStateInterface.h"
-
-
+#include "include.h"
+#include "GameStateInterface.h"
+//*******************全局变量定义区*******************
+//窗口句柄定义
+HWND hwnd = NULL;
+GameStateInterface demo;
+//************************结束************************
+//*********************函数声明区*********************
 LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam );
+HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
+//************************结束************************
 
 
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine, int cmdShow )
 {
-    UNREFERENCED_PARAMETER( prevInstance );
+    
+	if (FAILED(InitWindow(hInstance, cmdShow)))
+        return 0;
+
+    // Demo Initialize
+    bool result = demo.Initialize( hInstance, hwnd );
+
+	if( result == false )
+        return -1;
+
+    MSG msg = { 0 };
+    while( msg.message != WM_QUIT )
+    {
+        if( PeekMessage( &msg, 0, 0, 0, PM_REMOVE ) )
+        {
+            TranslateMessage( &msg );
+            DispatchMessage( &msg );
+        }
+		else
+		{
+			// Update and Draw
+			demo.Update( 0.0f );
+			demo.Render( );
+		}
+    }
+	char ch;
+	ch = getchar();
+    // Demo Shutdown
+    demo.Shutdown( );
+
+    return static_cast<int>( msg.wParam );
+}
+
+HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
+{
+
+	/*UNREFERENCED_PARAMETER( prevInstance );
     UNREFERENCED_PARAMETER( cmdLine );
 
     WNDCLASSEX wndClass = { 0 };
@@ -24,47 +65,45 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine
     if( !RegisterClassEx( &wndClass ) )
         return -1;
 
-    RECT rc = { 0, 0, 1000, 600 };
+    RECT rc = { 0, 0, WindowsWidth,WindowsHeight };
     AdjustWindowRect( &rc, WS_OVERLAPPEDWINDOW, FALSE );
 
-    HWND hwnd = CreateWindowA( "DX11BookWindowClass", "炸弹人超好玩版", WS_OVERLAPPEDWINDOW,
+    hwnd = CreateWindowA( "DX11BookWindowClass", "炸弹人超好玩版", WS_OVERLAPPEDWINDOW,
                                 CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top,
                                 NULL, NULL, hInstance, NULL );
 
     if( !hwnd )
         return -1;
 
-    ShowWindow( hwnd, cmdShow );
+    ShowWindow( hwnd, cmdShow );*/
 
-    GameStateInterface demo("decal.dds");
+    WNDCLASSEX wcex;
+    wcex.cbClsExtra = 0;
+    wcex.cbSize = sizeof(WNDCLASSEX);
+    wcex.cbWndExtra = 0;
+    wcex.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+    wcex.hCursor = LoadCursor(NULL,IDC_ARROW);
+    wcex.hIcon = LoadIcon(NULL, IDI_WINLOGO);
+    wcex.hIconSm = wcex.hIcon;
+    wcex.hInstance = hInstance;
+    wcex.lpfnWndProc = WndProc;
+    wcex.lpszClassName = GameTitle;
+    wcex.lpszMenuName = NULL;
+    wcex.style = CS_HREDRAW | CS_VREDRAW;
+    if (!RegisterClassEx(&wcex))
+        return E_FAIL;
 
-    // Demo Initialize
-    bool result = demo.Initialize( hInstance, hwnd );
+    RECT rc = { 0, 0, WindowsWidth,WindowsHeight };
+    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+    hwnd = CreateWindowEx(WS_EX_APPWINDOW, GameTitle, GameTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
+        rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
+    if (!hwnd)
+        return E_FAIL;
 
-    if( result == false )
-        return -1;
+    ShowWindow(hwnd, nCmdShow);
 
-    MSG msg = { 0 };
-
-    while( msg.message != WM_QUIT )
-    {
-        if( PeekMessage( &msg, 0, 0, 0, PM_REMOVE ) )
-        {
-            TranslateMessage( &msg );
-            DispatchMessage( &msg );
-        }
-
-        // Update and Draw
-        demo.Update( 0.0f );
-        demo.Render( );
-    }
-
-    // Demo Shutdown
-    demo.Shutdown( );
-
-    return static_cast<int>( msg.wParam );
+    return S_OK;
 }
-
 
 LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
 {

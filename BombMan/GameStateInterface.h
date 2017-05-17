@@ -1,19 +1,19 @@
 #pragma once
 #include "d3dclass.h"
-#include<xnamath.h>
-#include<d3dx11effect.h>
+#include "luaClass.h"
 
 class GameStateInterface :
 	public D3DCLASS
 {
 public:
+	GameStateInterface();
 	GameStateInterface(LPCSTR path);
 	~GameStateInterface(void);
 
+	void SetImagePath(LPCSTR Path);
 	bool LoadContent(HWND hwnd);
     void UnloadContent( );
-	bool DrawButton();
-
+	bool DrawButton(float ButtonStartX,float ButtonStartY, float tuX, float tuY);
     void Update( float dt );
     void Render( );
 private:

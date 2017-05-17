@@ -1,11 +1,32 @@
 #include "GameStateInterface.h"
 
 
+
+static int LuaDrawButton(lua_State *L);
+static int LuaInitStartButtonIamgePath(lua_State *L);
+
+
+
 struct VertexPos
 {
     XMFLOAT3 pos;
     XMFLOAT2 tex0;
+
 };
+
+
+GameStateInterface::GameStateInterface() : effect_(0),depthTexture_(0),depthStencilView_(0),
+										   inputLayout_(0),colorMap_(0),colorMapSampler_(0),
+										   vertexBuffer_(0),solidColorVS_(0),solidColorPS_(0)
+{
+	LuaClass SetImagePath("lua/StartButton.lua");
+	SetImagePath.LuaFuncRegister("LuaInitStartButtonIamgePath", LuaInitStartButtonIamgePath);
+	SetImagePath.LuaDoFile();
+	lua_getglobal(SetImagePath.lua_state, "SetButtonImagePath");
+	lua_call(SetImagePath.lua_state, 0, 0);
+	SetImagePath.LuaCloseFile();
+}
+
 
 GameStateInterface::GameStateInterface(LPCSTR path) : effect_(0),depthTexture_(0),depthStencilView_(0),
 													inputLayout_(0),colorMap_(0),colorMapSampler_(0),
@@ -113,73 +134,9 @@ bool GameStateInterface::LoadContent(HWND hwnd)
         DXTRACE_MSG( "Error creating the input layout!" );
         return false;
     }
-	/*ID3DBlob* vsBuffer = 0;
-
-    bool compileResult = CompileD3DShader( "TextureMap.fx", "VS_Main", "vs_5_0", &vsBuffer );
-
-    if( compileResult == false )
-    {
-        DXTRACE_MSG( "Error compiling the vertex shader!" );
-        return false;
-    }
-
-    HRESULT d3dResult;
-
-    d3dResult = d3dDevice_->CreateVertexShader( vsBuffer->GetBufferPointer( ),
-        vsBuffer->GetBufferSize( ), 0, &solidColorVS_ );
-
-    if( FAILED( d3dResult ) )
-    {
-        DXTRACE_MSG( "Error creating the vertex shader!" );
-
-        if( vsBuffer )
-            vsBuffer->Release( );
-
-        return false;
-    }
-
-    D3D11_INPUT_ELEMENT_DESC solidColorLayout[] =
-    {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-    };
-
-    unsigned int totalLayoutElements = ARRAYSIZE( solidColorLayout );
-
-    d3dResult = d3dDevice_->CreateInputLayout( solidColorLayout, totalLayoutElements,
-        vsBuffer->GetBufferPointer( ), vsBuffer->GetBufferSize( ), &inputLayout_ );
-
-    vsBuffer->Release( );
-
-    if( FAILED( d3dResult ) )
-    {
-        DXTRACE_MSG( "Error creating the input layout!" );
-        return false;
-    }
-
-    ID3DBlob* psBuffer = 0;
-
-    compileResult = CompileD3DShader( "TextureMap.fx", "PS_Main", "ps_5_0", &psBuffer );
-
-    if( compileResult == false )
-    {
-        DXTRACE_MSG( "Error compiling pixel shader!" );
-        return false;
-    }
-
-    d3dResult = d3dDevice_->CreatePixelShader( psBuffer->GetBufferPointer( ),
-        psBuffer->GetBufferSize( ), 0, &solidColorPS_ );
-
-    psBuffer->Release( );
-
-    if( FAILED( d3dResult ) )
-    {
-        DXTRACE_MSG( "Error creating pixel shader!" );
-        return false;
-    }*/
 
 	result = D3DX11CreateShaderResourceViewFromFile( d3dDevice_,
-        "decal.dds", 0, 0, &colorMap_, 0 );
+        ImagePath, 0, 0, &colorMap_, 0 );
 
     if( FAILED( result ) )
     {
@@ -224,7 +181,7 @@ bool GameStateInterface::LoadContent(HWND hwnd)
     return true;
 }
 
-bool GameStateInterface::DrawButton( )
+bool GameStateInterface::DrawButton(float ButtonStartX,float ButtonStartY, float tuX, float tuY)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mapResource;
@@ -235,90 +192,41 @@ bool GameStateInterface::DrawButton( )
         DXTRACE_MSG( "Failed to map resource!" );
         return false;
     }
-
-	    // Char's width on screen.
-    float charWidth = 400.0f / 1000.0f;
-
-    // Char's height on screen.
-    float charHeight = 170.0f / 600.0f;
-    
-    // Char's texel width.
-    float texelWidth = 1.0f;
-
-	float startX= 0.0f;
-	float startY= 0.0f;
+   
 
     VertexPos *spritePtr = ( VertexPos* )mapResource.pData;
-	/*for( int i = 0; i < 6; ++i )
-    {*/
- /*       float thisStartY = 100 + ( 170 * static_cast<float>( 0 ) );
-        float thisEndX = 600;
-        float thisEndY = 270;
-		float thisStartX = 210;*/
 
 
-		float thisStartX = startX;
-        float thisEndX = thisStartX + charWidth;
-		float thisStartY = startY + ( charHeight * static_cast<float>( 0 ) );
-        float thisEndY = startY + charHeight;
+	float thisStartX = ButtonStartX + ( ButtonWidthF * static_cast<float>( 0 ) );
+	float thisEndX = thisStartX + ButtonWidthF;
 
-        spritePtr[0].pos = XMFLOAT3( thisEndX,   thisEndY, 1.0f );
-        spritePtr[1].pos = XMFLOAT3( thisEndX,   startY,   1.0f );
-        spritePtr[2].pos = XMFLOAT3( thisStartX, startY,   1.0f );
-        spritePtr[3].pos = XMFLOAT3( thisStartX, startY,   1.0f );
-        spritePtr[4].pos = XMFLOAT3( thisStartX, thisEndY, 1.0f );
-        spritePtr[5].pos = XMFLOAT3( thisEndX,   thisEndY, 1.0f );
+	float thisStartY = ButtonStartY + ( ButtonHeightF * static_cast<float>( 0 ) );
+	float thisEndY = thisStartY + ButtonHeightF;
 
-        /*spritePtr[0].pos = _XMSHORT2( thisEndX,   thisEndY );
-        spritePtr[1].pos = _XMSHORT2( thisEndX,   thisStartY);
-        spritePtr[2].pos = _XMSHORT2( thisStartX, thisStartY);
-        spritePtr[3].pos = _XMSHORT2( thisStartX, thisStartY);
-        spritePtr[4].pos = _XMSHORT2( thisStartX, thisEndY);
-        spritePtr[5].pos = _XMSHORT2( thisEndX,   thisEndY);*/
+	spritePtr[0].pos = XMFLOAT3( thisEndX,   thisEndY,   1.0f );
+	spritePtr[1].pos = XMFLOAT3( thisEndX,   thisStartY, 1.0f );
+	spritePtr[2].pos = XMFLOAT3( thisStartX, thisStartY, 1.0f );
+	spritePtr[3].pos = XMFLOAT3( thisStartX, thisStartY, 1.0f );
+	spritePtr[4].pos = XMFLOAT3( thisStartX, thisEndY,   1.0f );
+	spritePtr[5].pos = XMFLOAT3( thisEndX,   thisEndY,   1.0f );
+  
+	float tuStartU = tuX + ( tuWidth * static_cast<float>( 0 ) );
+	float tuEndU = tuStartU + tuWidth;
 
-		//spritePtr[0].pos = _XMSHORT2( 1.0f, 0.0f);
-  //      spritePtr[1].pos = _XMSHORT2( 1.0f, 1.0f);
-  //      spritePtr[2].pos = _XMSHORT2( 0.0f, 1.0f);
-  //      spritePtr[3].pos = _XMSHORT2( 0.0f, 1.0f);
-  //      spritePtr[4].pos = _XMSHORT2( 0.0f, 0.0f);
-  //      spritePtr[5].pos = _XMSHORT2( 1.0f, 0.0f);
-  //      
-        float tuStartU = 0.0f + ( 390 * static_cast<float>( 0 ) );
-        float tuEndU = tuStartU + 390;
+	float tuStartV = tuY + ( tuHeight * static_cast<float>( 0 ) );
+	float tuEndV = tuStartV + tuHeight;
 
-		float tuStartV = 0.0f + ( 170 * static_cast<float>( 0 ) );
-        float tuEndV = tuStartV + 170;
-
-		float tuStart = 0.0f + ( texelWidth * static_cast<float>( 0 ) );
-        float tuEnd = tuStart + texelWidth;
-
-        spritePtr[0].tex0 = XMFLOAT2( tuEnd, 0.0f );
-        spritePtr[1].tex0 = XMFLOAT2( tuEnd, 1.0f );
-        spritePtr[2].tex0 = XMFLOAT2( tuStart, 1.0f );
-        spritePtr[3].tex0 = XMFLOAT2( tuStart, 1.0f );
-        spritePtr[4].tex0 = XMFLOAT2( tuStart, 0.0f );
-        spritePtr[5].tex0 = XMFLOAT2( tuEnd, 0.0f );
-
-        /*spritePtr[0].tex0 = _XMSHORT2( tuEndU, 0.0f );
-        spritePtr[1].tex0 = _XMSHORT2( tuEndU, 1.0f );
-        spritePtr[2].tex0 = _XMSHORT2( tuStartU, 1.0f );
-        spritePtr[3].tex0 = _XMSHORT2( tuStartU, 1.0f );
-        spritePtr[4].tex0 = _XMSHORT2( tuStartU, 0.0f );
-        spritePtr[5].tex0 = _XMSHORT2( tuEndU, 0.0f );*/
-
-		//spritePtr[0].tex0 = _XMSHORT2( 1.0f, 0.0f );
-  //      spritePtr[1].tex0 = _XMSHORT2( 1.0f, 1.0f );
-  //      spritePtr[2].tex0 = _XMSHORT2( 0.0f, 1.0f );
-  //      spritePtr[3].tex0 = _XMSHORT2( 0.0f, 1.0f );
-  //      spritePtr[4].tex0 = _XMSHORT2( 0.0f, 0.0f );
-  //      spritePtr[5].tex0 = _XMSHORT2( 1.0f, 0.0f );
-
-        //spritePtr += 6;
-    //}
-
+	spritePtr[0].tex0 = XMFLOAT2( tuEndU,   tuStartV);
+	spritePtr[1].tex0 = XMFLOAT2( tuEndU,   tuEndV);
+	spritePtr[2].tex0 = XMFLOAT2( tuStartU, tuEndV );
+	spritePtr[3].tex0 = XMFLOAT2( tuStartU, tuEndV );
+	spritePtr[4].tex0 = XMFLOAT2( tuStartU, tuStartV );
+	spritePtr[5].tex0 = XMFLOAT2( tuEndU,   tuStartV );
 	d3dContext_->Unmap( vertexBuffer_, 0 );
-    d3dContext_->Draw( 6, 0 );
+	d3dContext_->Draw( 6, 0 );
+	
 }
+
 
 void GameStateInterface::UnloadContent( )
 {
@@ -365,20 +273,78 @@ void GameStateInterface::Render()
         if( pass != 0 )
         {
             pass->Apply( 0, d3dContext_ );
-            DrawButton();
+
+			LuaClass LuaButtonShow("lua/StartButton.lua");
+			LuaButtonShow.LuaFuncRegister("LuaDrawButton", LuaDrawButton);
+			LuaButtonShow.LuaDoFile();
+			lua_getglobal(LuaButtonShow.lua_state, "DrawButtonFunc");
+			lua_call(LuaButtonShow.lua_state, 0, 0);
+			LuaButtonShow.LuaCloseFile();
+			/*int i=0;
+			DrawButton(-0.8f, 0.5f - i++ * ButtonHeightF, 0.0f,    0.0f);
+			DrawButton(-0.8f, 0.5f - i++ * ButtonHeightF, 0.0f,    2 * tuHeight);
+			DrawButton(-0.8f, 0.5f - i++ * ButtonHeightF, 0.0f,    4 * tuHeight);
+			DrawButton(-0.8f, 0.5f - i++ * ButtonHeightF, tuWidth, 0 * tuHeight);
+			DrawButton(-0.8f, 0.5f - i++ * ButtonHeightF, tuWidth, 2 * tuHeight);
+			DrawButton(-0.8f, 0.5f - i++ * ButtonHeightF, tuWidth, 4 * tuHeight);*/
         }
     }
 
-	/*d3dContext_->IASetInputLayout( inputLayout_ );
-    d3dContext_->IASetVertexBuffers( 0, 1, &vertexBuffer_, &stride, &offset );
-    d3dContext_->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-
-    d3dContext_->VSSetShader( solidColorVS_, 0, 0 );
-    d3dContext_->PSSetShader( solidColorPS_, 0, 0 );
-    d3dContext_->PSSetShaderResources( 0, 1, &colorMap_ );
-    d3dContext_->PSSetSamplers( 0, 1, &colorMapSampler_ );
-
-	DrawButton();*/
-
+	
     swapChain_->Present( 0, 0 );
+}
+
+void GameStateInterface::SetImagePath(LPCSTR Path)
+{
+	ImagePath = Path;
+}
+
+
+
+extern GameStateInterface demo;
+
+
+//提供给Lua调用的函数的接口
+//定义第一方法：返回值必须为int,参数必须为lua_State *L，（L）可变
+static int LuaDrawButton(lua_State *L)
+{
+	 //返回栈中元素的个数  
+    int n = lua_gettop(L);
+    float Value[4];  
+    int i;  
+    for (i = 1; i <= n; i++)  
+    {  
+        if (!lua_isnumber(L, i))   
+        {  
+            lua_pushstring(L, "Incorrect argument to 'average'");  
+            lua_error(L);
+			return 0;
+        }  
+        Value[i-1] = (float)lua_tonumber(L, i);
+    }
+	demo.DrawButton(Value[0],Value[1],Value[2],Value[3]);
+	return 1;
+}
+
+
+//提供给Lua调用的函数的接口
+//定义第一方法：返回值必须为int,参数必须为lua_State *L，（L）可变
+static int LuaInitStartButtonIamgePath(lua_State *L)
+{
+	 //返回栈中元素的个数  
+    int n = lua_gettop(L);
+    LPCSTR Value;  
+    int i;  
+    for (i = 1; i <= n; i++)  
+    {  
+        if (!lua_isstring(L, i))   
+        {  
+            lua_pushstring(L, "Incorrect argument to 'average'");  
+            lua_error(L);
+			return 0;
+        }  
+        Value = lua_tolstring(L, i, NULL);
+    }
+	demo.SetImagePath(Value);
+	return 1;
 }
