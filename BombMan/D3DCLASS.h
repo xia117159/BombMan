@@ -29,7 +29,7 @@ class D3DCLASS
         bool Initialize( HINSTANCE hInstance, HWND hwnd );
         void Shutdown( );
 
-		bool CompileD3DShader( char* filePath, char* entry, char* shaderModel, ID3DBlob** buffer );
+		bool CompileD3DShader( LPCWSTR filePath, char* entry, char* shaderModel, ID3DBlob** buffer );
 
         virtual bool LoadContent(HWND hwnd);
         virtual void UnloadContent( );

@@ -3,7 +3,7 @@
 //************宏定义************
 #define WindowsWidth 1000           //窗口宽度
 #define WindowsHeight 600           //窗口高度
-#define GameTitle "炸弹人超好玩版"  //窗口名字
+#define GameTitle L"炸弹人超好玩版"  //窗口名字
 
 //开始菜单图标高宽
 #define ButtonWidth            353.0f//391.5f
@@ -29,7 +29,13 @@
 #include <D3Dcompiler.h>
 #include <xnamath.h>
 #include <d3dx11effect.h>
-
+#include <iostream>
+#include <stdlib.h>
+#include <string>
+#include <DXUT.h>
+#include <DXUTcamera.h>
+#include <DXUTgui.h>
+#include <DXUTsettingsDlg.h>
 
 //**********lua库文件************
 extern "C" {  

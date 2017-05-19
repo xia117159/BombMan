@@ -83,7 +83,7 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
 
     if( FAILED( result ) )
     {
-        DXTRACE_MSG( "Failed to create the Direct3D device!" );
+        DXTRACE_MSG( L"Failed to create the Direct3D device!" );
         return false;
     }
 
@@ -113,12 +113,10 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
 			D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN,D2D1_ALPHA_MODE_PREMULTIPLIED),
 			dpiX,
 			dpiY);
-
 	result = pD2DFactory_->CreateDxgiSurfaceRenderTarget(
 		pBackBuffer,
 		&props,
 		&pRT_);
-
 	return LoadContent(hwnd);;
 }
 
@@ -230,7 +228,7 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
     return LoadContent( hwnd);
 }*/
 
-bool D3DCLASS::CompileD3DShader( char* filePath, char* entry, char* shaderModel, ID3DBlob** buffer )
+bool D3DCLASS::CompileD3DShader( LPCWSTR filePath, char* entry, char* shaderModel, ID3DBlob** buffer )
 {
     DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 

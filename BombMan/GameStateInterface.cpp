@@ -1,6 +1,6 @@
 #include "GameStateInterface.h"
-
-
+#include "luaClass.h"
+#include "sysfunc.h"
 
 static int LuaDrawButton(lua_State *L);
 static int LuaInitStartButtonIamgePath(lua_State *L);
@@ -17,21 +17,23 @@ struct VertexPos
 
 GameStateInterface::GameStateInterface() : effect_(0),depthTexture_(0),depthStencilView_(0),
 										   inputLayout_(0),colorMap_(0),colorMapSampler_(0),
-										   vertexBuffer_(0),solidColorVS_(0),solidColorPS_(0)
+										   vertexBuffer_(0),solidColorVS_(0),solidColorPS_(0),
+										   alphaBlendState_(0)
 {
-	LuaClass SetImagePath("lua/StartButton.lua");
-	SetImagePath.LuaFuncRegister("LuaInitStartButtonIamgePath", LuaInitStartButtonIamgePath);
-	SetImagePath.LuaDoFile();
-	lua_getglobal(SetImagePath.lua_state, "SetButtonImagePath");
-	lua_call(SetImagePath.lua_state, 0, 0);
-	SetImagePath.LuaCloseFile();
+	LuaClass setImagePath("lua/StartButton.lua");
+	setImagePath.CFuncRegister("LuaInitStartButtonIamgePath", LuaInitStartButtonIamgePath);
+	setImagePath.LuaDoFile();
+	setImagePath.LuaFuncUse("SetButtonImagePath()");
+	setImagePath.LuaCloseFile();
 }
 
 
-GameStateInterface::GameStateInterface(LPCSTR path) : effect_(0),depthTexture_(0),depthStencilView_(0),
+GameStateInterface::GameStateInterface(LPCWSTR path) : effect_(0),depthTexture_(0),depthStencilView_(0),
 													inputLayout_(0),colorMap_(0),colorMapSampler_(0),
-													vertexBuffer_(0),solidColorVS_(0),solidColorPS_(0)
+													vertexBuffer_(0),solidColorVS_(0),solidColorPS_(0),
+													alphaBlendState_(0)
 {
+	
 	ImagePath = path;
 }
 
@@ -57,7 +59,7 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 
     if( FAILED( result ) )
     {
-        DXTRACE_MSG( "Failed to get the swap chain back buffer!" );
+        DXTRACE_MSG( L"Failed to get the swap chain back buffer!" );
         return false;
     }
 	//创建渲染目标视图
@@ -68,7 +70,7 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 
     if( FAILED( result ) )
     {
-        DXTRACE_MSG( "Failed to create the render target view!" );
+        DXTRACE_MSG( L"Failed to create the render target view!" );
         return false;
     }
 	
@@ -86,11 +88,11 @@ bool GameStateInterface::LoadContent(HWND hwnd)
     d3dContext_->RSSetViewports( 1, &viewport );
 
 	ID3DBlob* buffer = 0;
-	bool compileResult = CompileD3DShader( "ColorInversion.fx", 0, "fx_5_0", &buffer );
+	bool compileResult = CompileD3DShader( L"ColorInversion.fx", 0, "fx_5_0", &buffer );
 
     if( compileResult == false )
     {
-        DXTRACE_MSG( "Error compiling the effect shader!" );
+        DXTRACE_MSG( L"Error compiling the effect shader!" );
         return false;
     }
 
@@ -99,7 +101,7 @@ bool GameStateInterface::LoadContent(HWND hwnd)
     
     if( FAILED( result ) )
     {
-        DXTRACE_MSG( "Error creating the effect shader!" );
+        DXTRACE_MSG( L"Error creating the effect shader!" );
 
         if( buffer )
             buffer->Release( );
@@ -131,7 +133,7 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 
     if( FAILED( result ) )
     {
-        DXTRACE_MSG( "Error creating the input layout!" );
+        DXTRACE_MSG( L"Error creating the input layout!" );
         return false;
     }
 
@@ -140,7 +142,7 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 
     if( FAILED( result ) )
     {
-        DXTRACE_MSG( "Failed to load the texture image!" );
+        DXTRACE_MSG( L"Failed to load the texture image!" );
         return false;
     }
 
@@ -157,7 +159,7 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 
     if( FAILED( result ) )
     {
-        DXTRACE_MSG( "Failed to create color map sampler state!" );
+        DXTRACE_MSG( L"Failed to create color map sampler state!" );
         return false;
     }
 
@@ -174,9 +176,25 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 
     if( FAILED( result ) )
     {
-        DXTRACE_MSG( "Failed to create vertex buffer!" );
+        DXTRACE_MSG( L"Failed to create vertex buffer!" );
         return false;
     }
+
+	D3D11_BLEND_DESC blendDesc;
+    ZeroMemory( &blendDesc, sizeof( blendDesc ) );
+    blendDesc.RenderTarget[0].BlendEnable = TRUE;
+    blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+    blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+    blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+    blendDesc.RenderTarget[0].RenderTargetWriteMask = 0x0F;
+
+    float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+    d3dDevice_->CreateBlendState( &blendDesc, &alphaBlendState_ );
+    d3dContext_->OMSetBlendState( alphaBlendState_, blendFactor, 0xFFFFFFFF );
 
     return true;
 }
@@ -189,7 +207,7 @@ bool GameStateInterface::DrawButton(float ButtonStartX,float ButtonStartY, float
 
 	if( FAILED( result ) )
     {
-        DXTRACE_MSG( "Failed to map resource!" );
+        DXTRACE_MSG( L"Failed to map resource!" );
         return false;
     }
    
@@ -234,6 +252,7 @@ void GameStateInterface::UnloadContent( )
 
 void GameStateInterface::Update( float dt )
 {
+
 }
 
 void GameStateInterface::Render()
@@ -243,7 +262,7 @@ void GameStateInterface::Render()
 
     float clearColor[4] = { 0.0f, 0.0f, 0.25f, 1.0f };
     d3dContext_->ClearRenderTargetView( backBufferTarget_, clearColor );
-    //d3dContext_->ClearDepthStencilView( depthStencilView_, D3D11_CLEAR_DEPTH, 1.0f, 0 );
+    d3dContext_->ClearDepthStencilView( depthStencilView_, D3D11_CLEAR_DEPTH, 1.0f, 0 );
 
     unsigned int stride = sizeof( VertexPos );
     unsigned int offset = 0;
@@ -275,18 +294,10 @@ void GameStateInterface::Render()
             pass->Apply( 0, d3dContext_ );
 
 			LuaClass LuaButtonShow("lua/StartButton.lua");
-			LuaButtonShow.LuaFuncRegister("LuaDrawButton", LuaDrawButton);
+			LuaButtonShow.CFuncRegister("LuaDrawButton", LuaDrawButton);
 			LuaButtonShow.LuaDoFile();
-			lua_getglobal(LuaButtonShow.lua_state, "DrawButtonFunc");
-			lua_call(LuaButtonShow.lua_state, 0, 0);
+			LuaButtonShow.LuaFuncUse("DrawButtonFunc()");
 			LuaButtonShow.LuaCloseFile();
-			/*int i=0;
-			DrawButton(-0.8f, 0.5f - i++ * ButtonHeightF, 0.0f,    0.0f);
-			DrawButton(-0.8f, 0.5f - i++ * ButtonHeightF, 0.0f,    2 * tuHeight);
-			DrawButton(-0.8f, 0.5f - i++ * ButtonHeightF, 0.0f,    4 * tuHeight);
-			DrawButton(-0.8f, 0.5f - i++ * ButtonHeightF, tuWidth, 0 * tuHeight);
-			DrawButton(-0.8f, 0.5f - i++ * ButtonHeightF, tuWidth, 2 * tuHeight);
-			DrawButton(-0.8f, 0.5f - i++ * ButtonHeightF, tuWidth, 4 * tuHeight);*/
         }
     }
 
@@ -294,7 +305,7 @@ void GameStateInterface::Render()
     swapChain_->Present( 0, 0 );
 }
 
-void GameStateInterface::SetImagePath(LPCSTR Path)
+void GameStateInterface::SetImagePath(LPCWSTR Path)
 {
 	ImagePath = Path;
 }
@@ -333,8 +344,10 @@ static int LuaInitStartButtonIamgePath(lua_State *L)
 {
 	 //返回栈中元素的个数  
     int n = lua_gettop(L);
-    LPCSTR Value;  
-    int i;  
+
+    LPCWSTR Value;
+	const size_t newsize = 100;
+	int i;  
     for (i = 1; i <= n; i++)  
     {  
         if (!lua_isstring(L, i))   
@@ -342,9 +355,12 @@ static int LuaInitStartButtonIamgePath(lua_State *L)
             lua_pushstring(L, "Incorrect argument to 'average'");  
             lua_error(L);
 			return 0;
-        }  
-        Value = lua_tolstring(L, i, NULL);
+        }
+
+		Value = AnsiToUnicode(lua_tolstring(L, i, NULL));
     }
 	demo.SetImagePath(Value);
 	return 1;
 }
+
+

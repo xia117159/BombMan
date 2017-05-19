@@ -11,7 +11,9 @@ public:
 	LuaClass(char * pFileName);
 	~LuaClass();
 
-	void LuaFuncRegister(char *cFuncName, lua_CFunction Func);
+
+	void LuaFuncUse(const char *LuaFuncName,...);
+	void CFuncRegister(char *cFuncName, lua_CFunction Func);
 	void LuaDoFile();
 	void LuaCloseFile();
 

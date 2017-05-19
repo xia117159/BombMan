@@ -99,9 +99,8 @@ HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
         rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
     if (!hwnd)
         return E_FAIL;
-
+	
     ShowWindow(hwnd, nCmdShow);
-
     return S_OK;
 }
 

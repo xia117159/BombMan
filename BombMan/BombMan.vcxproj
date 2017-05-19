@@ -19,7 +19,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -56,7 +56,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Effects11.lib;d2d1.lib;Dwrite.lib;dxerr.lib;d3d11.lib;d3dx11.lib;d3dcompiler.lib;lua51.lib;lua5.1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Effects11.lib;dxut.lib;d2d1.lib;Dwrite.lib;dxerr.lib;d3d11.lib;d3dx11.lib;d3dcompiler.lib;lua51.lib;lua5.1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -81,12 +81,14 @@
     <ClCompile Include="GameStateInterface.cpp" />
     <ClCompile Include="luaClass.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="sysfunc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3DCLASS.h" />
     <ClInclude Include="GameStateInterface.h" />
     <ClInclude Include="include.h" />
     <ClInclude Include="luaClass.h" />
+    <ClInclude Include="sysfunc.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
