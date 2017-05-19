@@ -17,6 +17,16 @@
 
 
 //************库文件************
+#define KeyUp       'W'
+#define KeyUpLua    99
+#define KeyDown     'S'
+#define KeyDownLua  100
+#define KeyRight    'A'
+#define KeyRightLua 101
+#define KeyLeft     'D'
+#define KeyLeftLua  102
+//**********宏定义结束**********
+//************库文件************
 #include <Windows.h>
 #include <WinError.h>
 #include <memory.h>
@@ -37,16 +47,16 @@
 #include <DXUTgui.h>
 #include <DXUTsettingsDlg.h>
 
-//**********lua库文件************
+//****lua库文件****
 extern "C" {  
 	#include "lua/lua.h"
 	#include "lua/lualib.h"
 	#include "lua/lauxlib.h"  
 }
-#include "lua/lua.hpp"
 
+//********库文件结束**********
 
-//**********命名空间************
+//*********命名空间***********
 using namespace std;
 
 

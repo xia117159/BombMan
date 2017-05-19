@@ -25,6 +25,9 @@ GameStateInterface::GameStateInterface() : effect_(0),depthTexture_(0),depthSten
 	setImagePath.LuaDoFile();
 	setImagePath.LuaFuncUse("SetButtonImagePath()");
 	setImagePath.LuaCloseFile();
+	LuaButtonShow.SetLuaFile("lua/StartButton.lua");
+	LuaButtonShow.CFuncRegister("LuaDrawButton", LuaDrawButton);
+	LuaButtonShow.LuaDoFile();
 }
 
 
@@ -255,6 +258,10 @@ void GameStateInterface::Update( float dt )
 
 }
 
+
+float tempUD = 0.0, tempLR = 0.0;
+
+
 void GameStateInterface::Render()
 {
 	if( d3dContext_ == 0 )
@@ -293,11 +300,9 @@ void GameStateInterface::Render()
         {
             pass->Apply( 0, d3dContext_ );
 
-			LuaClass LuaButtonShow("lua/StartButton.lua");
-			LuaButtonShow.CFuncRegister("LuaDrawButton", LuaDrawButton);
-			LuaButtonShow.LuaDoFile();
+
 			LuaButtonShow.LuaFuncUse("DrawButtonFunc()");
-			LuaButtonShow.LuaCloseFile();
+			//LuaButtonShow.LuaCloseFile();
         }
     }
 

@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<Project Name="BombMan.luaprj" Cmd="" Arg="" Dir="" Toggle="false" >
+    <LuaFile RelativePath=".\lua\StartButton.lua" />
+    <LuaFile RelativePath=".\lua\include.lua" />
+    <LuaFile RelativePath=".\lua\KeyControl.lua" />
+</Project>

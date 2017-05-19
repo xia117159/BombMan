@@ -8,6 +8,8 @@ GameStateInterface demo;
 //*********************函数声明区*********************
 LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam );
 HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
+static void MainMenuLoop();
+static void KeyControl();
 //************************结束************************
 
 
@@ -23,6 +25,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine
 	if( result == false )
         return -1;
 
+	
     MSG msg = { 0 };
     while( msg.message != WM_QUIT )
     {
@@ -33,18 +36,46 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine
         }
 		else
 		{
-			// Update and Draw
-			demo.Update( 0.0f );
-			demo.Render( );
+			const int constFps = 60;
+			float timeInOneFps = 1000.0f/constFps;    // 每秒60帧，则1帧就是约16毫秒
+			DWORD timeBegin = GetTickCount();
+ 
+		    //主循环函数
+			MainMenuLoop();
+ 
+			// 限帧
+			DWORD timeTotal = GetTickCount() - timeBegin;
+			if (timeTotal < timeInOneFps)
+				Sleep(DWORD(timeInOneFps-timeTotal));
 		}
     }
-	char ch;
-	ch = getchar();
     // Demo Shutdown
     demo.Shutdown( );
 
     return static_cast<int>( msg.wParam );
 }
+
+//主菜单循环函数
+static void MainMenuLoop()
+{
+	KeyControl();
+	// Update and Draw
+	demo.Update( 0.0f );
+	demo.Render( );
+}
+
+static void KeyControl()
+{
+	if(GetAsyncKeyState(KeyUp) & 0x8000)
+		demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", KeyUpLua);
+	else if(GetAsyncKeyState(KeyDown) & 0x8000)
+		demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", KeyDownLua);
+	else if(GetAsyncKeyState(KeyRight) & 0x8000)
+		demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", KeyRightLua);
+	else if(GetAsyncKeyState(KeyLeft) & 0x8000)
+		demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", KeyLeftLua);
+}
+
 
 HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
 {

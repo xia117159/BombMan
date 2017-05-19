@@ -15,10 +15,27 @@ LuaClass::LuaClass(char *pFileName)
 	lua_state = lua_open();
 	luaL_openlibs(lua_state);  
 }
+
+LuaClass::LuaClass(char *pFileName, bool doit)
+{
+	LuaFileName = pFileName;
+	lua_state = NULL;
+	lua_state = lua_open();
+	luaL_openlibs(lua_state);
+	if (doit) luaL_dofile(lua_state, LuaFileName);
+}
 //Îö¹¹º¯Êý
 LuaClass::~LuaClass()
 {
 
+}
+
+void LuaClass::SetLuaFile(char *pFileName)
+{
+	LuaFileName = pFileName;
+	lua_state = NULL;
+	lua_state = lua_open();
+	luaL_openlibs(lua_state); 
 }
 
 void LuaClass::LuaDoFile()

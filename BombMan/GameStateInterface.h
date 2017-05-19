@@ -17,8 +17,13 @@ public:
     void Update( float dt );
     void Render( );
 
+
+	friend static void KeyControl();
+
+
 private:
 	LPCWSTR ImagePath;
+	LuaClass LuaButtonShow;
 	ID3DX11Effect* effect_;
 	ID3D11Texture2D* depthTexture_;
 	ID3D11DepthStencilView* depthStencilView_; //表示深度/模板视图

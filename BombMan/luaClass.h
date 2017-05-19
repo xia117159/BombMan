@@ -9,9 +9,10 @@ class LuaClass
 public:
 	LuaClass();
 	LuaClass(char * pFileName);
+	LuaClass(char * pFileName, bool doit);
 	~LuaClass();
 
-
+	void SetLuaFile(char * pFileName);
 	void LuaFuncUse(const char *LuaFuncName,...);
 	void CFuncRegister(char *cFuncName, lua_CFunction Func);
 	void LuaDoFile();
