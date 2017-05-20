@@ -1,4 +1,5 @@
 Texture2D colorMap : register( t0 );
+Texture2D secondMap : register( t1 );
 SamplerState colorSampler : register( s0 );
 
 
@@ -24,10 +25,16 @@ PS_Input VS_Main( VS_Input vertex )
     return vsOut;
 }
 
-float4 PS_Main( PS_Input frag ) : SV_TARGET
+float4 PS_Main1( PS_Input frag ) : SV_TARGET
 {
     return colorMap.Sample( colorSampler, frag.tex0 );
 }
+
+float4 PS_Main2( PS_Input frag ) : SV_TARGET
+{
+    return secondMap.Sample( colorSampler, frag.tex0 );
+}
+
 
 technique11 ColorInversion
 {
@@ -35,6 +42,13 @@ technique11 ColorInversion
     {
         SetVertexShader( CompileShader( vs_5_0, VS_Main() ) );
         SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_5_0, PS_Main() ) );
+        SetPixelShader( CompileShader( ps_5_0, PS_Main1() ) );
     }
+    pass P1
+    {
+        SetVertexShader( CompileShader( vs_5_0, VS_Main() ) );
+        SetGeometryShader( NULL );
+        SetPixelShader( CompileShader( ps_5_0, PS_Main2() ) );
+    }
+    
 }
