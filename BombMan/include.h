@@ -25,6 +25,11 @@
 #define KeyRightLua 101
 #define KeyLeft     'D'
 #define KeyLeftLua  102
+
+#define KEYDOWN(name, key) ( name[key] & 0x80 )
+#define BUTTONDOWN(device, key) ( device.rgbButtons[key] & 0x80 )
+
+#define INITGUID 
 //**********宏定义结束**********
 //************库文件************
 #include <Windows.h>
@@ -42,10 +47,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string>
-#include <DXUT.h>
-#include <DXUTcamera.h>
-#include <DXUTgui.h>
-#include <DXUTsettingsDlg.h>
+#include <dinput.h>
+#include "resource.h"
 
 //****lua库文件****
 extern "C" {  

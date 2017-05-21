@@ -47,5 +47,18 @@
     <ClInclude Include="sysfunc.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="BombMan.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\icon.ico">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

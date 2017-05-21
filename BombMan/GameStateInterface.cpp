@@ -15,8 +15,7 @@ struct VertexPos
 };
 
 
-GameStateInterface::GameStateInterface() : effect_(0),depthTexture_(0),depthStencilView_(0),
-										   inputLayout_(0),colorMap_(0),colorMapSampler_(0),
+GameStateInterface::GameStateInterface() : effect_(0),inputLayout_(0),colorMap_(0),colorMapSampler_(0),
 										   vertexBuffer_(0),solidColorVS_(0),solidColorPS_(0),
 										   alphaBlendState_(0),BackGroundImage_(0)
 {
@@ -33,16 +32,6 @@ GameStateInterface::GameStateInterface() : effect_(0),depthTexture_(0),depthSten
 }
 
 
-GameStateInterface::GameStateInterface(LPCWSTR path) : effect_(0),depthTexture_(0),depthStencilView_(0),
-													inputLayout_(0),colorMap_(0),colorMapSampler_(0),
-													vertexBuffer_(0),solidColorVS_(0),solidColorPS_(0),
-													alphaBlendState_(0)
-{
-	
-	ImagePath = path;
-}
-
-
 GameStateInterface::~GameStateInterface(void)
 {
 
@@ -50,48 +39,7 @@ GameStateInterface::~GameStateInterface(void)
 
 bool GameStateInterface::LoadContent(HWND hwnd)
 {
-
-	RECT WindowSize;
-	GetClientRect(hwnd,&WindowSize );
-
-	unsigned int width = WindowSize.right - WindowSize.left;
-	unsigned int height = WindowSize.bottom - WindowSize.top;
 	HRESULT result;
-	
-	ID3D11Texture2D* backBufferTexture;
-
-	result = swapChain_->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* )&backBufferTexture );
-
-	if( FAILED( result ) )
-	{
-		DXTRACE_MSG( L"Failed to get the swap chain back buffer!" );
-		return false;
-	}
-	//创建渲染目标视图
-	result = d3dDevice_->CreateRenderTargetView( backBufferTexture, 0, &backBufferTarget_ );
-
-	if( backBufferTexture )
-		backBufferTexture->Release( );
-
-	if( FAILED( result ) )
-	{
-		DXTRACE_MSG( L"Failed to create the render target view!" );
-		return false;
-	}
-	
-	
-	d3dContext_->OMSetRenderTargets( 1, &backBufferTarget_, depthStencilView_ );
-
-	D3D11_VIEWPORT viewport;
-	viewport.Width = static_cast<float>( width );
-	viewport.Height = static_cast<float>( height );
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-	viewport.TopLeftX = 0.0f;
-	viewport.TopLeftY = 0.0f;
-
-	d3dContext_->RSSetViewports( 1, &viewport );
-
 	ID3DBlob* buffer = 0;
 	bool compileResult = CompileD3DShader( L"ColorInversion.fx", 0, "fx_5_0", &buffer );
 
@@ -198,8 +146,8 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 	ZeroMemory( &blendDesc, sizeof( blendDesc ) );
 	blendDesc.RenderTarget[0].BlendEnable = TRUE;
 	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ZERO;
 	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
 	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
@@ -235,12 +183,12 @@ bool GameStateInterface::DrawButton(float ButtonStartX,float ButtonStartY, float
 	float thisStartY = ButtonStartY + ( ButtonHeightF * static_cast<float>( 0 ) );
 	float thisEndY = thisStartY + ButtonHeightF;
 
-	spritePtr[0].pos = XMFLOAT3( thisEndX,   thisEndY,   1.0f );
-	spritePtr[1].pos = XMFLOAT3( thisEndX,   thisStartY, 1.0f );
-	spritePtr[2].pos = XMFLOAT3( thisStartX, thisStartY, 1.0f );
-	spritePtr[3].pos = XMFLOAT3( thisStartX, thisStartY, 1.0f );
-	spritePtr[4].pos = XMFLOAT3( thisStartX, thisEndY,   1.0f );
-	spritePtr[5].pos = XMFLOAT3( thisEndX,   thisEndY,   1.0f );
+	spritePtr[0].pos = XMFLOAT3( thisEndX,   thisEndY,   0.0f );
+	spritePtr[1].pos = XMFLOAT3( thisEndX,   thisStartY, 0.0f );
+	spritePtr[2].pos = XMFLOAT3( thisStartX, thisStartY, 0.0f );
+	spritePtr[3].pos = XMFLOAT3( thisStartX, thisStartY, 0.0f );
+	spritePtr[4].pos = XMFLOAT3( thisStartX, thisEndY,   0.0f );
+	spritePtr[5].pos = XMFLOAT3( thisEndX,   thisEndY,   0.0f );
   
 	float tuStartU = tuX + ( tuWidth * static_cast<float>( 0 ) );
 	float tuEndU = tuStartU + tuWidth;
@@ -274,12 +222,12 @@ bool GameStateInterface::DrawBackGround()
 
     VertexPos *spritePtr = ( VertexPos* )mapResource.pData;
 	
-	spritePtr[0].pos = XMFLOAT3(  1.0f,  1.0f, 1.0f );
-	spritePtr[1].pos = XMFLOAT3(  1.0f, -1.0f, 1.0f );
-	spritePtr[2].pos = XMFLOAT3( -1.0f, -1.0f, 1.0f );
-	spritePtr[3].pos = XMFLOAT3( -1.0f, -1.0f, 1.0f );
-	spritePtr[4].pos = XMFLOAT3( -1.0f,  1.0f, 1.0f );
-	spritePtr[5].pos = XMFLOAT3(  1.0f,  1.0f, 1.0f );
+	spritePtr[0].pos = XMFLOAT3(  1.0f,  1.0f, 0.9f );
+	spritePtr[1].pos = XMFLOAT3(  1.0f, -1.0f, 0.9f );
+	spritePtr[2].pos = XMFLOAT3( -1.0f, -1.0f, 0.9f );
+	spritePtr[3].pos = XMFLOAT3( -1.0f, -1.0f, 0.9f );
+	spritePtr[4].pos = XMFLOAT3( -1.0f,  1.0f, 0.9f );
+	spritePtr[5].pos = XMFLOAT3(  1.0f,  1.0f, 0.9f );
 
 	spritePtr[0].tex0 = XMFLOAT2( 1.0f, 0.0f );
 	spritePtr[1].tex0 = XMFLOAT2( 1.0f, 1.0f );
@@ -349,13 +297,14 @@ void GameStateInterface::Render()
         if( pass != 0 && p == 0)
         {
             pass->Apply( 0, d3dContext_ );
-			LuaButtonShow.LuaFuncUse("DrawButtonFunc()");
+			DrawBackGround();
+			
 			//LuaButtonShow.LuaCloseFile();
         }
 		if( pass != 0 && p == 1)
 		{
 			pass->Apply( 0, d3dContext_ );
-			DrawBackGround();
+			LuaButtonShow.LuaFuncUse("DrawButtonFunc()");
 		}
     }
 
@@ -406,7 +355,6 @@ static int LuaInitStartViewIamgePath(lua_State *L)
 	 //返回栈中元素的个数  
     int n = lua_gettop(L);
 
-    LPCWSTR Value;
 	const size_t newsize = 100;
 	int i;  
     for (i = 1; i <= n; i++)  

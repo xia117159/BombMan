@@ -25,12 +25,12 @@ PS_Input VS_Main( VS_Input vertex )
     return vsOut;
 }
 
-float4 PS_Main1( PS_Input frag ) : SV_TARGET
+float4 PS_Main2( PS_Input frag ) : SV_TARGET
 {
     return colorMap.Sample( colorSampler, frag.tex0 );
 }
 
-float4 PS_Main2( PS_Input frag ) : SV_TARGET
+float4 PS_Main1( PS_Input frag ) : SV_TARGET
 {
     return secondMap.Sample( colorSampler, frag.tex0 );
 }

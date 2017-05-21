@@ -56,7 +56,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Effects11.lib;dxut.lib;d2d1.lib;Dwrite.lib;dxerr.lib;d3d11.lib;d3dx11.lib;d3dcompiler.lib;lua51.lib;lua5.1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Effects11.lib;dxut.lib;dinput8.lib;d2d1.lib;Dwrite.lib;dxerr.lib;d3d11.lib;d3dx11.lib;d3dcompiler.lib;lua51.lib;lua5.1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -88,7 +88,14 @@
     <ClInclude Include="GameStateInterface.h" />
     <ClInclude Include="include.h" />
     <ClInclude Include="luaClass.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="sysfunc.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="BombMan.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

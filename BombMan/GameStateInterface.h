@@ -7,7 +7,6 @@ class GameStateInterface :
 {
 public:
 	GameStateInterface();
-	GameStateInterface(LPCWSTR path);
 	~GameStateInterface(void);
 
 	void SetButtonPath(LPCWSTR Path);
@@ -30,8 +29,8 @@ private:
 	LuaClass LuaButtonShow;
 
 	ID3DX11Effect* effect_;
-	ID3D11Texture2D* depthTexture_;
-	ID3D11DepthStencilView* depthStencilView_; //表示深度/模板视图
+	
+	
 	ID3D11InputLayout* inputLayout_; //输入布局
 
 	ID3D11ShaderResourceView* colorMap_;

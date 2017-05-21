@@ -2,7 +2,7 @@
 
 D3DCLASS::D3DCLASS( ) : driverType_( D3D_DRIVER_TYPE_NULL ), featureLevel_( D3D_FEATURE_LEVEL_11_0 ),
                                 d3dDevice_( 0 ), d3dContext_( 0 ), swapChain_( 0 ), backBufferTarget_( 0 ),
-								pD2DFactory_(NULL),pRT_(NULL)
+								pD2DFactory_(NULL),pRT_(NULL),directInput_( 0 ), keyboardDevice_( 0 ), mouseDevice_( 0 )
 {
 
 }
@@ -16,7 +16,6 @@ D3DCLASS::~D3DCLASS( )
 
 bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
 {
-
     hInstance_ = hInstance;
     hwnd_ = hwnd;
 
@@ -117,6 +116,151 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
 		pBackBuffer,
 		&props,
 		&pRT_);
+
+	if( FAILED( result ) )
+	{
+		DXTRACE_MSG( L"Failed to create!" );
+		return false;
+	}
+	
+	ID3D11Texture2D* backBufferTexture;
+
+	result = swapChain_->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* )&backBufferTexture );
+
+	if( FAILED( result ) )
+	{
+		DXTRACE_MSG( L"Failed to get the swap chain back buffer!" );
+		return false;
+	}
+	//创建渲染目标视图
+	result = d3dDevice_->CreateRenderTargetView( backBufferTexture, 0, &backBufferTarget_ );
+
+	if( backBufferTexture )
+		backBufferTexture->Release( );
+
+	if( FAILED( result ) )
+	{
+		DXTRACE_MSG( L"Failed to create the render target view!" );
+		return false;
+	}
+	
+	D3D11_TEXTURE2D_DESC depthTexDesc;
+    ZeroMemory( &depthTexDesc, sizeof( depthTexDesc ) );
+    depthTexDesc.Width = width;
+    depthTexDesc.Height = height;
+    depthTexDesc.MipLevels = 1;
+    depthTexDesc.ArraySize = 1;
+    depthTexDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depthTexDesc.SampleDesc.Count = 1;
+    depthTexDesc.SampleDesc.Quality = 0;
+    depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
+    depthTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    depthTexDesc.CPUAccessFlags = 0;
+    depthTexDesc.MiscFlags = 0;
+
+    result = d3dDevice_->CreateTexture2D( &depthTexDesc, NULL, &depthTexture_ );
+
+    if( FAILED( result ) )
+    {
+        DXTRACE_MSG( L"Failed to create the depth texture!" );
+        return false;
+    }
+
+    // Create the depth stencil view
+    D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+    ZeroMemory( &descDSV, sizeof( descDSV ) );
+    descDSV.Format = depthTexDesc.Format;
+    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    descDSV.Texture2D.MipSlice = 0;
+
+    result = d3dDevice_->CreateDepthStencilView( depthTexture_, &descDSV, &depthStencilView_ );
+
+    if( FAILED( result ) )
+    {
+        DXTRACE_MSG( L"Failed to create the depth stencil target view!" );
+        return false;
+    }
+	
+	d3dContext_->OMSetRenderTargets( 1, &backBufferTarget_, depthStencilView_ );
+
+	D3D11_VIEWPORT viewport;
+	viewport.Width = static_cast<float>( width );
+	viewport.Height = static_cast<float>( height );
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
+	viewport.TopLeftX = 0.0f;
+	viewport.TopLeftY = 0.0f;
+
+	d3dContext_->RSSetViewports( 1, &viewport );
+
+	ZeroMemory( keyboardKeys_, sizeof( keyboardKeys_ ) );
+    ZeroMemory( prevKeyboardKeys_, sizeof( prevKeyboardKeys_ ) );
+
+    result = DirectInput8Create( hInstance_, DIRECTINPUT_VERSION, IID_IDirectInput8, ( void** )&directInput_, 0 );
+
+    if( FAILED( result ) )
+    { 
+        return false;
+    }
+
+    result = directInput_->CreateDevice( GUID_SysKeyboard, &keyboardDevice_, 0 );
+
+    if( FAILED( result ) )
+    { 
+        return false;
+    }
+
+    result = keyboardDevice_->SetDataFormat( &c_dfDIKeyboard );
+
+    if( FAILED( result ) )
+    { 
+        return false;
+    }
+
+    result = keyboardDevice_->SetCooperativeLevel( hwnd_, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE );
+
+    if( FAILED( result ) )
+    { 
+        return false;
+    }
+
+    result = keyboardDevice_->Acquire( );
+
+    if( FAILED( result ) )
+    { 
+        return false;
+    }
+
+    mousePosX_ = mousePosY_ = mouseWheel_ = 0;
+
+    result = directInput_->CreateDevice( GUID_SysMouse, &mouseDevice_, 0 );
+
+    if( FAILED( result ) )
+    { 
+        return false;
+    }
+
+    result = mouseDevice_->SetDataFormat( &c_dfDIMouse );
+
+    if( FAILED( result ) )
+    { 
+        return false;
+    }
+
+    result = mouseDevice_->SetCooperativeLevel( hwnd_, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE );
+
+    if( FAILED( result ) )
+    { 
+        return false;
+    }
+
+    result = mouseDevice_->Acquire( );
+
+    if( FAILED( result ) )
+    { 
+        return false;
+    }
+
 	return LoadContent(hwnd);;
 }
 

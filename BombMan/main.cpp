@@ -114,8 +114,8 @@ HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
     wcex.cbWndExtra = 0;
     wcex.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
     wcex.hCursor = LoadCursor(NULL,IDC_ARROW);
-    wcex.hIcon = LoadIcon(NULL, IDI_WINLOGO);
-    wcex.hIconSm = wcex.hIcon;
+    wcex.hIcon = LoadIcon(hInstance,MAKEINTRESOURCE(IDI_ICON1));
+	wcex.hIconSm = LoadIcon(hInstance,MAKEINTRESOURCE(IDI_ICON1));
     wcex.hInstance = hInstance;
     wcex.lpfnWndProc = WndProc;
     wcex.lpszClassName = GameTitle;
@@ -126,7 +126,7 @@ HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
 
     RECT rc = { 0, 0, WindowsWidth,WindowsHeight };
     AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-    hwnd = CreateWindowEx(WS_EX_APPWINDOW, GameTitle, GameTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
+    hwnd = CreateWindowEx(WS_EX_APPWINDOW, GameTitle, GameTitle, WS_OVERLAPPEDWINDOW^WS_THICKFRAME^WS_MAXIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT,
         rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
     if (!hwnd)
         return E_FAIL;

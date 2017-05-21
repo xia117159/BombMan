@@ -3,8 +3,6 @@
 
 #include "include.h"
 
-
-
 template<class Interface>
 inline void
 SafeRelease(
@@ -50,6 +48,21 @@ class D3DCLASS
         ID3D11RenderTargetView* backBufferTarget_;
 		ID2D1Factory *pD2DFactory_; //所有根工厂接口
 		ID2D1RenderTarget *pRT_;
+		ID3D11DepthStencilView* depthStencilView_; //表示深度/模板视图
+		ID3D11Texture2D* depthTexture_;
+
+		LPDIRECTINPUT8 directInput_;
+        
+        LPDIRECTINPUTDEVICE8 keyboardDevice_; //键盘设备
+		char keyboardKeys_[256];      //目前键盘按键
+        char prevKeyboardKeys_[256];  //之前键盘按键
+
+        LPDIRECTINPUTDEVICE8 mouseDevice_;//鼠标设备
+        DIMOUSESTATE mouseState_;     //目前鼠标状态
+        DIMOUSESTATE prevMouseState_; //之前鼠标状态
+        long mousePosX_;  //鼠标x坐标
+        long mousePosY_;  //鼠标y坐标
+        long mouseWheel_; //滚轮
 };
 
 #endif
