@@ -21,10 +21,10 @@ FirstButtonUpOrDownMove = 0.0;
 
 
 --按键值设定，改变无用！
-KeyUpLua    = 99
-KeyDownLua  = 100
-KeyRightLua = 101
-KeyLeftLua  = 102
+KeyUpLua    = 0x11
+KeyDownLua  = 0x1F
+KeyRightLua = 0x1E
+KeyLeftLua  = 0x20
 
 CharacterRate = 0.005
 
@@ -38,7 +38,7 @@ function DrawButtonFunc()
 end
 
 function FirstButtonMove(key)
-	
+
 	if(key == KeyUpLua) then
 		FirstButtonUpOrDownMove = FirstButtonUpOrDownMove + CharacterRate;
 	elseif (key == KeyDownLua) then

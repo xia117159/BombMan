@@ -79,15 +79,19 @@
   <ItemGroup>
     <ClCompile Include="D3DCLASS.cpp" />
     <ClCompile Include="GameStateInterface.cpp" />
+    <ClCompile Include="KeyBoard.cpp" />
     <ClCompile Include="luaClass.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MouseControl.cpp" />
     <ClCompile Include="sysfunc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3DCLASS.h" />
     <ClInclude Include="GameStateInterface.h" />
     <ClInclude Include="include.h" />
+    <ClInclude Include="KeyBoard.h" />
     <ClInclude Include="luaClass.h" />
+    <ClInclude Include="MouseControl.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="sysfunc.h" />
   </ItemGroup>

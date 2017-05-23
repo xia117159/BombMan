@@ -16,15 +16,6 @@
 #define tuHeight               ( ButtonHeight / ButtonImageHeight )
 
 
-//************¿âÎÄ¼þ************
-#define KeyUp       'W'
-#define KeyUpLua    99
-#define KeyDown     'S'
-#define KeyDownLua  100
-#define KeyRight    'A'
-#define KeyRightLua 101
-#define KeyLeft     'D'
-#define KeyLeftLua  102
 
 #define KEYDOWN(name, key) ( name[key] & 0x80 )
 #define BUTTONDOWN(device, key) ( device.rgbButtons[key] & 0x80 )
@@ -47,6 +38,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string>
+#include <dinput.h>
 #include <dinput.h>
 #include "resource.h"
 

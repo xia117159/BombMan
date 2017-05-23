@@ -1,9 +1,13 @@
 #include "include.h"
+#include "MouseControl.h"
+#include "KeyBoard.h"
 #include "GameStateInterface.h"
 //*******************全局变量定义区*******************
 //窗口句柄定义
 HWND hwnd = NULL;
 GameStateInterface demo;
+KeyBoard TempKeyDetect;
+MouseControl MouseDetect;
 //************************结束************************
 //*********************函数声明区*********************
 LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam );
@@ -11,7 +15,6 @@ HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
 static void MainMenuLoop();
 static void KeyControl();
 //************************结束************************
-
 
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine, int cmdShow )
 {
@@ -25,7 +28,9 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine
 	if( result == false )
         return -1;
 
-	
+	TempKeyDetect.Initialize(hInstance, hwnd);
+	MouseDetect.Initialize(hInstance, hwnd);
+
     MSG msg = { 0 };
     while( msg.message != WM_QUIT )
     {
@@ -66,14 +71,16 @@ static void MainMenuLoop()
 
 static void KeyControl()
 {
-	if(GetAsyncKeyState(KeyUp) & 0x8000)
-		demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", KeyUpLua);
-	else if(GetAsyncKeyState(KeyDown) & 0x8000)
-		demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", KeyDownLua);
-	else if(GetAsyncKeyState(KeyRight) & 0x8000)
-		demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", KeyRightLua);
-	else if(GetAsyncKeyState(KeyLeft) & 0x8000)
-		demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", KeyLeftLua);
+	if(MouseDetect.DetectMouse( 0, 0, 1000, 600) == MouseLeftDown)demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", DIK_W);
+
+	if(TempKeyDetect.DetectKey(DIK_W))
+		demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", DIK_W);
+	else if(TempKeyDetect.DetectKey(DIK_D))
+		demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", DIK_D);
+	else if(TempKeyDetect.DetectKey(DIK_S))
+		demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", DIK_S);
+	else if(TempKeyDetect.DetectKey(DIK_A))
+		demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", DIK_A);
 }
 
 

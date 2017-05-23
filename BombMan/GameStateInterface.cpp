@@ -32,8 +32,14 @@ GameStateInterface::GameStateInterface() : effect_(0),inputLayout_(0),colorMap_(
 }
 
 
+
+
+
+
+
 GameStateInterface::~GameStateInterface(void)
 {
+
 
 }
 
@@ -245,8 +251,48 @@ void GameStateInterface::UnloadContent( )
 {
 }
 
-void GameStateInterface::Update( float dt )
+void GameStateInterface::Update( float dt)
 {
+	//keyboardDevice_->GetDeviceState( sizeof( keyboardKeys_ ), ( LPVOID )&keyboardKeys_ );
+ //   //mouseDevice_->GetDeviceState( sizeof ( mouseState_ ), ( LPVOID ) &mouseState_ );
+
+ //   // Button press event.
+	////if( KEYDOWN( keyboardKeys_, DIK_ESCAPE ) )
+ //   if( GetAsyncKeyState( VK_ESCAPE ) )
+	//{ 
+	//	PostQuitMessage( 0 );
+	//}
+
+ //   // Button up event.
+	//if( KEYDOWN( prevKeyboardKeys_, DIK_1 ) && KEYDOWN( keyboardKeys_, DIK_1 ))
+	//{ 
+	//	LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", KeyDownLua);
+	//}
+
+ //   // Button up event.
+	//if( KEYDOWN( prevKeyboardKeys_, DIK_UP ) && !KEYDOWN( keyboardKeys_, DIK_UP ) )
+	//{ 
+	//	
+	//}
+
+ //   //if( BUTTONDOWN( mouseState_, 0 ) && !BUTTONDOWN( prevMouseState_, 0 ) ) 
+ //   //{
+ //   //    
+ //   //}
+
+ //   //if( BUTTONDOWN( mouseState_, 1 ) && !BUTTONDOWN( prevMouseState_, 1 ) )
+ //   //{ 
+ //   //    
+ //   //} 
+
+ //   //mousePosX_ += mouseState_.lX;
+ //   //mousePosY_ += mouseState_.lY;
+ //   //mouseWheel_ += mouseState_.lZ;
+
+
+ //   memcpy( prevKeyboardKeys_, keyboardKeys_, sizeof( keyboardKeys_ ) );
+ //   //memcpy( &prevMouseState_, &mouseState_, sizeof( mouseState_ ) );
+
 
 }
 

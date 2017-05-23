@@ -2,7 +2,7 @@
 
 D3DCLASS::D3DCLASS( ) : driverType_( D3D_DRIVER_TYPE_NULL ), featureLevel_( D3D_FEATURE_LEVEL_11_0 ),
                                 d3dDevice_( 0 ), d3dContext_( 0 ), swapChain_( 0 ), backBufferTarget_( 0 ),
-								pD2DFactory_(NULL),pRT_(NULL),directInput_( 0 ), keyboardDevice_( 0 ), mouseDevice_( 0 )
+								pD2DFactory_(NULL),pRT_(NULL)//,directInput_( 0 ), keyboardDevice_( 0 ), mouseDevice_( 0 )
 {
 
 }
@@ -193,7 +193,7 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
 
 	d3dContext_->RSSetViewports( 1, &viewport );
 
-	ZeroMemory( keyboardKeys_, sizeof( keyboardKeys_ ) );
+	/*ZeroMemory( keyboardKeys_, sizeof( keyboardKeys_ ) );
     ZeroMemory( prevKeyboardKeys_, sizeof( prevKeyboardKeys_ ) );
 
     result = DirectInput8Create( hInstance_, DIRECTINPUT_VERSION, IID_IDirectInput8, ( void** )&directInput_, 0 );
@@ -259,7 +259,7 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
     if( FAILED( result ) )
     { 
         return false;
-    }
+    }*/
 
 	return LoadContent(hwnd);;
 }

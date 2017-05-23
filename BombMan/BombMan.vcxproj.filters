@@ -30,6 +30,12 @@
     <ClCompile Include="sysfunc.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="KeyBoard.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseControl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3DCLASS.h">
@@ -48,6 +54,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyBoard.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseControl.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
