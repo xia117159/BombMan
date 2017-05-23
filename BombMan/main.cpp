@@ -2,6 +2,7 @@
 #include "MouseControl.h"
 #include "KeyBoard.h"
 #include "GameStateInterface.h"
+#include "sysfunc.h"
 //*******************全局变量定义区*******************
 //窗口句柄定义
 HWND hwnd = NULL;
@@ -44,7 +45,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine
 			const int constFps = 60;
 			float timeInOneFps = 1000.0f/constFps;    // 每秒60帧，则1帧就是约16毫秒
 			DWORD timeBegin = GetTickCount();
- 
+			
 		    //主循环函数
 			MainMenuLoop();
  
@@ -71,7 +72,7 @@ static void MainMenuLoop()
 
 static void KeyControl()
 {
-	if(MouseDetect.DetectMouse( 0, 0, 1000, 600) == MouseLeftDown)demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", DIK_W);
+	if(MouseDetect.DetectMouse(0, 0, 100, 100) == MouseHover)demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", DIK_W);
 
 	if(TempKeyDetect.DetectKey(DIK_W))
 		demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", DIK_W);

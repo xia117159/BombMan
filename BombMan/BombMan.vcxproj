@@ -79,6 +79,7 @@
   <ItemGroup>
     <ClCompile Include="D3DCLASS.cpp" />
     <ClCompile Include="GameStateInterface.cpp" />
+    <ClCompile Include="GetMatrix.cpp" />
     <ClCompile Include="KeyBoard.cpp" />
     <ClCompile Include="luaClass.cpp" />
     <ClCompile Include="main.cpp" />
@@ -88,6 +89,7 @@
   <ItemGroup>
     <ClInclude Include="D3DCLASS.h" />
     <ClInclude Include="GameStateInterface.h" />
+    <ClInclude Include="GetMatrix.h" />
     <ClInclude Include="include.h" />
     <ClInclude Include="KeyBoard.h" />
     <ClInclude Include="luaClass.h" />

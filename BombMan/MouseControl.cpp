@@ -1,5 +1,5 @@
 #include "MouseControl.h"
-
+#include "sysfunc.h"
 MouseControl::MouseControl() : directInput_( 0 ), mouseDevice_( 0 )
 {
 
@@ -18,8 +18,14 @@ bool MouseControl::Initialize( HINSTANCE hInstance, HWND hwnd )
 	hwnd_ = hwnd;
 	HRESULT result;
 
+	POINT p;
+	GetCursorPos(&p);
+	ScreenToClient(hwnd,&p);
+	mousePosX_ = p.x;
+	mousePosY_ = p.y;
+	mouseWheel_ = 0;
 
-	mousePosX_ = mousePosY_ = mouseWheel_ = 0;
+
 
 	result = DirectInput8Create( hInstance_, DIRECTINPUT_VERSION, IID_IDirectInput8, ( void** )&directInput_, 0 );
 
@@ -69,10 +75,12 @@ int MouseControl::DetectMouse(float startX, float startY, float endX, float endY
 	mouseWheel_ += mouseState_.lZ;
 
 	//MessageBox(NULL, mousePosX_, mousePosY_, MB_OK);
+	/*char buf1[100];
+	sprintf(buf1,"mousePosX_：%ld，mouseState_.lX：%ld",mousePosX_,mouseState_.lX);*/
 
 	if( ( startX < mousePosX_  && mousePosX_ < endX ) && ( startY < mousePosY_  && mousePosY_< endY ) )
 	{
-		MessageBox(NULL, TEXT("标题"), TEXT("内容"), MB_OK);
+		//MessageBox(NULL, AnsiToUnicode(buf1), TEXT("标题"), MB_OK);
 		if( MOUSEDOWN( prevMouseState_, 0 ) && !MOUSEDOWN( mouseState_, 0 ) ) 
 		{
 			return MouseLeftUp;

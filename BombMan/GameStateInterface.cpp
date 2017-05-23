@@ -16,8 +16,7 @@ struct VertexPos
 
 
 GameStateInterface::GameStateInterface() : effect_(0),inputLayout_(0),colorMap_(0),colorMapSampler_(0),
-										   vertexBuffer_(0),solidColorVS_(0),solidColorPS_(0),
-										   alphaBlendState_(0),BackGroundImage_(0)
+										   vertexBuffer_(0),alphaBlendState_(0),BackGroundImage_(0),mvpCB_(0)
 {
 	BackGroundImage = ImagePath = NULL;
 	LuaClass setImagePath("lua/StartButton.lua");
@@ -47,7 +46,7 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 {
 	HRESULT result;
 	ID3DBlob* buffer = 0;
-	bool compileResult = CompileD3DShader( L"ColorInversion.fx", 0, "fx_5_0", &buffer );
+	bool compileResult = CompileD3DShader( L"StartInterface.fx", 0, "fx_5_0", &buffer );
 
 	if( compileResult == false )
 	{
@@ -77,7 +76,7 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 	unsigned int totalLayoutElements = ARRAYSIZE( solidColorLayout );
 
 	ID3DX11EffectTechnique* colorInvTechnique;
-	colorInvTechnique = effect_->GetTechniqueByName( "ColorInversion" );
+	colorInvTechnique = effect_->GetTechniqueByName( "StartInterface" );
 	ID3DX11EffectPass* effectPass = colorInvTechnique->GetPassByIndex( 0 );
 
 	D3DX11_PASS_SHADER_DESC passDesc;
@@ -147,6 +146,23 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 		DXTRACE_MSG( L"Failed to create vertex buffer!" );
 		return false;
 	}
+
+	D3D11_BUFFER_DESC constDesc;
+	ZeroMemory( &constDesc, sizeof( constDesc ) );
+	constDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	constDesc.ByteWidth = sizeof( XMMATRIX );
+	constDesc.Usage = D3D11_USAGE_DEFAULT;
+
+	result = d3dDevice_->CreateBuffer( &constDesc, 0, &mvpCB_ );
+
+	if( FAILED( result ) )
+    {
+        return false;
+    }
+
+	XMMATRIX view = XMMatrixIdentity( );
+    XMMATRIX projection = XMMatrixOrthographicOffCenterLH( 0.0f, 1000.0f, 0.0f, 600.0f, 0.1f, 100.0f );
+    vpMatrix_ = XMMatrixMultiply( view, projection );
 
 	D3D11_BLEND_DESC blendDesc;
 	ZeroMemory( &blendDesc, sizeof( blendDesc ) );
@@ -224,23 +240,57 @@ bool GameStateInterface::DrawBackGround()
         DXTRACE_MSG( L"Failed to map resource!" );
         return false;
     }
-   
+
+	XMFLOAT2 sprite1Pos( 500.0f, 300.0f );
+    image[0].SetPosition( sprite1Pos );
+
+	ID3D11Resource* colorTex;
+    colorMap_->GetResource( &colorTex );
+
+	D3D11_TEXTURE2D_DESC colorTexDesc;
+    ( ( ID3D11Texture2D* )colorTex )->GetDesc( &colorTexDesc );
+    colorTex->Release( );
+
+    float halfWidth = ( float )colorTexDesc.Width / 2.0f;
+    float halfHeight = ( float )colorTexDesc.Height / 2.0f;
 
     VertexPos *spritePtr = ( VertexPos* )mapResource.pData;
 	
-	spritePtr[0].pos = XMFLOAT3(  1.0f,  1.0f, 0.9f );
-	spritePtr[1].pos = XMFLOAT3(  1.0f, -1.0f, 0.9f );
-	spritePtr[2].pos = XMFLOAT3( -1.0f, -1.0f, 0.9f );
-	spritePtr[3].pos = XMFLOAT3( -1.0f, -1.0f, 0.9f );
-	spritePtr[4].pos = XMFLOAT3( -1.0f,  1.0f, 0.9f );
-	spritePtr[5].pos = XMFLOAT3(  1.0f,  1.0f, 0.9f );
+	spritePtr[0].pos =XMFLOAT3(  halfWidth,  halfHeight, 1.0f );
+    spritePtr[1].pos =XMFLOAT3(  halfWidth, -halfHeight, 1.0f );
+    spritePtr[2].pos =XMFLOAT3( -halfWidth, -halfHeight, 1.0f );
+
+    spritePtr[3].pos =XMFLOAT3( -halfWidth, -halfHeight, 1.0f );
+    spritePtr[4].pos =XMFLOAT3( -halfWidth,  halfHeight, 1.0f );
+    spritePtr[5].pos =XMFLOAT3(  halfWidth,  halfHeight, 1.0f );
+
+	spritePtr[0].tex0 = XMFLOAT2( 1.0f, 0.0f );
+	spritePtr[1].tex0 =  XMFLOAT2( 1.0f, 1.0f );
+	spritePtr[2].tex0 = XMFLOAT2( 0.0f, 1.0f );
+	spritePtr[3].tex0 = XMFLOAT2( 0.0f, 1.0f );
+	spritePtr[4].tex0 = XMFLOAT2( 0.0f, 0.0f );
+	spritePtr[5].tex0 = XMFLOAT2( 1.0f, 0.0f );
+	/*spritePtr[0].pos = XMFLOAT3(  100.0,  100.0, 0.9f );
+	spritePtr[1].pos = XMFLOAT3(  100.0, 0, 0.9f );
+	spritePtr[2].pos = XMFLOAT3( 0, 0, 0.9f );
+	spritePtr[3].pos = XMFLOAT3( 0,0, 0.9f );
+	spritePtr[4].pos = XMFLOAT3( 0,  100.0, 0.9f );
+	spritePtr[5].pos = XMFLOAT3(  100.0,  100.0, 0.9f );
 
 	spritePtr[0].tex0 = XMFLOAT2( 1.0f, 0.0f );
 	spritePtr[1].tex0 = XMFLOAT2( 1.0f, 1.0f );
 	spritePtr[2].tex0 = XMFLOAT2( 0.0f, 1.0f );
 	spritePtr[3].tex0 = XMFLOAT2( 0.0f, 1.0f );
 	spritePtr[4].tex0 = XMFLOAT2( 0.0f, 0.0f );
-	spritePtr[5].tex0 = XMFLOAT2( 1.0f, 0.0f );
+	spritePtr[5].tex0 = XMFLOAT2( 1.0f, 0.0f );*/
+
+	XMMATRIX world = image[0].GetWorldMatrix( );
+    XMMATRIX mvp = XMMatrixMultiply( world, vpMatrix_ );
+    mvp = XMMatrixTranspose( mvp );
+
+    d3dContext_->UpdateSubresource( mvpCB_, 0, 0, &mvp, 0, 0 );
+    d3dContext_->VSSetConstantBuffers( 0, 1, &mvpCB_ );
+
 	d3dContext_->Unmap( vertexBuffer_, 0 );
 	d3dContext_->Draw( 6, 0 );
 	return  true;
@@ -319,7 +369,7 @@ void GameStateInterface::Render()
     d3dContext_->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
     ID3DX11EffectShaderResourceVariable* colorMap;
-    colorMap = effect_->GetVariableByName( "colorMap" )->AsShaderResource( );
+    colorMap = effect_->GetVariableByName( "firstMap" )->AsShaderResource( );
     colorMap->SetResource( colorMap_ );
 
     ID3DX11EffectSamplerVariable* colorMapSampler;
@@ -331,7 +381,7 @@ void GameStateInterface::Render()
     BackGroundMap->SetResource( BackGroundImage_ );
 
     ID3DX11EffectTechnique* colorInvTechnique;
-    colorInvTechnique = effect_->GetTechniqueByName( "ColorInversion" );
+    colorInvTechnique = effect_->GetTechniqueByName( "StartInterface" );
 
     D3DX11_TECHNIQUE_DESC techDesc;
     colorInvTechnique->GetDesc( &techDesc );
