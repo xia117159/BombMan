@@ -7,6 +7,7 @@
 //窗口句柄定义
 HWND hwnd = NULL;
 GameStateInterface demo;
+LuaClass LuaConnect;//全局lua接口连接对象
 KeyBoard TempKeyDetect;
 MouseControl MouseDetect;
 //************************结束************************
@@ -15,11 +16,14 @@ LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam 
 HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
 static void MainMenuLoop();
 static void KeyControl();
+void LuaInterfaceInit();
 //************************结束************************
 
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine, int cmdShow )
 {
     
+	LuaInterfaceInit();
+
 	if (FAILED(InitWindow(hInstance, cmdShow)))
         return 0;
 
@@ -32,6 +36,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine
 	TempKeyDetect.Initialize(hInstance, hwnd);
 	MouseDetect.Initialize(hInstance, hwnd);
 
+	
     MSG msg = { 0 };
     while( msg.message != WM_QUIT )
     {
@@ -72,16 +77,7 @@ static void MainMenuLoop()
 
 static void KeyControl()
 {
-	if(MouseDetect.DetectMouse(0, 0, 100, 100) == MouseHover)demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", DIK_W);
-
-	if(TempKeyDetect.DetectKey(DIK_W))
-		demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", DIK_W);
-	else if(TempKeyDetect.DetectKey(DIK_D))
-		demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", DIK_D);
-	else if(TempKeyDetect.DetectKey(DIK_S))
-		demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", DIK_S);
-	else if(TempKeyDetect.DetectKey(DIK_A))
-		demo.LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", DIK_A);
+	LuaConnect.LuaFuncUse("FirstButtonMove()");
 }
 
 

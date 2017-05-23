@@ -39,6 +39,9 @@
     <ClCompile Include="GetMatrix.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="LuaInterface.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3DCLASS.h">

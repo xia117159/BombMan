@@ -2,9 +2,8 @@
 #include "luaClass.h"
 #include "sysfunc.h"
 
-static int LuaDrawButton(lua_State *L);
-static int LuaInitStartViewIamgePath(lua_State *L);
 
+extern LuaClass LuaConnect;
 
 
 struct VertexPos
@@ -15,19 +14,10 @@ struct VertexPos
 };
 
 
-GameStateInterface::GameStateInterface() : effect_(0),inputLayout_(0),colorMap_(0),colorMapSampler_(0),
-										   vertexBuffer_(0),alphaBlendState_(0),BackGroundImage_(0),mvpCB_(0)
+GameStateInterface::GameStateInterface() : effect_(0),inputLayout_(0),ImageMap_(0),colorMapSampler_(0),
+										   vertexBuffer_(0),alphaBlendState_(0),/*,BackGroundImage_(0),*/mvpCB_(0)
 {
-	BackGroundImage = ImagePath = NULL;
-	LuaClass setImagePath("lua/StartButton.lua");
-	setImagePath.CFuncRegister("LuaInitStartViewIamgePath", LuaInitStartViewIamgePath);
-	setImagePath.LuaDoFile();
-	setImagePath.LuaFuncUse("SetButtonImagePath()");
-	setImagePath.LuaCloseFile();
-	LuaButtonShow.SetLuaFile("lua/StartButton.lua");
-	LuaButtonShow.CFuncRegister("LuaDrawButton", LuaDrawButton);
-	LuaButtonShow.LuaDoFile();
-
+	ImagePath = NULL;
 }
 
 
@@ -96,7 +86,7 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 	}
 
 	result = D3DX11CreateShaderResourceViewFromFile( d3dDevice_,
-		ImagePath, 0, 0, &colorMap_, 0 );
+		ImagePath, 0, 0, &ImageMap_, 0 );
 
 	if( FAILED( result ) )
 	{
@@ -104,14 +94,14 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 		return false;
 	}
 
-	result = D3DX11CreateShaderResourceViewFromFile( d3dDevice_,
-		BackGroundImage, 0, 0, &BackGroundImage_, 0 );
+	//result = D3DX11CreateShaderResourceViewFromFile( d3dDevice_,
+	//	BackGroundImage, 0, 0, &BackGroundImage_, 0 );
 
-	if( FAILED( result ) )
-	{
-		DXTRACE_MSG( L"Failed to load the texture image!" );
-		return false;
-	}
+	//if( FAILED( result ) )
+	//{
+	//	DXTRACE_MSG( L"Failed to load the texture image!" );
+	//	return false;
+	//}
 
 	D3D11_SAMPLER_DESC colorMapDesc;
 	ZeroMemory( &colorMapDesc, sizeof( colorMapDesc ) );
@@ -241,48 +231,28 @@ bool GameStateInterface::DrawBackGround()
         return false;
     }
 
-	XMFLOAT2 sprite1Pos( 500.0f, 300.0f );
+	XMFLOAT2 sprite1Pos( 0.0f, 0.0f );
     image[0].SetPosition( sprite1Pos );
 
-	ID3D11Resource* colorTex;
-    colorMap_->GetResource( &colorTex );
-
-	D3D11_TEXTURE2D_DESC colorTexDesc;
-    ( ( ID3D11Texture2D* )colorTex )->GetDesc( &colorTexDesc );
-    colorTex->Release( );
-
-    float halfWidth = ( float )colorTexDesc.Width / 2.0f;
-    float halfHeight = ( float )colorTexDesc.Height / 2.0f;
+    float halfWidth = 1000;
+    float halfHeight = 600;
 
     VertexPos *spritePtr = ( VertexPos* )mapResource.pData;
 	
-	spritePtr[0].pos =XMFLOAT3(  halfWidth,  halfHeight, 1.0f );
-    spritePtr[1].pos =XMFLOAT3(  halfWidth, -halfHeight, 1.0f );
-    spritePtr[2].pos =XMFLOAT3( -halfWidth, -halfHeight, 1.0f );
+	spritePtr[0].pos =XMFLOAT3(  halfWidth, halfHeight, 1.0f );
+    spritePtr[1].pos =XMFLOAT3(  halfWidth, 0,          1.0f );
+    spritePtr[2].pos =XMFLOAT3(  0,         0,          1.0f );
 
-    spritePtr[3].pos =XMFLOAT3( -halfWidth, -halfHeight, 1.0f );
-    spritePtr[4].pos =XMFLOAT3( -halfWidth,  halfHeight, 1.0f );
-    spritePtr[5].pos =XMFLOAT3(  halfWidth,  halfHeight, 1.0f );
-
-	spritePtr[0].tex0 = XMFLOAT2( 1.0f, 0.0f );
-	spritePtr[1].tex0 =  XMFLOAT2( 1.0f, 1.0f );
-	spritePtr[2].tex0 = XMFLOAT2( 0.0f, 1.0f );
-	spritePtr[3].tex0 = XMFLOAT2( 0.0f, 1.0f );
-	spritePtr[4].tex0 = XMFLOAT2( 0.0f, 0.0f );
-	spritePtr[5].tex0 = XMFLOAT2( 1.0f, 0.0f );
-	/*spritePtr[0].pos = XMFLOAT3(  100.0,  100.0, 0.9f );
-	spritePtr[1].pos = XMFLOAT3(  100.0, 0, 0.9f );
-	spritePtr[2].pos = XMFLOAT3( 0, 0, 0.9f );
-	spritePtr[3].pos = XMFLOAT3( 0,0, 0.9f );
-	spritePtr[4].pos = XMFLOAT3( 0,  100.0, 0.9f );
-	spritePtr[5].pos = XMFLOAT3(  100.0,  100.0, 0.9f );
+    spritePtr[3].pos =XMFLOAT3(  0,         0,          1.0f );
+    spritePtr[4].pos =XMFLOAT3(  0,         halfHeight, 1.0f );
+    spritePtr[5].pos =XMFLOAT3(  halfWidth, halfHeight, 1.0f );
 
 	spritePtr[0].tex0 = XMFLOAT2( 1.0f, 0.0f );
 	spritePtr[1].tex0 = XMFLOAT2( 1.0f, 1.0f );
 	spritePtr[2].tex0 = XMFLOAT2( 0.0f, 1.0f );
 	spritePtr[3].tex0 = XMFLOAT2( 0.0f, 1.0f );
 	spritePtr[4].tex0 = XMFLOAT2( 0.0f, 0.0f );
-	spritePtr[5].tex0 = XMFLOAT2( 1.0f, 0.0f );*/
+	spritePtr[5].tex0 = XMFLOAT2( 1.0f, 0.0f );
 
 	XMMATRIX world = image[0].GetWorldMatrix( );
     XMMATRIX mvp = XMMatrixMultiply( world, vpMatrix_ );
@@ -296,6 +266,52 @@ bool GameStateInterface::DrawBackGround()
 	return  true;
 }
 
+bool GameStateInterface::DrawImage(float StartX,float StartY, float Width, float Height,float tuStartX, float tuEndX, float tuStartY, float tuEndY, float Priority)
+{
+	HRESULT result;
+	D3D11_MAPPED_SUBRESOURCE mapResource;
+    result = d3dContext_->Map( vertexBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapResource );
+
+	if( FAILED( result ) )
+    {
+        DXTRACE_MSG( L"Failed to map resource!" );
+        return false;
+    }
+
+	XMFLOAT2 sprite1Pos( StartX, StartY);
+    image[0].SetPosition( sprite1Pos );
+
+    VertexPos *spritePtr = ( VertexPos* )mapResource.pData;
+	
+	spritePtr[0].pos =XMFLOAT3(  Width, Height, Priority );
+    spritePtr[1].pos =XMFLOAT3(  Width, 0,      Priority );
+    spritePtr[2].pos =XMFLOAT3(  0,     0,      Priority );
+    spritePtr[3].pos =XMFLOAT3(  0,     0,      Priority );
+    spritePtr[4].pos =XMFLOAT3(  0,     Height, Priority );
+    spritePtr[5].pos =XMFLOAT3(  Width, Height, Priority );
+
+
+	spritePtr[0].tex0 = XMFLOAT2( tuEndX,   tuStartY);
+	spritePtr[1].tex0 = XMFLOAT2( tuEndX,   tuEndY);
+	spritePtr[2].tex0 = XMFLOAT2( tuStartX,	tuEndY );
+	spritePtr[3].tex0 = XMFLOAT2( tuStartX,	tuEndY );
+	spritePtr[4].tex0 = XMFLOAT2( tuStartX, tuStartY );
+	spritePtr[5].tex0 = XMFLOAT2( tuEndX,   tuStartY );
+
+	XMMATRIX world = image[0].GetWorldMatrix( );
+    XMMATRIX mvp = XMMatrixMultiply( world, vpMatrix_ );
+    mvp = XMMatrixTranspose( mvp );
+
+    d3dContext_->UpdateSubresource( mvpCB_, 0, 0, &mvp, 0, 0 );
+    d3dContext_->VSSetConstantBuffers( 0, 1, &mvpCB_ );
+
+	d3dContext_->Unmap( vertexBuffer_, 0 );
+	d3dContext_->Draw( 6, 0 );
+
+	return  true;
+}
+
+
 
 void GameStateInterface::UnloadContent( )
 {
@@ -303,46 +319,6 @@ void GameStateInterface::UnloadContent( )
 
 void GameStateInterface::Update( float dt)
 {
-	//keyboardDevice_->GetDeviceState( sizeof( keyboardKeys_ ), ( LPVOID )&keyboardKeys_ );
- //   //mouseDevice_->GetDeviceState( sizeof ( mouseState_ ), ( LPVOID ) &mouseState_ );
-
- //   // Button press event.
-	////if( KEYDOWN( keyboardKeys_, DIK_ESCAPE ) )
- //   if( GetAsyncKeyState( VK_ESCAPE ) )
-	//{ 
-	//	PostQuitMessage( 0 );
-	//}
-
- //   // Button up event.
-	//if( KEYDOWN( prevKeyboardKeys_, DIK_1 ) && KEYDOWN( keyboardKeys_, DIK_1 ))
-	//{ 
-	//	LuaButtonShow.LuaFuncUse("FirstButtonMove(%d)", KeyDownLua);
-	//}
-
- //   // Button up event.
-	//if( KEYDOWN( prevKeyboardKeys_, DIK_UP ) && !KEYDOWN( keyboardKeys_, DIK_UP ) )
-	//{ 
-	//	
-	//}
-
- //   //if( BUTTONDOWN( mouseState_, 0 ) && !BUTTONDOWN( prevMouseState_, 0 ) ) 
- //   //{
- //   //    
- //   //}
-
- //   //if( BUTTONDOWN( mouseState_, 1 ) && !BUTTONDOWN( prevMouseState_, 1 ) )
- //   //{ 
- //   //    
- //   //} 
-
- //   //mousePosX_ += mouseState_.lX;
- //   //mousePosY_ += mouseState_.lY;
- //   //mouseWheel_ += mouseState_.lZ;
-
-
- //   memcpy( prevKeyboardKeys_, keyboardKeys_, sizeof( keyboardKeys_ ) );
- //   //memcpy( &prevMouseState_, &mouseState_, sizeof( mouseState_ ) );
-
 
 }
 
@@ -368,17 +344,13 @@ void GameStateInterface::Render()
     d3dContext_->IASetVertexBuffers( 0, 1, &vertexBuffer_, &stride, &offset );
     d3dContext_->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
-    ID3DX11EffectShaderResourceVariable* colorMap;
-    colorMap = effect_->GetVariableByName( "firstMap" )->AsShaderResource( );
-    colorMap->SetResource( colorMap_ );
+    
 
     ID3DX11EffectSamplerVariable* colorMapSampler;
     colorMapSampler = effect_->GetVariableByName( "colorSampler" )->AsSampler( );
     colorMapSampler->SetSampler( 0, colorMapSampler_ );
 
-	ID3DX11EffectShaderResourceVariable* BackGroundMap;
-    BackGroundMap = effect_->GetVariableByName( "secondMap" )->AsShaderResource( );
-    BackGroundMap->SetResource( BackGroundImage_ );
+	
 
     ID3DX11EffectTechnique* colorInvTechnique;
     colorInvTechnique = effect_->GetTechniqueByName( "StartInterface" );
@@ -389,28 +361,33 @@ void GameStateInterface::Render()
     for( unsigned int p = 0; p < techDesc.Passes; p++ )
     {
         ID3DX11EffectPass* pass = colorInvTechnique->GetPassByIndex( p );
-
+		pass->Apply( 0, d3dContext_ );
         if( pass != 0 && p == 0)
         {
-            pass->Apply( 0, d3dContext_ );
-			DrawBackGround();
-			
+			//DrawBackGround();
+			/*ID3DX11EffectShaderResourceVariable* BackGroundMap;
+			BackGroundMap = effect_->GetVariableByName( "secondMap" )->AsShaderResource( );
+			BackGroundMap->SetResource( BackGroundImage_ );
+			DrawImage(0, 0, 1000, 600, 1.0f, 1.0f, 0.3f);*/
+
 			//LuaButtonShow.LuaCloseFile();
         }
 		if( pass != 0 && p == 1)
 		{
-			pass->Apply( 0, d3dContext_ );
-			LuaButtonShow.LuaFuncUse("DrawButtonFunc()");
+			ID3DX11EffectShaderResourceVariable* colorMap;
+			colorMap = effect_->GetVariableByName( "firstMap" )->AsShaderResource( );
+			colorMap->SetResource( ImageMap_ );
+			//DrawImage(0, 0, 500, 300, 1.0f, 1.0f, 0.2f);
+			LuaConnect.LuaFuncUse("DrawButtonFunc()");
 		}
     }
-
-	
     swapChain_->Present( 0, 0 );
 }
 
-void GameStateInterface::SetButtonPath(LPCWSTR Path)
+void GameStateInterface::SetImagePath(LPCWSTR Path)
 {
 	ImagePath = Path;
+
 }
 
 void GameStateInterface::SetBackGroundPath(LPCWSTR Path)
@@ -418,58 +395,7 @@ void GameStateInterface::SetBackGroundPath(LPCWSTR Path)
 	BackGroundImage = Path;
 }
 
-extern GameStateInterface demo;
 
 
-//提供给Lua调用的函数的接口
-//定义第一方法：返回值必须为int,参数必须为lua_State *L，（L）可变
-static int LuaDrawButton(lua_State *L)
-{
-	 //返回栈中元素的个数  
-    int n = lua_gettop(L);
-    float Value[4];  
-    int i;  
-    for (i = 1; i <= n; i++)  
-    {  
-        if (!lua_isnumber(L, i))   
-        {  
-            lua_pushstring(L, "Incorrect argument to 'average'");  
-            lua_error(L);
-			return 0;
-        }  
-        Value[i-1] = (float)lua_tonumber(L, i);
-    }
-	demo.DrawButton(Value[0],Value[1],Value[2],Value[3]);
-	return 1;
-}
-
-
-//提供给Lua调用的函数的接口
-//定义第一方法：返回值必须为int,参数必须为lua_State *L，（L）可变
-static int LuaInitStartViewIamgePath(lua_State *L)
-{
-	 //返回栈中元素的个数  
-    int n = lua_gettop(L);
-
-	const size_t newsize = 100;
-	int i;  
-    for (i = 1; i <= n; i++)  
-    {  
-        if (!lua_isstring(L, i))   
-        {  
-            lua_pushstring(L, "Incorrect argument to 'average'");  
-            lua_error(L);
-			return 0;
-        }
-		switch(i)
-		{
-			case 1:demo.SetButtonPath( AnsiToUnicode(lua_tolstring(L, i, NULL)) );break;
-			case 2:demo.SetBackGroundPath( AnsiToUnicode(lua_tolstring(L, i, NULL)) );break;
-			default:break;
-		}
-		
-    }
-	return 1;
-}
 
 

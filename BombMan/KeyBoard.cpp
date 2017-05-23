@@ -1,6 +1,5 @@
 #include "KeyBoard.h"
 
-
 KeyBoard::KeyBoard() :directInput_( 0 ), keyboardDevice_( 0 )
 {
 
@@ -81,6 +80,9 @@ bool KeyBoard::DetectKey(int Key)
 
 	return false;
 }
+
+
+
 
 
 

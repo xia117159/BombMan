@@ -82,6 +82,7 @@
     <ClCompile Include="GetMatrix.cpp" />
     <ClCompile Include="KeyBoard.cpp" />
     <ClCompile Include="luaClass.cpp" />
+    <ClCompile Include="LuaInterface.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MouseControl.cpp" />
     <ClCompile Include="sysfunc.cpp" />

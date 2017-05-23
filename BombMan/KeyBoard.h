@@ -2,7 +2,7 @@
 #define __KEYBOARD
 
 #include "include.h"
-
+#include "luaClass.h"
 
 class KeyBoard
 {
@@ -13,9 +13,9 @@ public:
 	bool Initialize( HINSTANCE hInstance, HWND hwnd );
 	bool DetectKey(int Key);
 
-
-
 private:
+
+	
 
 	HINSTANCE hInstance_;
     HWND hwnd_;
