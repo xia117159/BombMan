@@ -1,5 +1,5 @@
 #include "luaClass.h"
-
+#include "sysfunc.h"
 
 
 //默认构造函数
@@ -107,7 +107,9 @@ void LuaClass::LuaFuncUse(const char *LuaFuncName,...)
 		case '(':
 			{
 				for(;loopi<loopj;loopi++)LuaFunc[loopi] = *(LuaFuncName-loopj+loopi);
-				lua_getglobal(lua_state, LuaFunc);
+				//lua_getglobal(lua_state, LuaFunc);
+				lua_getfield(lua_state, LUA_GLOBALSINDEX, LuaFunc);
+
 			}break;
 		default:break;
 
@@ -116,10 +118,9 @@ void LuaClass::LuaFuncUse(const char *LuaFuncName,...)
 		LuaFuncName++;
 	}
 
-	lua_call(lua_state, ValuesNum, 0);
+	lua_pcall(lua_state, ValuesNum, 0, 0);
 	va_end(args); 
 }
-
 
 
 

@@ -19,10 +19,15 @@ public:
 
 	bool Initialize( HINSTANCE hInstance, HWND hwnd );
 	int DetectMouse(float startX, float startY, float endX, float endY);
-
-
+	int GetMouseStatus();
+	void UpdateMousePos();
+	long GetMouseX();
+	long GetMouseY();
 
 private:
+
+	POINT p;
+
 
 	HINSTANCE hInstance_;
     HWND hwnd_;

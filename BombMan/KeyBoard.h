@@ -4,6 +4,16 @@
 #include "include.h"
 #include "luaClass.h"
 
+
+
+
+
+
+#define KeepPressing 101  //一直按下
+#define Press        102  //按下的那一瞬间
+#define Release      103  //松开的那一瞬间
+
+
 class KeyBoard
 {
 public:
@@ -11,7 +21,7 @@ public:
 	~KeyBoard();
 
 	bool Initialize( HINSTANCE hInstance, HWND hwnd );
-	bool DetectKey(int Key);
+	int DetectKey(int Key);
 
 private:
 

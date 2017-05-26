@@ -40,6 +40,11 @@
 #include <string>
 #include <dinput.h>
 #include <dinput.h>
+
+
+#include <mmsystem.h>//导入声音头文件
+#pragma comment(lib, "winmm.lib")
+
 #include "resource.h"
 
 //****lua库文件****

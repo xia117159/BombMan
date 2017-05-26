@@ -67,18 +67,27 @@ bool KeyBoard::Initialize( HINSTANCE hInstance, HWND hwnd )
 	return true;
 }
 
-bool KeyBoard::DetectKey(int Key)
+int KeyBoard::DetectKey(int Key)
 {
+	int Result = 0;
 	keyboardDevice_->GetDeviceState( sizeof( keyboardKeys_ ), ( LPVOID )&keyboardKeys_ );
 
 	if( KEYDOWN( prevKeyboardKeys_, Key ) && KEYDOWN( keyboardKeys_, Key ))
 	{ 
-		return true;
+		Result = KeepPressing;
+	}
+	else if( !KEYDOWN( prevKeyboardKeys_, Key ) && KEYDOWN( keyboardKeys_, Key ))
+	{ 
+		Result = Press;
+	}
+	else if( KEYDOWN( prevKeyboardKeys_, Key ) && !KEYDOWN( keyboardKeys_, Key ))
+	{ 
+		Result = Release;
 	}
 
 	memcpy( prevKeyboardKeys_, keyboardKeys_, sizeof( keyboardKeys_ ) );
 
-	return false;
+	return Result;
 }
 
 
