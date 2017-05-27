@@ -1,7 +1,7 @@
 ImageClass = 
 {
-	Event = 1,
-
+	Event = 0,
+	DrawStatus = 1;
 
 
 	ImagePath = "",

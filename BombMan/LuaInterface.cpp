@@ -13,6 +13,7 @@ static int LuaDetectMouse(lua_State *L);
 static int PlayMusic(lua_State *L);
 static int ReleaseImageData(lua_State *L);
 static int LuaGetMouseStatus(lua_State *L);
+static int ExitGame(lua_State *L);
 //全局对象声明
 extern GameStateInterface demo;
 
@@ -35,6 +36,7 @@ void LuaInterfaceInit()
 	LuaConnect.CFuncRegister("GetMouseStatus", LuaGetMouseStatus);
 	LuaConnect.CFuncRegister("PlayMusic", PlayMusic);
 	LuaConnect.CFuncRegister("ReleaseImageData", ReleaseImageData);
+	LuaConnect.CFuncRegister("Exit", ExitGame);
 
 	LuaConnect.LuaDoFile();
 }
@@ -138,6 +140,19 @@ static int PlayMusic(lua_State *L)
 
 	return 1;
 }
+
+//提供给Lua调用的函数的接口
+//定义第一方法：返回值必须为int,参数必须为lua_State *L，（L）可变
+static int ExitGame(lua_State *L)
+{
+	 //返回栈中元素的个数  
+    int n = lua_gettop(L);
+
+	exit(0);
+	
+	return 1;
+}
+
 
 
 //提供给Lua调用的函数的接口

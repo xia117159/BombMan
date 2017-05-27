@@ -17,9 +17,14 @@ function StartViewKC()
 		if Result == MouseHover then --鼠标左键悬停
 			ksButton:setImagePos(ButtonWidth, ButtonWidth*2, ButtonHeight*0, ButtonHeight*1);
 		elseif Result == MouseLeftDown then --鼠标左键按下
+			ksButton["Event"] = 1;
 			ksButton:setImagePos(ButtonWidth*2, ButtonWidth*3, ButtonHeight*0, ButtonHeight*1);
 		elseif Result == MouseLeftUp then --鼠标左键松开
 			ksButton:setImagePos(0, ButtonWidth, ButtonHeight*0, ButtonHeight*1);
+			if ksButton["Event"] == 1 then
+				ksButton["Event"] = 0;
+				goPlotView();
+			end
 		end
 	--挑战模式按钮事件
 	elseif DetectMousePos(tzButton) == 1 then
@@ -35,7 +40,7 @@ function StartViewKC()
 			tzButton:setImagePos(0, ButtonWidth, ButtonHeight*1, ButtonHeight*2);
 			if tzButton["Event"] == 1 then
 				tzButton["Event"] = 0;
-
+				goChallengeView();
 			end
 		end
 	--道具商城按钮事件
@@ -69,7 +74,7 @@ function StartViewKC()
 			bzButton:setImagePos(0, ButtonWidth, ButtonHeight*3, ButtonHeight*4);
 			if bzButton["Event"] == 1 then
 				bzButton["Event"] = 0;
-				
+				goHelpView();
 			end
 		end
 	--
@@ -85,7 +90,7 @@ function StartViewKC()
 			cdButton:setImagePos(0, ButtonWidth, ButtonHeight*4, ButtonHeight*5);
 			if cdButton["Event"] == 1 then
 				cdButton["Event"] = 0;
-				
+				goSaveView()
 			end
 		end
 	--
@@ -101,7 +106,7 @@ function StartViewKC()
 			tcButton:setImagePos(0, ButtonWidth, ButtonHeight*5, ButtonHeight*6);
 			if tcButton["Event"] == 1 then
 				tcButton["Event"] = 0;
-				
+				goEndView();
 			end
 		end
 	elseif Result == 0 then
@@ -110,6 +115,30 @@ function StartViewKC()
 	end
 end
 
+--跳转开始画面页面并进行相关设置的函数
+function goStartView()
+	
+	ReleaseImageData();--清除图片资源以便目标页面加载
+	LoadStartViewImageFile();--加载商城界面
+	NowView = StartV;--设置视图位于商城
+end
+
+--跳转剧情模式页面并进行相关设置的函数
+function goPlotView()
+	
+	--ReleaseImageData();--清除图片资源以便目标页面加载
+	--加载商城界面自行添加
+	--NowView = ShopV;--设置视图位于商城
+end
+
+
+--跳转挑战模式页面并进行相关设置的函数
+function goChallengeView()
+	
+	--ReleaseImageData();--清除图片资源以便目标页面加载
+	---加载商城界面自行添加
+	--NowView = ShopV;--设置视图位于商城
+end
 
 
 --跳转商城页面并进行相关设置的函数
@@ -118,6 +147,33 @@ function goShopView()
 	ReleaseImageData();--清除图片资源以便目标页面加载
 	LoadShopImageFile();--加载商城界面
 	NowView = ShopV;--设置视图位于商城
+end
+
+
+--跳转帮助页面并进行相关设置的函数
+function goHelpView()
+	
+	--ReleaseImageData();--清除图片资源以便目标页面加载
+	--加载商城界面
+	--NowView = ShopV;--设置视图位于商城
+end
+
+
+--跳转商城页面并进行相关设置的函数
+function goSaveView()
+	
+	--ReleaseImageData();--清除图片资源以便目标页面加载
+	--加载商城界面
+	--NowView = ShopV;--设置视图位于商城
+end
+
+
+--退出程序并进行相关设置的函数
+function goEndView()
+	Exit();
+	--ReleaseImageData();--清除图片资源以便目标页面加载
+	--加载商城界面
+	--NowView = ShopV;--设置视图位于商城
 end
 
 function NotReSetButton(TempB)

@@ -11,8 +11,7 @@ require "ShopKeyControl"
 
 require "MainKeyFunc"
 
-
-NowView    =   StartV
-LoadStartViewImageFile();
+goShopView();
+--goStartView(); -- 转到开始界面
 
 PlayBackGroundMusic();

@@ -56,6 +56,7 @@ function DrawButtonFunc()
 	cdButton:DrawImage();
 	bzButton:DrawImage();
 	tcButton:DrawImage();
+	
 end
 
 
