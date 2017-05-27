@@ -148,7 +148,7 @@ static int PlayMusic(lua_State *L)
 	int Device = lua_tonumber(L, 1);
 	if(Device == BGMDevice)
 	{
-		SEPlayMusicDevice.Stop();
+		BGMPlayMusicDevice.Stop();
 		BGMPlayMusicDevice.Play(hwnd, AnsiToUnicode(lua_tostring(L, 2)));
 	}
 	else if(Device == SEDevice)
