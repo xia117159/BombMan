@@ -85,6 +85,7 @@
     <ClCompile Include="LuaInterface.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MouseControl.cpp" />
+    <ClCompile Include="PlayMusicClass.cpp" />
     <ClCompile Include="sysfunc.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -95,6 +96,7 @@
     <ClInclude Include="KeyBoard.h" />
     <ClInclude Include="luaClass.h" />
     <ClInclude Include="MouseControl.h" />
+    <ClInclude Include="PlayMusicClass.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="sysfunc.h" />
   </ItemGroup>

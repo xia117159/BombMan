@@ -1,6 +1,7 @@
 ImageClass = 
 {
 	Event = 0,
+	Hover = 0,
 	DrawStatus = 1;
 
 

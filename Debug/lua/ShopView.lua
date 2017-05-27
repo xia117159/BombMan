@@ -11,7 +11,7 @@ ShopBigBombProps:setImage(50, 450-247*0.6, 223, 247, 0, 223, 174, 421, 9.8);
 
 ShopBigBombPropsTemp = ImageClass:new();
 ShopBigBombPropsTemp:setImageFileSize(570, 421);
-ShopBigBombPropsTemp:setscaling_ratio(0.6);
+ShopBigBombPropsTemp:setscaling_ratio(0.3);
 ShopBigBombPropsTemp["DrawStatus"] = 0;
 ShopBigBombPropsTemp:setImage(50, 450-247*0.6, 223, 247, 0, 223, 174, 421, 8.0);
 
@@ -30,8 +30,10 @@ end
 
 function LoadShopImageFile()
 	local ShopBackGround = ImageClass:new();
+	
 	ShopBackGround:LoadImage("Image/BackGround.png","DrawBackGroundFunc()", "Image_0");
 	ShopBackGround:LoadImage("Image/PropsBomb.png","DrawShopAllIamge()", "Image_1");
+	PlayMusic(BGMDevice,"music/ShopVeiwBGM.wav");
 end
 
 

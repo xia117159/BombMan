@@ -15,6 +15,10 @@ function StartViewKC()
 		
 		Result = GetMouseStatus();
 		if Result == MouseHover then --鼠标左键悬停
+			if ksButton["Hover"] == 0 then
+				ksButton["Hover"] = 1;
+				PlayMusic(SEDevice,"music/StartButtonMHover.wav");
+			end
 			ksButton:setImagePos(ButtonWidth, ButtonWidth*2, ButtonHeight*0, ButtonHeight*1);
 		elseif Result == MouseLeftDown then --鼠标左键按下
 			ksButton["Event"] = 1;
@@ -31,6 +35,10 @@ function StartViewKC()
 		NotReSetButton(2);
 		Result = GetMouseStatus();
 		if Result == MouseHover then --鼠标左键悬停
+			if tzButton["Hover"] == 0 then
+				tzButton["Hover"] = 1;
+				PlayMusic(SEDevice,"music/StartButtonMHover.wav");
+			end
 			tzButton:setImagePos(ButtonWidth, ButtonWidth*2, ButtonHeight*1, ButtonHeight*2);
 		elseif Result == MouseLeftDown then --鼠标左键按下
 			tzButton:setImagePos(ButtonWidth*2, ButtonWidth*3, ButtonHeight*1, ButtonHeight*2);
@@ -56,11 +64,27 @@ function StartViewKC()
 			djButton:setImagePos(0, ButtonWidth, ButtonHeight*2, ButtonHeight*3);
 			if djButton["Event"] == 1 then
 				djButton["Event"] = 0;
-
+				
 				goShopView();
 			end
 		end
-		
+	--游戏存档按钮事件
+	elseif DetectMousePos(cdButton) == 1 then
+		NotReSetButton(5);
+		Result = GetMouseStatus();
+		if Result == MouseHover then --鼠标左键悬停
+			cdButton:setImagePos(ButtonWidth, ButtonWidth*2, ButtonHeight*4, ButtonHeight*5);
+		elseif Result == MouseLeftDown then --鼠标左键按下
+			cdButton:setImagePos(ButtonWidth*2, ButtonWidth*3, ButtonHeight*4, ButtonHeight*5);
+			cdButton["Event"] = 1;
+		elseif Result == MouseLeftUp then --鼠标左键松开
+			cdButton:setImagePos(0, ButtonWidth, ButtonHeight*4, ButtonHeight*5);
+			if cdButton["Event"] == 1 then
+				cdButton["Event"] = 0;
+
+				goSaveView()
+			end
+		end	
 	--游戏帮助按钮事件
 	elseif DetectMousePos(bzButton) == 1 then
 		NotReSetButton(4);
@@ -74,25 +98,11 @@ function StartViewKC()
 			bzButton:setImagePos(0, ButtonWidth, ButtonHeight*3, ButtonHeight*4);
 			if bzButton["Event"] == 1 then
 				bzButton["Event"] = 0;
+
 				goHelpView();
 			end
 		end
-	--
-	elseif DetectMousePos(cdButton) == 1 then
-		NotReSetButton(5);
-		Result = GetMouseStatus();
-		if Result == MouseHover then --鼠标左键悬停
-			cdButton:setImagePos(ButtonWidth, ButtonWidth*2, ButtonHeight*4, ButtonHeight*5);
-		elseif Result == MouseLeftDown then --鼠标左键按下
-			cdButton:setImagePos(ButtonWidth*2, ButtonWidth*3, ButtonHeight*4, ButtonHeight*5);
-			cdButton["Event"] = 1;
-		elseif Result == MouseLeftUp then --鼠标左键松开
-			cdButton:setImagePos(0, ButtonWidth, ButtonHeight*4, ButtonHeight*5);
-			if cdButton["Event"] == 1 then
-				cdButton["Event"] = 0;
-				goSaveView()
-			end
-		end
+	
 	--
 	elseif DetectMousePos(tcButton) == 1 then
 		NotReSetButton(6);
@@ -110,6 +120,8 @@ function StartViewKC()
 			end
 		end
 	elseif Result == 0 then
+		
+		
 		GetMouseStatus();
 		NotReSetButton(0);
 	end
@@ -178,10 +190,12 @@ end
 
 function NotReSetButton(TempB)
 	if TempB ~= 1 then
+		ksButton["Hover"] = 0;
 		ksButton:setImagePos(0, ButtonWidth, ButtonHeight*0, ButtonHeight*1);
 	end
 	
 	if TempB ~= 2 then
+		tzButton["Hover"] = 0;
 		tzButton:setImagePos(0, ButtonWidth, ButtonHeight*1, ButtonHeight*2);
 	end
 	

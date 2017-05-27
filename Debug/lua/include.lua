@@ -47,6 +47,11 @@ MousePosX      = 0      --鼠标当前X位置
 MousePosY      = 0		--鼠标当前Y位置
 
 
+
+--音乐设备名
+BGMDevice  =  0x101
+SEDevice  =  0x102
+
 --C++程序接口
 --SetViewIamgePath("路劲", "画图函数名()", "Image_数值"); @加载图片
 --LuaDrawImage                                            @此函数已封装，不可单独使用
@@ -54,7 +59,10 @@ MousePosY      = 0		--鼠标当前Y位置
 --MouseDetect(起始X, 起始Y, 终止X, 终止Y);                @检测鼠标在此区域的操作状态， ==0 表示未进入此区域
 --GetMouseStatus();                                       @获取鼠标当前状态，无参数
 --MessageBox("内容","标题",按钮值);                       @弹出MessageBox
---PlayMusic("wav音乐路劲");                               @播放音乐
+--PlayMusic(设备名,"wav音乐路劲");                        @播放音乐
+--StopMusic(设备名);                                      @停止指定设备名所播放的音乐
+--PlayToPauseMusic(设备名);                               @暂停播放指定设备名所播放的音乐
+--PauseToPlayMusic(设备名);                               @恢复播放指定设备名所播放的音乐
 --ReleaseImageData();                                     @释放当前已加载的图片资源
 
 

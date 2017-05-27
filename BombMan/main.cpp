@@ -3,7 +3,7 @@
 #include "KeyBoard.h"
 #include "GameStateInterface.h"
 #include "sysfunc.h"
-
+#include "PlayMusicClass.h"
 
 //*******************全局变量定义区*******************
 //窗口句柄定义
@@ -13,6 +13,8 @@ GameStateInterface demo;
 LuaClass LuaConnect;//全局lua接口连接对象
 KeyBoard TempKeyDetect;
 MouseControl MouseDetect;
+CPlayMusic BGMPlayMusicDevice;
+CPlayMusic SEPlayMusicDevice;
 
 const char * KeyFunc = NULL;
 const char * MouseSetPosFunc = NULL;
@@ -39,6 +41,9 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine
 
 	if( result == false )
         return -1;
+
+	SEPlayMusicDevice.InitDevice();
+	BGMPlayMusicDevice.InitDevice();
 
 	LuaInterfaceInit();
 

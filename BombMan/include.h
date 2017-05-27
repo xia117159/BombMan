@@ -15,6 +15,8 @@
 #define tuWidth                ( ButtonWidth / ButtonImageWidth )
 #define tuHeight               ( ButtonHeight / ButtonImageHeight )
 
+#define BGMDevice 0x101
+#define SEDevice 0x102
 
 
 #define KEYDOWN(name, key) ( name[key] & 0x80 )
@@ -39,8 +41,7 @@
 #include <stdlib.h>
 #include <string>
 #include <dinput.h>
-#include <dinput.h>
-
+#include <Digitalv.h>  
 
 #include <mmsystem.h>//导入声音头文件
 #pragma comment(lib, "winmm.lib")
