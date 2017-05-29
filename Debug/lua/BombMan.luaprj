@@ -13,4 +13,6 @@
         <LuaFile RelativePath=".\ShopKeyControl.lua" />
     </Filter>
     <LuaFile RelativePath=".\MainKeyFunc.lua" />
+    <LuaFile RelativePath=".\MusicClass.lua" />
+    <LuaFile RelativePath=".\Map.lua" />
 </Project>

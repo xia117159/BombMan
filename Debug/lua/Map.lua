@@ -81,7 +81,7 @@ function DrawGround()
 	y=0;
 	for i=1,12,1 do
 		for j=1,20,1 do
-			ground:setImage(x, y, 50, 50, 0, 500, 0, 500, 11.0);
+			ground:setAbsoluteStartPos(x, y);
 			ground:DrawImage();
 			x=x+50;		
 		end
@@ -99,11 +99,13 @@ function DrawMap()
 --		vec{i} = {};
 		for j=1,20,1 do
 			if mapTable[i][j][3] == 1 then
-				BrickWall:setImage(x, y, 50, 50, 0, 50, 0, 50, 10.0);
+				BrickWall:setImagePos( 0, 250, 0, 250);
+				BrickWall:setAbsoluteStartPos(x, y);
 				BrickWall:DrawImage();								
 			end
 			if mapTable[i][j][4] == 1 then
-				BrickWall:setImage(x, y, 50, 50, 251, 503, 0, 252, 10.0);
+				BrickWall:setImagePos( 253, 501, 0, 252);
+				BrickWall:setAbsoluteStartPos(x, y);
 				BrickWall:DrawImage();								
 			end
 			x=x+50;				
@@ -114,22 +116,22 @@ function DrawMap()
 	
 end
 
---1代表向右 2代表向上 3代表向左 4代表向右
+--1代表向右 2代表向上 3代表向左 4代表向下
 function DrawActor()
 	if(movestatus == 0) then
 		--actor:setImage(500, 500, 50, 50, 0, 208, 0, 184, 9.0);
 	end
 	if(movestatus == 1) then
-		actor:setRelativelyStartPos(2,0);
+		actor:setRelativelyStartPos(1,0);
 	end
 	if(movestatus == 2) then
-		actor:setRelativelyStartPos(0,2);
+		actor:setRelativelyStartPos(0,1);
 	end
 	if(movestatus == 3) then
-		actor:setRelativelyStartPos(-2,0);
+		actor:setRelativelyStartPos(-1,0);
 	end
 	if(movestatus == 4) then
-		actor:setRelativelyStartPos(0,-2);
+		actor:setRelativelyStartPos(0,-1);
 	end
 	actor:DrawImage();
 end
@@ -138,7 +140,7 @@ end
 
 
 function LoadMapViewImageFile()
-	ground:LoadImage("Image/ground.png","DrawGround()", "Image_0");
+	ground:LoadImage("Image/ground.jpg","DrawGround()", "Image_0");
 	BrickWall:LoadImage("Image/brick.png","DrawMap()", "Image_1");
 	actor:LoadImage("Image/actor.png","DrawActor()", "Image_2");
 	
@@ -152,16 +154,15 @@ function ActorKey()
 	local KeyResult_Up = KeyDetect(Up);
 	local KeyResult_Left = KeyDetect(Left);
 	local KeyResult_Down = KeyDetect(Down);
-	if KeyResult_right == Press then
+	if KeyResult_right == KeepPressing then
 		movestatus = 1;
-	end
-	if KeyResult_right == Release then
-		movestatus = 0;
-	end
-	if KeyResult_Up == Press then
+	elseif KeyResult_Up == KeepPressing then
 		movestatus = 2;
-	end
-	if KeyResult_Up == Release then
+	elseif KeyResult_Left == KeepPressing then
+		movestatus = 3;
+	elseif KeyResult_Down == KeepPressing then
+		movestatus = 4;
+	else
 		movestatus = 0;
 	end
 	--[[if KeyResult_Left == Press then

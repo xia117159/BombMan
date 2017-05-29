@@ -22,7 +22,7 @@ NowView    =   0x1001
 StartV     =   0x1001
 ChallengeV =   0x1002
 ShopV      =   0x1003
-
+PlotV      =   0x1004
 --按键状态
 KeepPressing  = 101  --一直按下
 Press         = 102  --按下的那一瞬间
@@ -49,8 +49,21 @@ MousePosY      = 0		--鼠标当前Y位置
 
 
 --音乐设备名
-BGMDevice  =  0x101
-SEDevice  =  0x102
+BGMDevice   =  0x101
+SEDevice    =  0x102
+
+MusicStop   = 0x110
+MusicOpen   = 0x111
+MusicPause  = 0x112
+MusicPlay   = 0x113
+
+seMusicStopStatus   = 0
+seMusicPauseStatus  = 0
+bgmMusicStopStatus  = 0
+bgmMusicPauseStatus = 0
+
+ForcedSwitch   = 0x201
+EndSwitch      = 0x202
 
 --C++程序接口
 --SetViewIamgePath("路劲", "画图函数名()", "Image_数值"); @加载图片

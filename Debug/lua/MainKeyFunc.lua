@@ -22,7 +22,10 @@ function KeyFunc()
 		NoFunc();
 	elseif 	NowView == ShopV then
 		ShopViewKC();
+	elseif 	NowView == PlotV then
+		ActorKey();
 	end
+	Gamebgm:Play(EndSwitch);
 end
 
 function NoFunc()

@@ -1,5 +1,6 @@
 
 
+
 --程序框大小设定，改变无用！
 ButtonImagePath  = "Image/StartButton.png"
 ButtonImageWidth = 600.0
@@ -43,8 +44,8 @@ tcButton:setscaling_ratio(ButtonSR);
 ksButton:setImage(50.0, 550.0-1*ButtonHeight*ButtonSR, ButtonWidth, ButtonHeight, 0, ButtonWidth, ButtonHeight*0, ButtonHeight*1, 9.0);
 tzButton:setImage(50.0, 550.0-2*ButtonHeight*ButtonSR, ButtonWidth, ButtonHeight, 0, ButtonWidth, ButtonHeight*1, ButtonHeight*2, 8.99);
 djButton:setImage(50.0, 550.0-3*ButtonHeight*ButtonSR, ButtonWidth, ButtonHeight, 0, ButtonWidth, ButtonHeight*2, ButtonHeight*3, 8.98);
-cdButton:setImage(50.0, 550.0-4*ButtonHeight*ButtonSR, ButtonWidth, ButtonHeight, 0, ButtonWidth, ButtonHeight*3, ButtonHeight*4, 8.97);
-bzButton:setImage(50.0, 550.0-5*ButtonHeight*ButtonSR, ButtonWidth, ButtonHeight, 0, ButtonWidth, ButtonHeight*4, ButtonHeight*5, 8.96);
+bzButton:setImage(50.0, 550.0-5*ButtonHeight*ButtonSR, ButtonWidth, ButtonHeight, 0, ButtonWidth, ButtonHeight*3, ButtonHeight*4, 8.96);
+cdButton:setImage(50.0, 550.0-4*ButtonHeight*ButtonSR, ButtonWidth, ButtonHeight, 0, ButtonWidth, ButtonHeight*4, ButtonHeight*5, 8.97);
 tcButton:setImage(50.0, 550.0-6*ButtonHeight*ButtonSR, ButtonWidth, ButtonHeight, 0, ButtonWidth, ButtonHeight*5, ButtonHeight*6, 8.95);
 
 
@@ -53,8 +54,8 @@ function DrawButtonFunc()
 	ksButton:DrawImage();
 	tzButton:DrawImage();
 	djButton:DrawImage();
-	cdButton:DrawImage();
 	bzButton:DrawImage();
+	cdButton:DrawImage();
 	tcButton:DrawImage();
 	
 end
@@ -63,7 +64,7 @@ end
 function LoadStartViewImageFile()
 	BackGround:LoadImage("Image/BackGround.png","DrawBackGroundFunc()", "Image_0");
 	ksButton:LoadImage(ButtonImagePath,"DrawButtonFunc()", "Image_1");
-	PlayMusic(BGMDevice,"music/StartViewBGM.mp3");
+
 end
 
 
