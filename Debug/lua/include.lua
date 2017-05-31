@@ -65,6 +65,23 @@ bgmMusicPauseStatus = 0
 ForcedSwitch   = 0x201
 EndSwitch      = 0x202
 
+
+--程序定义
+--助手右值绝对不可更改！！！！！！！
+GirlsAssistant = 0x000
+BoysAssistant = 0x001
+
+
+--通用函数定义区域
+function GetBitNum(Num, Bit)
+	local StrGCNum = tostring(Num);
+	return tonumber(string.sub(StrGCNum,Bit,Bit));
+end
+
+
+
+
+
 --C++程序接口
 --SetViewIamgePath("路劲", "画图函数名()", "Image_数值"); @加载图片
 --LuaDrawImage                                            @此函数已封装，不可单独使用

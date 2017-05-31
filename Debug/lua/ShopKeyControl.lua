@@ -6,11 +6,15 @@ ShoptViewRBse:SetMusicData("music/ButtonSE1.wav");
 ShoptViewPropsse = seMusicClass:new();
 ShoptViewPropsse:SetMusicData("music/ButtonSE3.wav");
 
+ShopViewBuy = seMusicClass:new();
+ShopViewBuy:SetMusicData("music/ButtonSE4.wav");
 function ShopViewKC()
 	--[[if KeyDetect(Right) == KeepPressing then
 		ksButton:setRelativelyStartPos(CharacterRate, 0.0);
 	end--]]
 	Result = 0;
+	
+	--·µ»Ø¼üÇøÓò
 	if DetectMousePos(ShopReturnButton) == 1 then
 		
 		NotReSetShopButton(1);
@@ -34,57 +38,181 @@ function ShopViewKC()
 				goStartView();
 			end
 		end
+		
+	--³¬¼¶Õ¨µ¯Í¼±êÇøÓò
 	elseif DetectMousePos(ShopBigBombProps) == 1 then
 		
 		NotReSetShopButton(2);
 		
 		Result = GetMouseStatus();
 		if Result == MouseHover then --Êó±ê×ó¼üÐüÍ£
-			ShopBigBombProps:setImagePos(BigBombPropsW*1+5, BigBombPropsW*2+5, 0, BigBombPropsH);
+			ShopBigBombProps:setImagePos(PropsW*1+5, PropsW*2+5, 0, PropsH);
 			
 			if ShopBigBombProps["Hover"] == 0 then
 				ShopBigBombProps["Hover"] = 1;
-				ShopBigBombIntr["DrawStatus"] = 1;
+				ShowPropsIntro(2);
 				ShoptViewPropsse:Play();
 			end
 		elseif Result == MouseLeftDown then --Êó±ê×ó¼ü°´ÏÂ
 			ShopBigBombProps["Event"] = 1;
 			ShopBigBombPropsTemp["DrawStatus"] = 1;
-			ShopBigBombIntr["DrawStatus"] = 0;
-			ShopBigBombProps:setImagePos(BigBombPropsW*0, BigBombPropsW*1, 0, BigBombPropsH);
+			ShopBigBombProps:setImagePos(PropsW*0, PropsW*1, 0, PropsH);
 		elseif Result == MouseLeftUp then --Êó±ê×ó¼üËÉ¿ª
-			ShopBigBombProps:setImagePos(BigBombPropsW*0, BigBombPropsW*1, 0, BigBombPropsH);
+			ShopBigBombProps:setImagePos(PropsW*0, PropsW*1, 0, PropsH);
 			ShopBigBombPropsTemp["DrawStatus"] = 0;
 			if ShopBigBombProps["Event"] == 1 then
 				ShopBigBombProps["Event"] = 0;
+			end
+		end
+	--³¬¼¶Õ¨µ¯¹ºÂò°´Å¥
+	elseif DetectMousePos(BuyBigBombButton) == 1 then
+		NotReSetShopButton(3);
+		Result = GetMouseStatus();
+		if Result == MouseHover then --Êó±ê×ó¼üÐüÍ£
+			BuyBigBombButton:setImagePos(0, 320, 146, 146*2);
+			
+			if BuyBigBombButton["Hover"] == 0 then
+				BuyBigBombButton["Hover"] = 1;
+				ShopViewBuy:Play();
+			end
+		elseif Result == MouseLeftDown then --Êó±ê×ó¼ü°´ÏÂ
+			BuyBigBombButton["Event"] = 1;
+			BuyBigBombButton:setImagePos(0, 320, 146*2, 146*3);
+		elseif Result == MouseLeftUp then --Êó±ê×ó¼üËÉ¿ª
+			BuyBigBombButton:setImagePos(0, 320, 0, 146);
+			if BuyBigBombButton["Event"] == 1 then
+				BuyBigBombButton["Event"] = 0;
+				BuyBigBombEvent();
+			end
+		end
+	--ÖúÊÖÍ¼±êÇøÓò
+	elseif DetectMousePos(ShopAssistantPropsProps) == 1 then
+		
+		NotReSetShopButton(4);
+		
+		Result = GetMouseStatus();
+		if Result == MouseHover then --Êó±ê×ó¼üÐüÍ£
+			ShopAssistantPropsProps:setImagePos(PropsW*1+5+OnePropsImageW*AssistantProps, PropsW*2+5+OnePropsImageW*AssistantProps, OnePropsImageH+16, PropsH+OnePropsImageH+16);
+			
+			if ShopAssistantPropsProps["Hover"] == 0 then
+				ShopAssistantPropsProps["Hover"] = 1;
+				ShowPropsIntro(3);
+				ShoptViewPropsse:Play();
+			end
+		elseif Result == MouseLeftDown then --Êó±ê×ó¼ü°´ÏÂ
+			ShopAssistantPropsProps["Event"] = 1;
+			ShopAssistantPropsPropsTemp["DrawStatus"] = 1;
+			ShopAssistantPropsProps:setImagePos(PropsW*0+OnePropsImageW*AssistantProps, PropsW*1+OnePropsImageW*AssistantProps, OnePropsImageH+16, PropsH+OnePropsImageH+16);
+		elseif Result == MouseLeftUp then --Êó±ê×ó¼üËÉ¿ª
+			ShopAssistantPropsProps:setImagePos(PropsW*0+OnePropsImageW*AssistantProps, PropsW*1+OnePropsImageW*AssistantProps, OnePropsImageH+16, PropsH+OnePropsImageH+16);
+			ShopAssistantPropsPropsTemp["DrawStatus"] = 0;
+			if ShopAssistantPropsProps["Event"] == 1 then
+				ShopAssistantPropsProps["Event"] = 0;
+			end
+		end
+	--¹ºÂòÖúÊÖ°´Å¥ÇøÓò
+	elseif DetectMousePos(BuyAssistantButton) == 1 then
+		NotReSetShopButton(5);
+		Result = GetMouseStatus();
+		if Result == MouseHover then --Êó±ê×ó¼üÐüÍ£
+			BuyAssistantButton:setImagePos(0, 320, 146, 146*2);
+			
+			if BuyAssistantButton["Hover"] == 0 then
+				BuyAssistantButton["Hover"] = 1;
+				ShopViewBuy:Play();
+			end
+		elseif Result == MouseLeftDown then --Êó±ê×ó¼ü°´ÏÂ
+			BuyAssistantButton["Event"] = 1;
+			BuyAssistantButton:setImagePos(0, 320, 146*2, 146*3);
+		elseif Result == MouseLeftUp then --Êó±ê×ó¼üËÉ¿ª
+			BuyAssistantButton:setImagePos(0, 320, 0, 146);
+			if BuyAssistantButton["Event"] == 1 then
+				BuyAssistantButton["Event"] = 0;
+				BuyAssistantPropsEvent();
 			end
 		end
 	else
 		Result = GetMouseStatus();
 		if Result == MouseLeftUp then
 			ShopBigBombPropsTemp["DrawStatus"] = 0;
+			ShopAssistantPropsPropsTemp["DrawStatus"] = 0;
 		end
-		ShopBigBombIntr["DrawStatus"] = 0;
 		GetMouseStatus();
 		NotReSetShopButton(0);
 	end
-	--[[local RResult = KeyDetect(Right);
-	local uResult = KeyDetect(Up);
-	if RResult == KeepPressing then
-		ShopReturnButton:setRelativelyStartPos(1, 0.0);
-	end
-	if uResult == KeepPressing then
-		ShopReturnButton:setRelativelyStartPos(0.0, 1);
-	end--]]
+	
 end	
 
 function NotReSetShopButton(value)
+
 	if value ~= 1 then
 		ShopReturnButton:setImagePos(0, 173.7, 0, 172);
 		ShopReturnButton["Hover"] = 0;
+		
 	end
 	if value ~= 2 then
 		ShopBigBombProps["Hover"] = 0;
-		ShopBigBombProps:setImagePos(0, BigBombPropsW, 0, BigBombPropsH);
+		ShopBigBombProps:setImagePos(0, PropsW, 0, PropsH);
+	end
+	if value ~= 3 then
+		BuyBigBombButton["Hover"] = 0;
+		BuyBigBombButton:setImagePos(0, 320, 0, 146);
+	end
+	
+	if value ~= 4 then
+		ShopAssistantPropsProps["Hover"] = 0;
+		ShopAssistantPropsProps:setImagePos(0+OnePropsImageW*AssistantProps, PropsW+OnePropsImageW*AssistantProps, OnePropsImageH+16, PropsH+OnePropsImageH+16);
+	end
+	if value ~= 5 then
+		BuyAssistantButton["Hover"] = 0;
+		BuyAssistantButton:setImagePos(0, 320, 0, 146);
 	end
 end
+
+
+
+function ShowPropsIntro(value)
+	if value == 0 then
+		ShopIntroDefault["DrawStatus"] = 1;
+		ShopBigBombIntr["DrawStatus"] = 0;
+		ShopAssistantPropsPropsIntr["DrawStatus"] = 0;
+	elseif value == 2 then
+		ShopIntroDefault["DrawStatus"] = 0;
+		ShopBigBombIntr["DrawStatus"] = 1;
+		ShopAssistantPropsPropsIntr["DrawStatus"] = 0;
+	elseif value == 3 then
+		ShopIntroDefault["DrawStatus"] = 0;
+		ShopBigBombIntr["DrawStatus"] = 0;
+		ShopAssistantPropsPropsIntr["DrawStatus"] = 1;
+	end
+end
+
+
+
+
+
+
+
+
+
+
+function BuyBigBombEvent()
+	
+	if UserData["GoldCoins"] - BigBombNeeds < 0 then
+		
+	else
+		UserData["GoldCoins"] = UserData["GoldCoins"] - BigBombNeeds;
+	end
+end
+
+
+
+function BuyAssistantPropsEvent()
+	if UserData["GoldCoins"] - AssistantPropsNeeds < 0 then
+		
+	else
+		UserData["GoldCoins"] = UserData["GoldCoins"] - AssistantPropsNeeds;
+	end
+	
+end
+

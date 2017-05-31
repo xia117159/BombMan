@@ -2,8 +2,7 @@ ImageClass =
 {
 	Event = 0,
 	Hover = 0,
-	DrawStatus = 1;
-
+	DrawStatus = 1,
 
 	ImagePath = "",
 	WindowsWidth  =   1000.0,
@@ -29,6 +28,8 @@ function ImageClass:setRelativelyStartPos(sx, sy)
 	self.StartX = self.StartX + sx;
 	self.StartY = self.StartY + sy;
 end
+
+
 function ImageClass:setAbsoluteStartPos(sx, sy)
 	self.StartX = sx;
 	self.EndX =  sx + self.Width;
@@ -80,11 +81,13 @@ function ImageClass:setImage(sx, sy, w, h, isx, iex, isy, iey, p)
 	self.Priority = p;
 end
 function ImageClass:DrawImage()
-	LuaDrawImage(self.StartX, self.StartY, 
-	self.Width, self.Height, 
-	self.ImageStartX, self.ImageEndX,
-	self.ImageStartY, self.ImageEndY,
-	self.Priority);
+	if self.DrawStatus == 1  then
+		LuaDrawImage(self.StartX, self.StartY, 
+		self.Width, self.Height, 
+		self.ImageStartX, self.ImageEndX,
+		self.ImageStartY, self.ImageEndY,
+		self.Priority);
+	end
 end
 
 function ImageClass:GetStartX()
@@ -101,8 +104,37 @@ function ImageClass:new()
 	return o;
 end
 
+AnimationRecord = {
+	StartX = 0,
+	StartY = 0, 
+	Timer = 0, 
+	NowTimer = 0,
+	FrameRate = 1,
+	NowFrameRate = 1
+}
+function AnimationRecord:SetValue(sx, sy, t, fr)
+	self.StartX = sx;
+	self.StartY = sy;
+	self.Timer = t;
+	self.NowTimer = self.Timer;
+	self.FrameRate = fr;
+end
+
+function AnimationRecord:TimerGo(fr)
+	self.NowTimer = self.NowTimer - 1;
+	if self.NowTimer  <= 0 then
+		self.NowFrameRate = self.NowFrameRate + 1;
+		if self.NowFrameRate > self.FrameRate then
+			self.NowFrameRate = 1;
+		end
+		self.NowTimer = self.Timer;
+	end
+	return self.NowFrameRate;
+end
 
 
-
-
-
+function AnimationRecord:new()
+	o = {}
+	setmetatable(o, {__index = self});
+	return o;
+end
