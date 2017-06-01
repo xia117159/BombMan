@@ -74,6 +74,13 @@ GirlsAssistant = 0x000
 BoysAssistant = 0x001
 
 
+--快捷键设置值，可修改
+ShortcutKey1 = 1
+ShortcutKey2 = 2
+--检测快捷键盘的值，无需修改
+DetectShortcutKey1 = ShortcutKey1+1
+DetectShortcutKey2 = ShortcutKey2+1
+
 --通用函数定义区域
 function GetBitNum(Num, Bit)
 	local StrGCNum = tostring(Num);

@@ -36,7 +36,7 @@ bool KeyBoard::Initialize( HINSTANCE hInstance, HWND hwnd )
     { 
         return false;
     }
-
+	
 	result = directInput_->CreateDevice( GUID_SysKeyboard, &keyboardDevice_, 0 );
 
     if( FAILED( result ) )

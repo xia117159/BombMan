@@ -26,6 +26,9 @@ function bpViewKC()
 			bpReturnButton:setImagePos(173.7*2, 173.7*3, 0, 172);
 		elseif Result == MouseLeftUp then --Êó±ê×ó¼üËÉ¿ª
 			bpReturnButton:setImagePos(0, 173.7, 0, 172);
+			MovePropsMem = 0;
+			bpBigBombPropsTemp["DrawStatus"] = 0;
+			bpAssistantPropsPropsTemp["DrawStatus"] = 0;
 			if bpReturnButton["Event"] == 1 then
 				bpReturnButton["Event"] = 0;
 				Gamebgm:Play(ForcedSwitch);
@@ -53,10 +56,11 @@ function bpViewKC()
 			bpBigBombProps:setImagePos(PropsW*0, PropsW*1, 0, PropsH);
 		elseif Result == MouseLeftUp then --Êó±ê×ó¼üËÉ¿ª
 			bpBigBombProps:setImagePos(PropsW*0, PropsW*1, 0, PropsH);
+			MovePropsMem = 0;
 			bpBigBombPropsTemp["DrawStatus"] = 0;
+			bpAssistantPropsPropsTemp["DrawStatus"] = 0;
 			if bpBigBombProps["Event"] == 1 then
 				bpBigBombProps["Event"] = 0;
-				
 				
 			end
 		end
@@ -81,9 +85,12 @@ function bpViewKC()
 				bpAssistantPropsProps:setImagePos(PropsW*0+OnePropsImageW*AssistantProps, PropsW*1+OnePropsImageW*AssistantProps, OnePropsImageH+16, PropsH+OnePropsImageH+16);
 			elseif Result == MouseLeftUp then --Êó±ê×ó¼üËÉ¿ª
 				bpAssistantPropsProps:setImagePos(PropsW*0+OnePropsImageW*AssistantProps, PropsW*1+OnePropsImageW*AssistantProps, OnePropsImageH+16, PropsH+OnePropsImageH+16);
+				MovePropsMem = 0;
+				bpBigBombPropsTemp["DrawStatus"] = 0;
 				bpAssistantPropsPropsTemp["DrawStatus"] = 0;
 				if bpAssistantPropsProps["Event"] == 1 then
 					bpAssistantPropsProps["Event"] = 0;
+					
 				end
 			end
 		end
@@ -101,7 +108,6 @@ function bpViewKC()
 				bpAssistantPropsPropsTemp["DrawStatus"] = 0;
 				if bpShortCutBar1["Event"] == 1 then
 					bpShortCutBar1["Event"] = 0;
-					UserData["ShortCutBarBBP"] = 1;
 					
 				end
 				
@@ -141,6 +147,7 @@ function bpViewKC()
 				bpAssistantPropsPropsTemp["DrawStatus"] = 0;
 				if bpShortCutBar2["Event"] == 1 then
 					bpShortCutBar2["Event"] = 0;
+					
 				end
 
 				if UserData["ShortCutBarBBP"] == 1 or UserData["ShortCutBarAP"] == 1 then

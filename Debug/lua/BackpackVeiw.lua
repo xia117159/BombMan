@@ -140,12 +140,23 @@ bpPriceNumberPriority = 0.3
 
 
 
+
+
 function DrawbpNumber()
-	--DrawTwoNumber(740,470,GetBitNum(BigBombNeeds,1), GetBitNum(BigBombNeeds,2))
-	--助手价格
-	--if UserData["AssistantLock"] == 0 then
-	--	DrawTwoNumber(740,320,GetBitNum(AssistantPropsNeeds,1), GetBitNum(AssistantPropsNeeds,2))
-	--end
+	
+	if UserData["BigBombPropsAmount"] >= 10 then
+		DrawTwoNumber(740,420,GetBitNum(UserData["BigBombPropsAmount"],1), GetBitNum(UserData["BigBombPropsAmount"],2), 1);
+	else
+		DrawTwoNumber(740,420, 0, GetBitNum(UserData["BigBombPropsAmount"],1), 1);
+	end
+	--助手拥有个数
+	if UserData["AssistantLock"] == 0 then
+		if UserData["AssistantPropsAmount"] >= 10 then
+			DrawTwoNumber(740,280,GetBitNum(UserData["AssistantPropsAmount"],1), GetBitNum(UserData["AssistantPropsAmount"],2), 1);
+		else
+			DrawTwoNumber(740,280, 0, GetBitNum(UserData["AssistantPropsAmount"],1), 1);
+		end
+	end
 	
 	
 	if UserData["GoldCoins"] < 10 then
@@ -157,13 +168,15 @@ function DrawbpNumber()
 	else
 		DrawFourNumber(700, 140, GetBitNum(UserData["GoldCoins"],1), GetBitNum(UserData["GoldCoins"],2),GetBitNum(UserData["GoldCoins"],3), GetBitNum(UserData["GoldCoins"],4))
 	end
+	
+	--画快捷键提示
+	DrawNumberFunc(ShortcutPosX+40, ShortcutPosY - 30, 0.3, ShortcutKey1, 2);
+	DrawNumberFunc(ShortcutPosX+140, ShortcutPosY - 30, 0.3, ShortcutKey2, 2);
 end
 
+
+
 -------------------------------------------------------画字体
-
-FontImageW = 392
-FontImageH = 95
-
 
 bpGoldFont = ImageClass:new();
 bpGoldFont :setImageFileSize(FontImageW, FontImageH);
@@ -175,10 +188,27 @@ bpOverageFont :setImageFileSize(FontImageW, FontImageH);
 bpOverageFont :setscaling_ratio(0.3);
 bpOverageFont :setImage(620, 140 ,212, 95, 180, 392,0, 95, ShopPriorityFont+0.9);
 
+bpFontGE = ImageClass:new();
+bpFontGE :setImageFileSize(FontImageW, FontImageH);
+bpFontGE :setscaling_ratio(0.3);
+bpFontGE :setImage(800, 420 ,93, 95, 400, 493,0, 95, ShopPriorityFont+0.9);
+
 
 function DrawbpFont()
-
+	bpFontGE:setAbsoluteStartPos(800,420);
+	bpFontGE:DrawImage();
+	bpOverageFont:setAbsoluteStartPos(620,140);
 	bpOverageFont:DrawImage();
+	bpOverageFont:setAbsoluteStartPos(660,420);
+	bpOverageFont:DrawImage();
+	
+	if UserData["AssistantLock"] == 0 then
+		bpFontGE:setAbsoluteStartPos(800,280);
+		bpFontGE:DrawImage();
+		bpOverageFont:setAbsoluteStartPos(660,280);
+		bpOverageFont:DrawImage();
+	end
+	
 	bpGoldFont :DrawImage();
 	
 end
@@ -190,16 +220,17 @@ end
 
 -------------------------------------------------------画金币
 
-GoldA1 = AnimationRecord:new();
-GoldA1:SetValue(660, 460, 20, 8);
+bpGoldA1 = AnimationRecord:new();
+bpGoldA1:SetValue(550, 130, 20, 8);
 
-GoldA2 = AnimationRecord:new();
-GoldA2:SetValue(660, 310, 20, 8);
 function DrawbpGold()
-	DrawGoldFunc(GoldA1["StartX"], GoldA1["StartY"], GoldA1:TimerGo() );
+	DrawGoldFunc(bpGoldA1["StartX"], bpGoldA1["StartY"], bpGoldA1:TimerGo() );
 end
 
 -------------------------------------------------------画快捷栏
+
+ShortcutPosX = 650
+ShortcutPosY = 40
 
 ShortCutBarW = 200
 ShortCutBarH = 162
@@ -207,12 +238,12 @@ ShortCutBarH = 162
 bpShortCutBar1 = ImageClass:new();
 bpShortCutBar1 :setImageFileSize(800, 162);
 bpShortCutBar1 :setscaling_ratio(0.5);
-bpShortCutBar1 :setImage(500, 30 ,ShortCutBarW, ShortCutBarH,  ShortCutBarW, ShortCutBarW*2,0, ShortCutBarH, bpPrioritySCB+0.9);
+bpShortCutBar1 :setImage(ShortcutPosX, ShortcutPosY ,ShortCutBarW, ShortCutBarH,  ShortCutBarW, ShortCutBarW*2,0, ShortCutBarH, bpPrioritySCB+0.9);
 
 bpShortCutBar2 = ImageClass:new();
 bpShortCutBar2 :setImageFileSize(800, 162);
 bpShortCutBar2 :setscaling_ratio(0.5);
-bpShortCutBar2 :setImage(600, 30 ,ShortCutBarW, ShortCutBarH, ShortCutBarW*3, ShortCutBarW*4,0, ShortCutBarH, bpPrioritySCB+0.9);
+bpShortCutBar2 :setImage(ShortcutPosX+100, ShortcutPosY ,ShortCutBarW, ShortCutBarH, ShortCutBarW*3, ShortCutBarW*4,0, ShortCutBarH, bpPrioritySCB+0.9);
 
 
 bpBigBombPropsSCB = ImageClass:new();
@@ -233,21 +264,21 @@ function bpDrawShortCutBar()
 	
 	if UserData["ShortCutBarBBP"] == 1 then
 		bpBigBombPropsSCB["DrawStatus"] = 1;
-		bpBigBombPropsSCB:setAbsoluteStartPos(520, 40);
+		bpBigBombPropsSCB:setAbsoluteStartPos(ShortcutPosX+20, ShortcutPosY+10);
 		bpShortCutBar1:setImagePos(0, ShortCutBarW,0, ShortCutBarH);
 	elseif UserData["ShortCutBarBBP"] == 2 then
 		bpBigBombPropsSCB["DrawStatus"] = 1;
-		bpBigBombPropsSCB:setAbsoluteStartPos(620, 40);
+		bpBigBombPropsSCB:setAbsoluteStartPos(ShortcutPosX+120, ShortcutPosY+10);
 		bpShortCutBar2:setImagePos(ShortCutBarW*2, ShortCutBarW*3,0, ShortCutBarH);
 	end
 	
 	if UserData["ShortCutBarAP"] == 1 then
 		bpAssistantPropsPropsSCB["DrawStatus"] = 1;
-		bpAssistantPropsPropsSCB:setAbsoluteStartPos(520, 40);
+		bpAssistantPropsPropsSCB:setAbsoluteStartPos(ShortcutPosX+20, ShortcutPosY+10);
 		bpShortCutBar1:setImagePos(0, ShortCutBarW,0, ShortCutBarH);
 	elseif UserData["ShortCutBarAP"] == 2 then
 		bpAssistantPropsPropsSCB["DrawStatus"] = 1;
-		bpAssistantPropsPropsSCB:setAbsoluteStartPos(620, 40);
+		bpAssistantPropsPropsSCB:setAbsoluteStartPos(ShortcutPosX+120, ShortcutPosY+10);
 		bpShortCutBar2:setImagePos(ShortCutBarW*2, ShortCutBarW*3,0, ShortCutBarH);
 	end
 	
@@ -269,7 +300,7 @@ function LoadBakcpackImageFile()
 	ImageLoad:LoadImage("Image/Return.png","DrawbpReturn()", "Image_1");
 	ImageLoad:LoadImage("Image/Gold.png","DrawbpGold()", "Image_2");
 	ImageLoad:LoadImage("Image/Number.png","DrawbpNumber()", "Image_3");
-	ImageLoad:LoadImage("Image/Font.png","DrawbpFont()", "Image_4");
+	ImageLoad:LoadImage("Image/Font1.png","DrawbpFont()", "Image_4");
 	ImageLoad:LoadImage("Image/ShortcutBar2.png","bpDrawShortCutBar()", "Image_5");
 	ImageLoad:LoadImage("Image/Shop/ShopProps.png","DrawbpProps()", "Image_6");
 	

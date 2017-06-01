@@ -118,10 +118,25 @@ PriceNumberPriority = 0.3
 
 
 function DrawNumber()
-	DrawTwoNumber(740,470,GetBitNum(BigBombNeeds,1), GetBitNum(BigBombNeeds,2))
+	
+	if UserData["BigBombPropsAmount"] >= 10 then
+		DrawTwoNumber(880,385,GetBitNum(UserData["BigBombPropsAmount"],1), GetBitNum(UserData["BigBombPropsAmount"],2),1);
+	else
+		DrawTwoNumber(880,385, 0, GetBitNum(UserData["BigBombPropsAmount"],1),1);
+	end
+	--助手拥有个数
+	if UserData["AssistantLock"] == 0 then
+		if UserData["AssistantPropsAmount"] >= 10 then
+			DrawTwoNumber(880,235,GetBitNum(UserData["AssistantPropsAmount"],1), GetBitNum(UserData["AssistantPropsAmount"],2),1);
+		else
+			DrawTwoNumber(880,235, 0, GetBitNum(UserData["AssistantPropsAmount"],1),1);
+		end
+	end
+	
+	DrawTwoNumber(740,470,GetBitNum(BigBombNeeds,1), GetBitNum(BigBombNeeds,2),2)
 	--助手价格
 	if UserData["AssistantLock"] == 0 then
-		DrawTwoNumber(740,320,GetBitNum(AssistantPropsNeeds,1), GetBitNum(AssistantPropsNeeds,2))
+		DrawTwoNumber(740,320,GetBitNum(AssistantPropsNeeds,1), GetBitNum(AssistantPropsNeeds,2),2)
 	end
 	
 	
@@ -158,9 +173,10 @@ function DrawFourNumber(sx, sy, Tho, Hun, Ten, Bit)
 end
 
 
-function DrawTwoNumber(sx, sy, Ten, Bit)
-	local Color = 2;
-	DrawNumberFunc(sx, sy, PriceNumberPriority, Ten, Color);
+function DrawTwoNumber(sx, sy, Ten, Bit,Color)
+	if Ten ~= 0 then
+		DrawNumberFunc(sx, sy, PriceNumberPriority, Ten, Color);
+	end
 	DrawNumberFunc(sx+NumberW*PriceNumberPriority, sy, PriceNumberPriority, Bit, Color);
 	
 end
@@ -175,7 +191,7 @@ end
 
 -------------------------------------------------------画字体
 
-FontImageW = 392
+FontImageW = 493
 FontImageH = 95
 
 
@@ -189,14 +205,36 @@ OverageFont :setImageFileSize(FontImageW, FontImageH);
 OverageFont :setscaling_ratio(0.3);
 OverageFont :setImage(520, 70 ,212, 95, 180, 392,0, 95, ShopPriorityFont+0.9);
 
+FontGE = ImageClass:new();
+FontGE :setImageFileSize(FontImageW, FontImageH);
+FontGE :setscaling_ratio(0.3);
+FontGE :setImage(800, 420 ,93, 95, 400, 493,0, 95, ShopPriorityFont+0.9);
+
+
 
 function DrawFont()
+	
+	
+	OverageFont:setAbsoluteStartPos(800,385);
+	OverageFont:DrawImage();
+	FontGE:setAbsoluteStartPos(930,385);
+	FontGE:DrawImage();
+	
 	GoldFont :setAbsoluteStartPos(800,470);
 	GoldFont :DrawImage();
+	
 	if UserData["AssistantLock"] == 0 then
 		GoldFont :setAbsoluteStartPos(800,320);
 		GoldFont :DrawImage();
+		
+		OverageFont:setAbsoluteStartPos(800,235);
+		OverageFont:DrawImage();
+		FontGE:setAbsoluteStartPos(930,235);
+		FontGE:DrawImage();
 	end
+	
+	
+	OverageFont:setAbsoluteStartPos(520,70);
 	OverageFont:DrawImage();
 	GoldFont :setAbsoluteStartPos(700,70);
 	GoldFont :DrawImage();
@@ -249,12 +287,12 @@ end
 BuyBigBombButton = ImageClass:new();
 BuyBigBombButton :setImageFileSize(320, 438);
 BuyBigBombButton :setscaling_ratio(0.4);
-BuyBigBombButton :setImage(740, 370 ,320, 146, 0, 320, 0, 146, ShopPriorityBB+0.9);
+BuyBigBombButton :setImage(650, 370 ,320, 146, 0, 320, 0, 146, ShopPriorityBB+0.9);
 
 BuyAssistantButton = ImageClass:new();
 BuyAssistantButton :setImageFileSize(320, 438);
 BuyAssistantButton :setscaling_ratio(0.4);
-BuyAssistantButton :setImage(740, 220 ,320, 146, 0, 320, 0, 146, ShopPriorityBB+0.9);
+BuyAssistantButton :setImage(650, 220 ,320, 146, 0, 320, 0, 146, ShopPriorityBB+0.9);
 function DrawBuyButton()
 	
 	BuyBigBombButton:DrawImage();
@@ -288,7 +326,7 @@ function LoadShopImageFile()
 	ImageLoad:LoadImage("Image/Return.png","DrawShopReturn()", "Image_1");
 	ImageLoad:LoadImage("Image/Gold.png","DrawGold()", "Image_2");
 	ImageLoad:LoadImage("Image/Number.png","DrawNumber()", "Image_3");
-	ImageLoad:LoadImage("Image/Font.png","DrawFont()", "Image_4");
+	ImageLoad:LoadImage("Image/Font1.png","DrawFont()", "Image_4");
 	ImageLoad:LoadImage("Image/Shop/BuyButton.png","DrawBuyButton()", "Image_5");
 	ImageLoad:LoadImage("Image/Shop/backpack1.png","Drawbackpack()", "Image_6");
 	ImageLoad:LoadImage("Image/Shop/ShopProps.png","DrawShopProps()", "Image_7");
