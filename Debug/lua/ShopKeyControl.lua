@@ -55,7 +55,6 @@ function ShopViewKC()
 			end
 		elseif Result == MouseLeftDown then --鼠标左键按下
 			ShopBigBombProps["Event"] = 1;
-			ShopBigBombPropsTemp["DrawStatus"] = 1;
 			ShopBigBombProps:setImagePos(PropsW*0, PropsW*1, 0, PropsH);
 		elseif Result == MouseLeftUp then --鼠标左键松开
 			ShopBigBombProps:setImagePos(PropsW*0, PropsW*1, 0, PropsH);
@@ -87,48 +86,75 @@ function ShopViewKC()
 		end
 	--助手图标区域
 	elseif DetectMousePos(ShopAssistantPropsProps) == 1 then
-		
-		NotReSetShopButton(4);
-		
-		Result = GetMouseStatus();
-		if Result == MouseHover then --鼠标左键悬停
-			ShopAssistantPropsProps:setImagePos(PropsW*1+5+OnePropsImageW*AssistantProps, PropsW*2+5+OnePropsImageW*AssistantProps, OnePropsImageH+16, PropsH+OnePropsImageH+16);
+		if UserData["AssistantLock"] == 0 then
+			NotReSetShopButton(4);
 			
-			if ShopAssistantPropsProps["Hover"] == 0 then
-				ShopAssistantPropsProps["Hover"] = 1;
-				ShowPropsIntro(3);
-				ShoptViewPropsse:Play();
-			end
-		elseif Result == MouseLeftDown then --鼠标左键按下
-			ShopAssistantPropsProps["Event"] = 1;
-			ShopAssistantPropsPropsTemp["DrawStatus"] = 1;
-			ShopAssistantPropsProps:setImagePos(PropsW*0+OnePropsImageW*AssistantProps, PropsW*1+OnePropsImageW*AssistantProps, OnePropsImageH+16, PropsH+OnePropsImageH+16);
-		elseif Result == MouseLeftUp then --鼠标左键松开
-			ShopAssistantPropsProps:setImagePos(PropsW*0+OnePropsImageW*AssistantProps, PropsW*1+OnePropsImageW*AssistantProps, OnePropsImageH+16, PropsH+OnePropsImageH+16);
-			ShopAssistantPropsPropsTemp["DrawStatus"] = 0;
-			if ShopAssistantPropsProps["Event"] == 1 then
-				ShopAssistantPropsProps["Event"] = 0;
+			Result = GetMouseStatus();
+			if Result == MouseHover then --鼠标左键悬停
+				ShopAssistantPropsProps:setImagePos(PropsW*1+5+OnePropsImageW*AssistantProps, PropsW*2+5+OnePropsImageW*AssistantProps, OnePropsImageH+16, PropsH+OnePropsImageH+16);
+				
+				if ShopAssistantPropsProps["Hover"] == 0 then
+					ShopAssistantPropsProps["Hover"] = 1;
+
+					ShowPropsIntro(3);
+					ShoptViewPropsse:Play();
+				end
+			elseif Result == MouseLeftDown then --鼠标左键按下
+				ShopAssistantPropsProps["Event"] = 1;
+				ShopAssistantPropsProps:setImagePos(PropsW*0+OnePropsImageW*AssistantProps, PropsW*1+OnePropsImageW*AssistantProps, OnePropsImageH+16, PropsH+OnePropsImageH+16);
+			elseif Result == MouseLeftUp then --鼠标左键松开
+				ShopAssistantPropsProps:setImagePos(PropsW*0+OnePropsImageW*AssistantProps, PropsW*1+OnePropsImageW*AssistantProps, OnePropsImageH+16, PropsH+OnePropsImageH+16);
+				ShopAssistantPropsPropsTemp["DrawStatus"] = 0;
+				if ShopAssistantPropsProps["Event"] == 1 then
+					ShopAssistantPropsProps["Event"] = 0;
+				end
 			end
 		end
 	--购买助手按钮区域
 	elseif DetectMousePos(BuyAssistantButton) == 1 then
-		NotReSetShopButton(5);
+		if UserData["AssistantLock"] == 0 then
+			NotReSetShopButton(5);
+			Result = GetMouseStatus();
+			if Result == MouseHover then --鼠标左键悬停
+				BuyAssistantButton:setImagePos(0, 320, 146, 146*2);
+				
+				if BuyAssistantButton["Hover"] == 0 then
+					BuyAssistantButton["Hover"] = 1;
+					ShopViewBuy:Play();
+				end
+			elseif Result == MouseLeftDown then --鼠标左键按下
+				BuyAssistantButton["Event"] = 1;
+				BuyAssistantButton:setImagePos(0, 320, 146*2, 146*3);
+			elseif Result == MouseLeftUp then --鼠标左键松开
+				BuyAssistantButton:setImagePos(0, 320, 0, 146);
+				if BuyAssistantButton["Event"] == 1 then
+					BuyAssistantButton["Event"] = 0;
+					BuyAssistantPropsEvent();
+				end
+			end
+		end
+	--背包区域
+	elseif DetectMousePos(backpack) == 1 then
+		NotReSetShopButton(6);
 		Result = GetMouseStatus();
 		if Result == MouseHover then --鼠标左键悬停
-			BuyAssistantButton:setImagePos(0, 320, 146, 146*2);
 			
-			if BuyAssistantButton["Hover"] == 0 then
-				BuyAssistantButton["Hover"] = 1;
-				ShopViewBuy:Play();
+			if backpack["Hover"] == 0 then
+				backpack["Hover"] = 1;
+				backpack :setscaling_ratio(0.23);
+				backpack:setImage(890, 45 ,339, 410, 300, 639, 0, 410, ShopPriorityBackPack+0.9);
+				ShoptViewPropsse:Play();
 			end
 		elseif Result == MouseLeftDown then --鼠标左键按下
-			BuyAssistantButton["Event"] = 1;
-			BuyAssistantButton:setImagePos(0, 320, 146*2, 146*3);
+			backpack["Event"] = 1;
+			backpack :setscaling_ratio(0.2);
+			backpack:setImage(900, 50 ,300, 410, 0, 300, 0, 410, ShopPriorityBackPack+0.9);
 		elseif Result == MouseLeftUp then --鼠标左键松开
-			BuyAssistantButton:setImagePos(0, 320, 0, 146);
-			if BuyAssistantButton["Event"] == 1 then
-				BuyAssistantButton["Event"] = 0;
-				BuyAssistantPropsEvent();
+			backpack :setscaling_ratio(0.2);
+			backpack:setImage(900, 50 ,300, 410, 0, 300, 0, 410, ShopPriorityBackPack+0.9);
+			if backpack["Event"] == 1 then
+				backpack["Event"] = 0;
+				GoBackpackVeiw();
 			end
 		end
 	else
@@ -167,6 +193,11 @@ function NotReSetShopButton(value)
 		BuyAssistantButton["Hover"] = 0;
 		BuyAssistantButton:setImagePos(0, 320, 0, 146);
 	end
+	if value ~= 6 then
+		backpack["Hover"] = 0;
+		backpack :setscaling_ratio(0.2);
+		backpack:setImage(900, 50 ,300, 410, 0, 300, 0, 410, ShopPriorityBackPack+0.9);
+	end
 end
 
 
@@ -201,6 +232,7 @@ function BuyBigBombEvent()
 	if UserData["GoldCoins"] - BigBombNeeds < 0 then
 		
 	else
+		UserData["BigBombPropsAmount"] = UserData["BigBombPropsAmount"] + 1;
 		UserData["GoldCoins"] = UserData["GoldCoins"] - BigBombNeeds;
 	end
 end
@@ -211,6 +243,7 @@ function BuyAssistantPropsEvent()
 	if UserData["GoldCoins"] - AssistantPropsNeeds < 0 then
 		
 	else
+		UserData["AssistantPropsAmount"] = UserData["AssistantPropsAmount"] + 1;
 		UserData["GoldCoins"] = UserData["GoldCoins"] - AssistantPropsNeeds;
 	end
 	

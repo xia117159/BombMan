@@ -23,6 +23,8 @@ StartV     =   0x1001
 ChallengeV =   0x1002
 ShopV      =   0x1003
 PlotV      =   0x1004
+BackpackV  =   0x1005
+
 --按键状态
 KeepPressing  = 101  --一直按下
 Press         = 102  --按下的那一瞬间

@@ -26,7 +26,7 @@ end
 ShopPropsImageW = 1720
 ShopPropsImageH = 2800
 OnePropsImageW = 860
-OnePropsImageH = 1392
+OnePropsImageH = 1392 
 PropsW = 266
 PropsH = 266
 
@@ -85,12 +85,6 @@ function DrawShopProps()
 		ShopAssistantPropsPropsIntr:DrawImage();
 		ShopAssistantPropsProps:DrawImage();
 	end
-	ShopBigBombPropsTemp:setAbsoluteStartPos(MousePosX-ShopBigBombPropsTemp["Width"]/2,600.0 - MousePosY- ShopBigBombPropsTemp["Height"]/2);
-	ShopBigBombPropsTemp:DrawImage();
-	if UserData["AssistantLock"] == 0 then
-		ShopAssistantPropsPropsTemp:setAbsoluteStartPos(MousePosX-ShopBigBombPropsTemp["Width"]/2,600.0 - MousePosY- ShopBigBombPropsTemp["Height"]/2);
-		ShopAssistantPropsPropsTemp:DrawImage();
-	end
 	
 end
 
@@ -110,22 +104,6 @@ function DrawShopBackGroundFunc()
 	ShopIntroDefault:DrawImage();
 end
 
-ShopBackGround = ImageClass:new();
-ShopBackGround:setImageFileSize(1875, 2250);
-ShopBackGround:setImage(0, 0, 1000, 600, 0, 1875, 0, 1125, 10.99);
-
-ShopIntroDefault = ImageClass:new();
-ShopIntroDefault :setImageFileSize(1875, 2250);
-ShopIntroDefault:setscaling_ratio(0.52);
-
-ShopIntroDefault :setImage(30, 10, 860, 1123, 0, 860, 1126, 2249, 10.98);
-
-function DrawShopBackGroundFunc()
-	ShopBackGround:DrawImage();
-	
-	ShopIntroDefault:DrawImage();
-end
-
 
 
 
@@ -141,8 +119,10 @@ PriceNumberPriority = 0.3
 
 function DrawNumber()
 	DrawTwoNumber(740,470,GetBitNum(BigBombNeeds,1), GetBitNum(BigBombNeeds,2))
-	DrawTwoNumber(740,320,GetBitNum(AssistantPropsNeeds,1), GetBitNum(AssistantPropsNeeds,2))
-	
+	--助手价格
+	if UserData["AssistantLock"] == 0 then
+		DrawTwoNumber(740,320,GetBitNum(AssistantPropsNeeds,1), GetBitNum(AssistantPropsNeeds,2))
+	end
 	
 	
 	if UserData["GoldCoins"] < 10 then
@@ -154,12 +134,13 @@ function DrawNumber()
 	else
 		DrawFourNumber(600, 70, GetBitNum(UserData["GoldCoins"],1), GetBitNum(UserData["GoldCoins"],2),GetBitNum(UserData["GoldCoins"],3), GetBitNum(UserData["GoldCoins"],4))
 	end
+	
 end
 
 
 
 function DrawFourNumber(sx, sy, Tho, Hun, Ten, Bit)
-	local Color = 4;
+	local Color = 1;
 	if Tho ~= 0 then
 		DrawNumberFunc(sx, sy, PriceNumberPriority, Tho, Color);
 	end
@@ -181,6 +162,7 @@ function DrawTwoNumber(sx, sy, Ten, Bit)
 	local Color = 2;
 	DrawNumberFunc(sx, sy, PriceNumberPriority, Ten, Color);
 	DrawNumberFunc(sx+NumberW*PriceNumberPriority, sy, PriceNumberPriority, Bit, Color);
+	
 end
 
 function DrawNumberFunc(sx, sy, P, Num, Color)
@@ -211,12 +193,14 @@ OverageFont :setImage(520, 70 ,212, 95, 180, 392,0, 95, ShopPriorityFont+0.9);
 function DrawFont()
 	GoldFont :setAbsoluteStartPos(800,470);
 	GoldFont :DrawImage();
-	GoldFont :setAbsoluteStartPos(800,320);
-	GoldFont :DrawImage();
-	
+	if UserData["AssistantLock"] == 0 then
+		GoldFont :setAbsoluteStartPos(800,320);
+		GoldFont :DrawImage();
+	end
 	OverageFont:DrawImage();
 	GoldFont :setAbsoluteStartPos(700,70);
 	GoldFont :DrawImage();
+	
 end
 
 
@@ -234,7 +218,9 @@ GoldA2:SetValue(660, 310, 20, 8);
 function DrawGold()
 
 	DrawGoldFunc(GoldA1["StartX"], GoldA1["StartY"], GoldA1:TimerGo() );
-	DrawGoldFunc(GoldA2["StartX"], GoldA2["StartY"], GoldA2:TimerGo() );
+	if UserData["AssistantLock"] == 0 then
+		DrawGoldFunc(GoldA2["StartX"], GoldA2["StartY"], GoldA2:TimerGo() );
+	end
 end
 
 function DrawGoldFunc(sx, sy, fr)
@@ -272,14 +258,16 @@ BuyAssistantButton :setImage(740, 220 ,320, 146, 0, 320, 0, 146, ShopPriorityBB+
 function DrawBuyButton()
 	
 	BuyBigBombButton:DrawImage();
-	BuyAssistantButton:DrawImage();
+	if UserData["AssistantLock"] == 0 then
+		BuyAssistantButton:DrawImage();
+	end
 	
 end
 -------------------------------------------------画背包
 backpack = ImageClass:new();
-backpack :setImageFileSize(294, 374);
+backpack :setImageFileSize(639, 410);
 backpack :setscaling_ratio(0.2);
-backpack :setImage(900, 50 ,294, 374, 0, 294, 0, 374, ShopPriorityBackPack+0.9);
+backpack :setImage(900, 50 ,300, 410, 0, 300, 0, 410, ShopPriorityBackPack+0.9);
 
 function Drawbackpack()
 	backpack:DrawImage();
@@ -302,7 +290,7 @@ function LoadShopImageFile()
 	ImageLoad:LoadImage("Image/Number.png","DrawNumber()", "Image_3");
 	ImageLoad:LoadImage("Image/Font.png","DrawFont()", "Image_4");
 	ImageLoad:LoadImage("Image/Shop/BuyButton.png","DrawBuyButton()", "Image_5");
-	ImageLoad:LoadImage("Image/Shop/backpack.png","Drawbackpack()", "Image_6");
+	ImageLoad:LoadImage("Image/Shop/backpack1.png","Drawbackpack()", "Image_6");
 	ImageLoad:LoadImage("Image/Shop/ShopProps.png","DrawShopProps()", "Image_7");
 	
 	ShowPropsIntro(0);

@@ -16,4 +16,8 @@
     <LuaFile RelativePath=".\MusicClass.lua" />
     <LuaFile RelativePath=".\Map.lua" />
     <LuaFile RelativePath=".\UserData.lua" />
+    <Filter Name="BackPack" Toggle="false" >
+        <LuaFile RelativePath=".\BackpackVeiw.lua" />
+        <LuaFile RelativePath=".\BackpackKeyControl.lua" />
+    </Filter>
 </Project>

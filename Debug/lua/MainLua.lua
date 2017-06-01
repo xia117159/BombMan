@@ -12,6 +12,10 @@ require "Map"
 require "ShopView"
 require "ShopKeyControl"
 
+require "BackpackVeiw"
+require "BackpackKeyControl"
+
+
 require "MainKeyFunc"
 
 goShopView();

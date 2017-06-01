@@ -24,6 +24,8 @@ function KeyFunc()
 		ShopViewKC();
 	elseif 	NowView == PlotV then
 		ActorKey();
+	elseif 	NowView == BackpackV then
+		bpViewKC();
 	end
 	Gamebgm:Play(EndSwitch);
 end

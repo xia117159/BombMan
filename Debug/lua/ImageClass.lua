@@ -58,6 +58,7 @@ end
 --…Ë÷√Àı∑≈±»
 function ImageClass:setscaling_ratio(sr)
 	self.scaling_ratio = sr;
+
 end
 function ImageClass:LoadImage(path, funcName, ShaderName)
 	self.ImagePath = path;
