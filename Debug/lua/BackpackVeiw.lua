@@ -6,10 +6,9 @@ bpPriorityGold = 8
 bpPriorityNumber = 7
 bpPriorityFont   = 6
 bpPrioritySCB = 5
-bpPriorityBBP  = 4
-
--------------
+bpPriorityLottery = 4
 bpPriorityBBP = 3
+-------------
 bpPriorityTwo   = 2
 bpPriorityOne   = 1
 
@@ -141,7 +140,6 @@ bpPriceNumberPriority = 0.3
 
 
 
-
 function DrawbpNumber()
 	
 	if UserData["BigBombPropsAmount"] >= 10 then
@@ -172,6 +170,8 @@ function DrawbpNumber()
 	--»­¿ì½Ý¼üÌáÊ¾
 	DrawNumberFunc(ShortcutPosX+40, ShortcutPosY - 30, 0.3, ShortcutKey1, 2);
 	DrawNumberFunc(ShortcutPosX+140, ShortcutPosY - 30, 0.3, ShortcutKey2, 2);
+	
+	DrawTwoNumber(120,50,GetBitNum(LotteryGoldSpend,1), GetBitNum(LotteryGoldSpend,2), 1);
 end
 
 
@@ -181,17 +181,23 @@ end
 bpGoldFont = ImageClass:new();
 bpGoldFont :setImageFileSize(FontImageW, FontImageH);
 bpGoldFont :setscaling_ratio(0.3);
-bpGoldFont :setImage(800, 140 ,180, 95, 0, 180,0, 95, ShopPriorityFont+0.9);
+bpGoldFont :setImage(800, 140 ,180, FontImageH, 0, 180,0, FontImageH, ShopPriorityFont+0.9);
 
 bpOverageFont = ImageClass:new();
 bpOverageFont :setImageFileSize(FontImageW, FontImageH);
 bpOverageFont :setscaling_ratio(0.3);
-bpOverageFont :setImage(620, 140 ,212, 95, 180, 392,0, 95, ShopPriorityFont+0.9);
+bpOverageFont :setImage(620, 140 ,212, FontImageH, 180, 392,0, FontImageH, ShopPriorityFont+0.9);
 
 bpFontGE = ImageClass:new();
 bpFontGE :setImageFileSize(FontImageW, FontImageH);
 bpFontGE :setscaling_ratio(0.3);
-bpFontGE :setImage(800, 420 ,93, 95, 400, 493,0, 95, ShopPriorityFont+0.9);
+bpFontGE :setImage(800, 420 ,93, FontImageH, 400, 493,0, FontImageH, ShopPriorityFont+0.9);
+
+SpendFont = ImageClass:new();
+SpendFont :setImageFileSize(FontImageW, FontImageH);
+SpendFont :setscaling_ratio(0.3);
+SpendFont :setImage(60, 50 ,190, FontImageH, 493, 683,0, FontImageH, ShopPriorityFont+0.9);
+
 
 
 function DrawbpFont()
@@ -209,8 +215,10 @@ function DrawbpFont()
 		bpOverageFont:DrawImage();
 	end
 	
-	bpGoldFont :DrawImage();
+	bpGoldFont:DrawImage();
 	
+	--
+	SpendFont:DrawImage();
 end
 
 
@@ -223,8 +231,13 @@ end
 bpGoldA1 = AnimationRecord:new();
 bpGoldA1:SetValue(550, 130, 20, 8);
 
+bpGoldA2 = AnimationRecord:new();
+bpGoldA2:SetValue(170, 40, 20, 8);
+
 function DrawbpGold()
 	DrawGoldFunc(bpGoldA1["StartX"], bpGoldA1["StartY"], bpGoldA1:TimerGo() );
+	
+	DrawGoldFunc(bpGoldA2["StartX"], bpGoldA2["StartY"], bpGoldA2:TimerGo() );
 end
 
 -------------------------------------------------------»­¿ì½ÝÀ¸
@@ -286,11 +299,28 @@ function bpDrawShortCutBar()
 	bpShortCutBar2:DrawImage();
 end
 
+bpLottery = ImageClass:new();
+bpLottery :setImageFileSize(1217, 1200);
+bpLottery :setscaling_ratio(0.41);
+bpLottery :setImage(0, 100 ,1217, 1200,  0, 1217,0, 1200, bpPriorityLottery+0.9);
 
 
 
+function DrawbpLottery()
+	bpLottery:DrawImage();
+end
 
 
+--»­³é½±°´Å¥
+bpLotteryButton = ImageClass:new();
+bpLotteryButton :setImageFileSize(556, 506);
+bpLotteryButton :setscaling_ratio(0.3);
+bpLotteryButton :setImage(220, 40 ,556, 143,  0, 556,0, 143, bpPriorityLottery+0.9);
+
+
+function DrawbpLotteryButton()
+	bpLotteryButton:DrawImage();
+end
 
 
 function LoadBakcpackImageFile()
@@ -300,10 +330,11 @@ function LoadBakcpackImageFile()
 	ImageLoad:LoadImage("Image/Return.png","DrawbpReturn()", "Image_1");
 	ImageLoad:LoadImage("Image/Gold.png","DrawbpGold()", "Image_2");
 	ImageLoad:LoadImage("Image/Number.png","DrawbpNumber()", "Image_3");
-	ImageLoad:LoadImage("Image/Font1.png","DrawbpFont()", "Image_4");
+	ImageLoad:LoadImage("Image/Font.png","DrawbpFont()", "Image_4");
 	ImageLoad:LoadImage("Image/ShortcutBar2.png","bpDrawShortCutBar()", "Image_5");
-	ImageLoad:LoadImage("Image/Shop/ShopProps.png","DrawbpProps()", "Image_6");
-	
+	ImageLoad:LoadImage("Image/Shop/LotteryBackGround.png","DrawbpLottery()", "Image_6");
+	ImageLoad:LoadImage("Image/Shop/LotteryButton.png","DrawbpLotteryButton()", "Image_7");
+	ImageLoad:LoadImage("Image/Shop/ShopProps.png","DrawbpProps()", "Image_8");
 	
 	ShowPropsIntro(0);
 end

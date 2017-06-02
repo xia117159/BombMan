@@ -87,9 +87,13 @@ function GetBitNum(Num, Bit)
 	return tonumber(string.sub(StrGCNum,Bit,Bit));
 end
 
-
-
-
+--全局变量
+-- 抽奖所需要的金币数量
+LotteryGoldSpend = 25
+-- 需要的金币数量
+BigBombNeeds = 15
+-- 需要的金币数量
+AssistantPropsNeeds = 30 
 
 --C++程序接口
 --SetViewIamgePath("路劲", "画图函数名()", "Image_数值"); @加载图片

@@ -96,78 +96,102 @@ function bpViewKC()
 		end
 	--快捷键1区域
 	elseif DetectMousePos(bpShortCutBar1) == 1 then
-		if UserData["AssistantLock"] == 0 then
-			NotReSetbpButton(3);
+		NotReSetbpButton(3);
+		
+		Result = GetMouseStatus();
+		if Result == MouseLeftDown then --鼠标左键按下
+			bpShortCutBar1["Event"] = 1;
 			
-			Result = GetMouseStatus();
-			if Result == MouseLeftDown then --鼠标左键按下
-				bpShortCutBar1["Event"] = 1;
+		elseif Result == MouseLeftUp then --鼠标左键松开
+			bpBigBombPropsTemp["DrawStatus"] = 0;
+			bpAssistantPropsPropsTemp["DrawStatus"] = 0;
+			if bpShortCutBar1["Event"] == 1 then
+				bpShortCutBar1["Event"] = 0;
 				
-			elseif Result == MouseLeftUp then --鼠标左键松开
-				bpBigBombPropsTemp["DrawStatus"] = 0;
-				bpAssistantPropsPropsTemp["DrawStatus"] = 0;
-				if bpShortCutBar1["Event"] == 1 then
-					bpShortCutBar1["Event"] = 0;
-					
-				end
-				
-				if UserData["ShortCutBarBBP"] == 2 or UserData["ShortCutBarAP"] == 2 then
-					bpShortCutBar2:setImagePos(ShortCutBarW*3, ShortCutBarW*4,0, ShortCutBarH);
-				end
+			end
 			
-				if MovePropsMem == 1 and UserData["BigBombPropsAmount"] >= 1 then
-					MovePropsMem = 0;
+			if UserData["ShortCutBarBBP"] == 2 or UserData["ShortCutBarAP"] == 2 then
+				bpShortCutBar2:setImagePos(ShortCutBarW*3, ShortCutBarW*4,0, ShortCutBarH);
+			end
+		
+			if MovePropsMem == 1 and UserData["BigBombPropsAmount"] >= 1 then
+				MovePropsMem = 0;
 
-					UserData["ShortCutBarBBP"] = 1;
-					if UserData["ShortCutBarAP"] == 1 then
-						UserData["ShortCutBarAP"] = 0;
-						bpAssistantPropsPropsSCB["DrawStatus"] = 0;
-					end
-				elseif  MovePropsMem == 2 and UserData["AssistantPropsAmount"] >= 1 then
-					MovePropsMem = 0;
+				UserData["ShortCutBarBBP"] = 1;
+				if UserData["ShortCutBarAP"] == 1 then
+					UserData["ShortCutBarAP"] = 0;
+					bpAssistantPropsPropsSCB["DrawStatus"] = 0;
+				end
+			elseif  MovePropsMem == 2 and UserData["AssistantPropsAmount"] >= 1 then
+				MovePropsMem = 0;
 
-					UserData["ShortCutBarAP"] = 1;
-					if UserData["ShortCutBarBBP"] == 1 then
-						UserData["ShortCutBarBBP"] = 0;
-						bpBigBombPropsSCB["DrawStatus"] = 0;
-					end
+				UserData["ShortCutBarAP"] = 1;
+				if UserData["ShortCutBarBBP"] == 1 then
+					UserData["ShortCutBarBBP"] = 0;
+					bpBigBombPropsSCB["DrawStatus"] = 0;
 				end
 			end
 		end
 	--快捷键2区域
 	elseif DetectMousePos(bpShortCutBar2) == 1 then
-		if UserData["AssistantLock"] == 0 then
-			NotReSetbpButton(3);
-			
-			Result = GetMouseStatus();
-			if Result == MouseLeftDown then --鼠标左键按下
-				bpShortCutBar2["Event"] = 1;
-			elseif Result == MouseLeftUp then --鼠标左键松开
-				bpBigBombPropsTemp["DrawStatus"] = 0;
-				bpAssistantPropsPropsTemp["DrawStatus"] = 0;
-				if bpShortCutBar2["Event"] == 1 then
-					bpShortCutBar2["Event"] = 0;
-					
-				end
-
-				if UserData["ShortCutBarBBP"] == 1 or UserData["ShortCutBarAP"] == 1 then
-					bpShortCutBar1:setImagePos(ShortCutBarW*3, ShortCutBarW*4,0, ShortCutBarH);
-				end
+		NotReSetbpButton(3);
+		
+		Result = GetMouseStatus();
+		if Result == MouseLeftDown then --鼠标左键按下
+			bpShortCutBar2["Event"] = 1;
+		elseif Result == MouseLeftUp then --鼠标左键松开
+			bpBigBombPropsTemp["DrawStatus"] = 0;
+			bpAssistantPropsPropsTemp["DrawStatus"] = 0;
+			if bpShortCutBar2["Event"] == 1 then
+				bpShortCutBar2["Event"] = 0;
 				
-				if MovePropsMem == 1 and UserData["BigBombPropsAmount"] >= 1 then
-					MovePropsMem = 0;
-					UserData["ShortCutBarBBP"] = 2;
-					if UserData["ShortCutBarAP"] == 2 then
-						UserData["ShortCutBarAP"] = 0;
-						bpAssistantPropsPropsSCB["DrawStatus"] = 0;
-					end
-				elseif  MovePropsMem == 2  and UserData["AssistantPropsAmount"] >= 1 then
-					MovePropsMem = 0;
-					UserData["ShortCutBarAP"] = 2;
-					if UserData["ShortCutBarBBP"] == 2 then
-						UserData["ShortCutBarBBP"] = 0;
-						bpBigBombPropsSCB["DrawStatus"] = 0;
-					end
+			end
+
+			if UserData["ShortCutBarBBP"] == 1 or UserData["ShortCutBarAP"] == 1 then
+				bpShortCutBar1:setImagePos(ShortCutBarW*3, ShortCutBarW*4,0, ShortCutBarH);
+			end
+			
+			if MovePropsMem == 1 and UserData["BigBombPropsAmount"] >= 1 then
+				MovePropsMem = 0;
+				UserData["ShortCutBarBBP"] = 2;
+				if UserData["ShortCutBarAP"] == 2 then
+					UserData["ShortCutBarAP"] = 0;
+					bpAssistantPropsPropsSCB["DrawStatus"] = 0;
+				end
+			elseif  MovePropsMem == 2  and UserData["AssistantPropsAmount"] >= 1 then
+				MovePropsMem = 0;
+				UserData["ShortCutBarAP"] = 2;
+				if UserData["ShortCutBarBBP"] == 2 then
+					UserData["ShortCutBarBBP"] = 0;
+					bpBigBombPropsSCB["DrawStatus"] = 0;
+				end
+			end
+		end
+	elseif DetectMousePos(bpLotteryButton) == 1 then
+		NotReSetbpButton(4);
+		Result = GetMouseStatus();
+		if Result == MouseHover then --鼠标左键悬停
+			bpLotteryButton:setImage(220, 29 ,556, 215,  0, 556, 145, 360, bpPriorityLottery+0.9);
+			
+			if bpLotteryButton["Hover"] == 0 then
+				bpLotteryButton["Hover"] = 1;
+
+				ShoptViewPropsse:Play();
+			end
+		elseif Result == MouseLeftDown then --鼠标左键按下
+			bpLotteryButton:setImage(220, 39 ,556, 146,  0, 556, 360, 506, bpPriorityLottery+0.9);
+			bpLotteryButton["Event"] = 1;
+		elseif Result == MouseLeftUp then --鼠标左键松开
+			bpLotteryButton:setImage(220, 40 ,556, 143,  0, 556,0, 143, bpPriorityLottery+0.9);
+			MovePropsMem = 0;
+			bpBigBombPropsTemp["DrawStatus"] = 0;
+			bpAssistantPropsPropsTemp["DrawStatus"] = 0;
+			if bpLotteryButton["Event"] == 1 then
+				bpLotteryButton["Event"] = 0;
+				if UserData["AssistantLock"] == 0 then
+					LotteryHAPEvent();
+				else
+					LotteryNAPEvent();
 				end
 			end
 		end
@@ -216,6 +240,11 @@ function NotReSetbpButton(value)
 		bpAssistantPropsProps["Hover"] = 0;
 		bpAssistantPropsProps:setImagePos(0+bpOnePropsImageW*AssistantProps, bpPropsW+bpOnePropsImageW*AssistantProps, bpOnePropsImageH+16, bpPropsH+bpOnePropsImageH+16);
 	end
+	
+	if value ~= 4 then
+		bpLotteryButton["Hover"] = 0;
+		bpLotteryButton:setImage(220, 40 ,556, 143,  0, 556,0, 143, bpPriorityLottery+0.9);
+	end
 end
 
 
@@ -230,11 +259,157 @@ function DetectMouseUpSCBPos(X, Y)
 end
 
 
+function LotteryHAPEvent()
+	if UserData["GoldCoins"] - LotteryGoldSpend < 0 then
+		
+	else
+		UserData["GoldCoins"] = UserData["GoldCoins"] - LotteryGoldSpend;
+		local RandNum = math.random(1,100);
+		if 1<= RandNum and RandNum <10 then
+			MessageBox("很遗憾，这一次抽奖你未中奖\n请再接再厉吧！","真倒霉",MB_OK);
+		elseif 10<=RandNum and RandNum<50 then
+		
+			local Str1 = "这一次抽奖你中奖啦!!! 恭喜你获得【金币】："
+			local GoldRandom = math.random(5,45);
+			UserData["GoldCoins"] = UserData["GoldCoins"] + GoldRandom;
+			local Str2 = " 个"
+			local Str3 = Str1..tostring(GoldRandom)..Str2;
+			MessageBox(Str3,"真幸运",MB_OK);
+		elseif 50<=RandNum and RandNum<75 then
+			
+			local Str1 = "这一次抽奖你中奖啦!!! 恭喜你获得【终极大炸弹】："
+			local bbpNum = 0;
+			local bbpProbability = math.random(1,100);
+			local temp = 0;
+			if 1<= bbpProbability and  bbpProbability< 50 then  --bbp+1为50%的概率
+				bbpNum = 1;
+				UserData["BigBombPropsAmount"] = UserData["BigBombPropsAmount"] + 1;
+				if UserData["BigBombPropsAmount"] >= 99 then
+					UserData["BigBombPropsAmount"] = 99;
+					UserData["GoldCoins"] = UserData["GoldCoins"] + BigBombNeeds;
+				end
+			elseif 50<= bbpProbability and  bbpProbability< 80 then --bbp+2为30%的概率
+				bbpNum = 2;
+				temp = UserData["AssistantPropsAmount"];
+				UserData["BigBombPropsAmount"] = UserData["BigBombPropsAmount"] + 2;
+				if UserData["BigBombPropsAmount"] >= 99 then
+					UserData["BigBombPropsAmount"] = 99;
+					UserData["GoldCoins"] = UserData["GoldCoins"] + (2-(99 - temp))*BigBombNeeds;
+				end
+			elseif 80<= bbpProbability and  bbpProbability<= 100 then --bbp+3为20%的概率
+				bbpNum = 3;
+				temp = UserData["BigBombPropsAmount"];
+				UserData["BigBombPropsAmount"] = UserData["BigBombPropsAmount"] + 3;
+				if UserData["BigBombPropsAmount"] >= 99 then
+					UserData["BigBombPropsAmount"] = 99;
+					UserData["GoldCoins"] = UserData["GoldCoins"] + (3-(99 - temp))*BigBombNeeds;
+				end
+			end
+			local Str2 = " 个"
+			local Str3 = Str1..tostring(bbpNum)..Str2;
+			MessageBox(Str3,"真幸运",MB_OK);
+		elseif 75<=RandNum and RandNum<100 then
+			
+			local Str1 = "这一次抽奖你中奖啦!!! 恭喜你获得【助手】："
+			local apNum = 0;
+			local apProbability = math.random(1,100);
+			local temp = 0;
+			if 1<= apProbability and  apProbability< 50 then  --ap+1为50%的概率
+				apNum = 1;
+				
+				UserData["AssistantPropsAmount"] = UserData["AssistantPropsAmount"] + 1;
+				if UserData["AssistantPropsAmount"] > 99 then
+					UserData["AssistantPropsAmount"] = 99;
+					UserData["GoldCoins"] = UserData["GoldCoins"] + AssistantPropsNeeds;
+					temp = 1;
+				end
+			elseif 50<= apProbability and  apProbability< 80 then --ap+2为30%的概率
+				apNum = 2;
+				temp = UserData["AssistantPropsAmount"];
+				UserData["AssistantPropsAmount"] = UserData["AssistantPropsAmount"] + 2;
+				if UserData["AssistantPropsAmount"] > 99 then
+					UserData["AssistantPropsAmount"] = 99;
+					UserData["GoldCoins"] = UserData["GoldCoins"] + (2-(99 - temp))*AssistantPropsNeeds;
+					temp = 1;
+				end
+			elseif 80<= apProbability and  apProbability<= 100 then --ap+3为20%的概率
+				apNum = 3;
+				temp = UserData["AssistantPropsAmount"];
+				UserData["AssistantPropsAmount"] = UserData["AssistantPropsAmount"] + 3;
+				if UserData["AssistantPropsAmount"] > 99 then
+					UserData["AssistantPropsAmount"] = 99;
+					UserData["GoldCoins"] = UserData["GoldCoins"] + (3-(99 - temp))*AssistantPropsNeeds;
+					temp = 1;
+				end
+			end
+			local Str2 = " 个"
+			local Str3 = Str1..tostring(apNum)..Str2;
+			if temp == 1 then
+				local Str4 = "\n但是由于你拥有的个数已经超过的最大99个限制。\n系统将多余的道具自动为你转换为对应的金币！~~"
+				Str3 = Str3..Str4; 
+			end
+			MessageBox(Str3,"真幸运",MB_OK);
+		end
+		
+	end
+	
+end
 
 
 
-
-
+function LotteryNAPEvent()
+	if UserData["GoldCoins"] - LotteryGoldSpend < 0 then
+		
+	else
+		UserData["GoldCoins"] = UserData["GoldCoins"] - LotteryGoldSpend;
+		local RandNum = math.random(1,100);
+		if 1<= RandNum and RandNum <15 then
+			MessageBox("很遗憾，这一次抽奖你未中奖\n请再接再厉吧！","真倒霉",MB_OK);
+		elseif 15<=RandNum and RandNum<65 then
+		
+			local Str1 = "这一次抽奖你中奖啦!!! 恭喜你获得【金币】："
+			local GoldRandom = math.random(5,45);
+			UserData["GoldCoins"] = UserData["GoldCoins"] + GoldRandom;
+			local Str2 = " 个"
+			local Str3 = Str1..tostring(GoldRandom)..Str2;
+			MessageBox(Str3,"真幸运",MB_OK);
+		elseif 65<=RandNum and RandNum<100 then
+			
+			local Str1 = "这一次抽奖你中奖啦!!! 恭喜你获得【终极大炸弹】："
+			local bbpNum = 0;
+			local bbpProbability = math.random(1,100);
+			local temp = 0;
+			if 1<= bbpProbability and  bbpProbability< 50 then  --bbp+1为50%的概率
+				bbpNum = 1;
+				UserData["BigBombPropsAmount"] = UserData["BigBombPropsAmount"] + 1;
+				if UserData["BigBombPropsAmount"] >= 99 then
+					UserData["BigBombPropsAmount"] = 99;
+					UserData["GoldCoins"] = UserData["GoldCoins"] + BigBombNeeds;
+				end
+			elseif 50<= bbpProbability and  bbpProbability< 80 then --bbp+2为30%的概率
+				bbpNum = 2;
+				temp = UserData["AssistantPropsAmount"];
+				UserData["BigBombPropsAmount"] = UserData["BigBombPropsAmount"] + 2;
+				if UserData["BigBombPropsAmount"] >= 99 then
+					UserData["BigBombPropsAmount"] = 99;
+					UserData["GoldCoins"] = UserData["GoldCoins"] + (2-(99 - temp))*BigBombNeeds;
+				end
+			elseif 80<= bbpProbability and  bbpProbability<= 100 then --bbp+3为20%的概率
+				bbpNum = 3;
+				temp = UserData["BigBombPropsAmount"];
+				UserData["BigBombPropsAmount"] = UserData["BigBombPropsAmount"] + 3;
+				if UserData["BigBombPropsAmount"] >= 99 then
+					UserData["BigBombPropsAmount"] = 99;
+					UserData["GoldCoins"] = UserData["GoldCoins"] + (3-(99 - temp))*BigBombNeeds;
+				end
+			end
+			local Str2 = " 个"
+			local Str3 = Str1..tostring(bbpNum)..Str2;
+			MessageBox(Str3,"真幸运",MB_OK);
+		end
+		
+	end
+end
 
 
 

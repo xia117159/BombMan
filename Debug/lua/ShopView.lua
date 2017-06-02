@@ -34,7 +34,7 @@ PropsH = 266
 
 
 ----------------------------------------------------------
-BigBombNeeds = 15-- 需要的金币数量
+
 --------------------------------------
 ShopBigBombProps = ImageClass:new();
 ShopBigBombProps:setImageFileSize(ShopPropsImageW, ShopPropsImageH);
@@ -57,7 +57,7 @@ ShopBigBombIntr:setImage(30, 10, 860, 1123, 0, 860, 268, OnePropsImageH-1, ShopP
 --当前解锁助手标志
 AssistantProps = UserData["AssistantProps"]
 -------------------------------------------------
-AssistantPropsNeeds = 30 -- 需要的金币数量
+
 
 -------------------------------------------------
 ShopAssistantPropsProps = ImageClass:new();
@@ -191,25 +191,24 @@ end
 
 -------------------------------------------------------画字体
 
-FontImageW = 493
-FontImageH = 95
+FontImageW = 683
+FontImageH = 100
 
 
 GoldFont = ImageClass:new();
 GoldFont :setImageFileSize(FontImageW, FontImageH);
 GoldFont :setscaling_ratio(0.3);
-GoldFont :setImage(800, 470 ,180, 95, 0, 180,0, 95, ShopPriorityFont+0.9);
+GoldFont :setImage(800, 470 ,180, FontImageH, 0, 180,0, FontImageH, ShopPriorityFont+0.9);
 
 OverageFont = ImageClass:new();
 OverageFont :setImageFileSize(FontImageW, FontImageH);
 OverageFont :setscaling_ratio(0.3);
-OverageFont :setImage(520, 70 ,212, 95, 180, 392,0, 95, ShopPriorityFont+0.9);
+OverageFont :setImage(520, 70 ,212, FontImageH, 180, 392,0, FontImageH, ShopPriorityFont+0.9);
 
 FontGE = ImageClass:new();
 FontGE :setImageFileSize(FontImageW, FontImageH);
 FontGE :setscaling_ratio(0.3);
-FontGE :setImage(800, 420 ,93, 95, 400, 493,0, 95, ShopPriorityFont+0.9);
-
+FontGE :setImage(800, 420 ,93, FontImageH, 400, 493,0, FontImageH, ShopPriorityFont+0.9);
 
 
 function DrawFont()
@@ -238,6 +237,7 @@ function DrawFont()
 	OverageFont:DrawImage();
 	GoldFont :setAbsoluteStartPos(700,70);
 	GoldFont :DrawImage();
+	
 	
 end
 
@@ -326,7 +326,7 @@ function LoadShopImageFile()
 	ImageLoad:LoadImage("Image/Return.png","DrawShopReturn()", "Image_1");
 	ImageLoad:LoadImage("Image/Gold.png","DrawGold()", "Image_2");
 	ImageLoad:LoadImage("Image/Number.png","DrawNumber()", "Image_3");
-	ImageLoad:LoadImage("Image/Font1.png","DrawFont()", "Image_4");
+	ImageLoad:LoadImage("Image/Font.png","DrawFont()", "Image_4");
 	ImageLoad:LoadImage("Image/Shop/BuyButton.png","DrawBuyButton()", "Image_5");
 	ImageLoad:LoadImage("Image/Shop/backpack1.png","Drawbackpack()", "Image_6");
 	ImageLoad:LoadImage("Image/Shop/ShopProps.png","DrawShopProps()", "Image_7");
