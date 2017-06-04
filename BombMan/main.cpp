@@ -8,6 +8,7 @@
 //*******************全局变量定义区*******************
 //窗口句柄定义
 HWND hwnd = NULL;
+HINSTANCE GlobalhInstance = NULL;
 GameStateInterface demo;
 
 LuaClass LuaConnect;//全局lua接口连接对象
@@ -32,7 +33,7 @@ void LuaInterfaceInit();
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine, int cmdShow )
 {
 	
-
+	GlobalhInstance = hInstance;
 	if (FAILED(InitWindow(hInstance, cmdShow)))
         return 0;
 
@@ -132,6 +133,9 @@ HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
     return S_OK;
 }
 
+
+
+int WindowsFocus = 0;
 LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
     PAINTSTRUCT paintStruct;
@@ -147,7 +151,24 @@ LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam 
         case WM_DESTROY:
             PostQuitMessage( 0 );
             break;
-
+		case WM_SETFOCUS:
+			if (WindowsFocus == 1)
+			{
+				WindowsFocus = 0;
+				TempKeyDetect.Initialize(GlobalhInstance, hwnd);
+				MouseDetect.Initialize(GlobalhInstance, hwnd);
+				BGMPlayMusicDevice.Pause();
+				LuaConnect.LuaFuncUse("SetWinFoucsStatus(%d)", WM_SETFOCUS);
+			}
+			break;
+		case WM_KILLFOCUS:
+			if (WindowsFocus == 0)
+			{
+				BGMPlayMusicDevice.Pause();
+				LuaConnect.LuaFuncUse("SetWinFoucsStatus(%d)", WM_KILLFOCUS);
+				WindowsFocus = 1;
+			}
+			break;
         default:
             return DefWindowProc( hwnd, message, wParam, lParam );
     }

@@ -48,11 +48,10 @@ bgmMusicClass =
 
 function bgmMusicClass:Play(S)
 	
-	if bgmMusicStopStatus == 0 and bgmMusicPauseStatus == 0 then
+	if bgmMusicStopStatus == 0 and bgmMusicPauseStatus == 0 and WinFocus == WM_SETFOCUS then
 		self.Timer = self.Timer + 1;
 		if self.Timer >= (self.Time[self.last]+self.Delay)*100 or S == ForcedSwitch then
-			--math.randomseed(os.time());
-			local RandNum = math.random(1,5);
+			local RandNum = math.random(1,7);
 			if self.last == RandNum then
 				if RandNum == 7 then
 					self.last = RandNum - 1;
@@ -73,6 +72,12 @@ function bgmMusicClass:new()
 	o = {}
 	setmetatable(o, {__index = self});
 	return o;
+end
+
+
+
+function SetWinFoucsStatus(c)
+	WinFocus = c;
 end
 
 function bgmMusicPlayControl(c)

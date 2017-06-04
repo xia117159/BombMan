@@ -67,6 +67,11 @@ bgmMusicPauseStatus = 0
 ForcedSwitch   = 0x201
 EndSwitch      = 0x202
 
+--界面焦点
+
+WM_SETFOCUS  = 0x0007 --获得焦点
+WM_KILLFOCUS = 0x0008 --失去焦点
+WinFocus = WM_SETFOCUS
 
 --程序定义
 --助手右值绝对不可更改！！！！！！！

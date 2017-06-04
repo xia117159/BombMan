@@ -20,5 +20,5 @@ require "MainKeyFunc"
 
 
 DetectPropsAmount();
-goShopView();
---goStartView(); -- 转到开始界面
+--goShopView();
+goStartView(); -- 转到开始界面

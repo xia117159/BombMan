@@ -51,7 +51,7 @@ bool MouseControl::Initialize( HINSTANCE hInstance, HWND hwnd )
         return false;
     }
 
-    result = mouseDevice_->SetCooperativeLevel( hwnd_, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE );
+    result = mouseDevice_->SetCooperativeLevel( hwnd_, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE );
 
     if( FAILED( result ) )
     { 

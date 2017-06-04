@@ -261,6 +261,8 @@ function DrawGold()
 	end
 end
 
+
+
 function DrawGoldFunc(sx, sy, fr)
 	local GoldAnimation = ImageClass:new();
 	GoldAnimation :setImageFileSize(785, 628);

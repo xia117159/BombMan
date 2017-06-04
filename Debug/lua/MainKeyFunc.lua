@@ -16,16 +16,18 @@ end
 
 --此函数名不可更改，否者无效
 function KeyFunc()
-	if NowView == StartV then
-		StartViewKC();
-	elseif NowView == ChallengeV then
-		NoFunc();
-	elseif 	NowView == ShopV then
-		ShopViewKC();
-	elseif 	NowView == PlotV then
-		ActorKey();
-	elseif 	NowView == BackpackV then
-		bpViewKC();
+	if WinFocus == WM_SETFOCUS then
+		if NowView == StartV then
+			StartViewKC();
+		elseif NowView == ChallengeV then
+			NoFunc();
+		elseif 	NowView == ShopV then
+			ShopViewKC();
+		elseif 	NowView == PlotV then
+			ActorKey();
+		elseif 	NowView == BackpackV then
+			bpViewKC();
+		end
 	end
 	Gamebgm:Play(EndSwitch);
 end
