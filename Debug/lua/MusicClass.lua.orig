@@ -51,8 +51,11 @@ function bgmMusicClass:Play(S)
 	if bgmMusicStopStatus == 0 and bgmMusicPauseStatus == 0 and WinFocus == WM_SETFOCUS then
 		self.Timer = self.Timer + 1;
 		if self.Timer >= (self.Time[self.last]+self.Delay)*100 or S == ForcedSwitch then
+<<<<<<< HEAD
+			--math.randomseed(os.time());
+=======
+>>>>>>> 8b260f0a8ad92fc783404c06f4a14971a59abc0e
 			local RandNum = math.random(1,7);
-
 			if self.last == RandNum then
 				if RandNum == 7 then
 					self.last = RandNum - 1;

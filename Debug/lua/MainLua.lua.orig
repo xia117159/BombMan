@@ -18,8 +18,15 @@ require "BackpackKeyControl"
 
 require "MainKeyFunc"
 
+<<<<<<< HEAD
 require "Recode"
+
 Read()
 --Preserve();
 --goShopView();;
+=======
+
+DetectPropsAmount();
+--goShopView();
+>>>>>>> 8b260f0a8ad92fc783404c06f4a14971a59abc0e
 goStartView(); -- 转到开始界面

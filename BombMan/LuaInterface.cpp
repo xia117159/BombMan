@@ -93,6 +93,8 @@ static int KeyControl(lua_State *L)
 {
 	 //返回栈中元素的个数  
     int n = lua_gettop(L);
+	
+
 	lua_pushnumber(LuaConnect.lua_state, TempKeyDetect.DetectKey((int)lua_tonumber(L, 1)));
 
 	return 1;

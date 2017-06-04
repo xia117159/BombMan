@@ -15,8 +15,8 @@ function initParams(s,n,maptype,groundtype)
 	--mapTable[i][j][1]代表位置X，mapTable[i][j][2]代表位置Y，
 	--mapTable[i][j][3]代表砖，mapTable[i][j][4]代表墙，0为无，1为存在
 
-	if maptype == 1 then
-		for i=1,s do
+	if maptype == 1 then 
+		for i=1,s do 
 			mapTable[i] = {};	
 			if i % 2 == 0 then
 				temp = true;
@@ -121,6 +121,8 @@ function DrawActor()
 	if(movestatus == 0) then
 		--actor:setImage(500, 500, 50, 50, 0, 208, 0, 184, 9.0);
 	end
+
+	
 	if(movestatus == 1) then
 		actor:setRelativelyStartPos(1,0);
 	end

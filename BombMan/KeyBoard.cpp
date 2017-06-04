@@ -22,6 +22,7 @@ bool KeyBoard::Initialize( HINSTANCE hInstance, HWND hwnd )
 	ZeroMemory( keyboardKeys_, sizeof( keyboardKeys_ ) );
     ZeroMemory( prevKeyboardKeys_, sizeof( prevKeyboardKeys_ ) );
 
+	
 	result = DirectInput8Create( hInstance_, DIRECTINPUT_VERSION, IID_IDirectInput8, ( void** )&directInput_, 0 );
 
     if( FAILED( result ) )
@@ -30,13 +31,6 @@ bool KeyBoard::Initialize( HINSTANCE hInstance, HWND hwnd )
     }
 
 
-	result = directInput_->CreateDevice( GUID_SysKeyboard, &keyboardDevice_, 0 );
-
-    if( FAILED( result ) )
-    { 
-        return false;
-    }
-	
 	result = directInput_->CreateDevice( GUID_SysKeyboard, &keyboardDevice_, 0 );
 
     if( FAILED( result ) )
@@ -66,7 +60,8 @@ bool KeyBoard::Initialize( HINSTANCE hInstance, HWND hwnd )
     }
 	return true;
 }
-
+extern HWND hwnd;
+extern HINSTANCE GlobalhInstance;
 int KeyBoard::DetectKey(int Key)
 {
 	int Result = 0;
@@ -84,6 +79,8 @@ int KeyBoard::DetectKey(int Key)
 	{ 
 		Result = Release;
 	}
+
+	
 
 	memcpy( prevKeyboardKeys_, keyboardKeys_, sizeof( keyboardKeys_ ) );
 

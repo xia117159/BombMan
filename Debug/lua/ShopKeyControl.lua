@@ -232,8 +232,10 @@ function BuyBigBombEvent()
 	if UserData["GoldCoins"] - BigBombNeeds < 0 then
 		
 	else
-		UserData["BigBombPropsAmount"] = UserData["BigBombPropsAmount"] + 1;
-		UserData["GoldCoins"] = UserData["GoldCoins"] - BigBombNeeds;
+		if UserData["BigBombPropsAmount"]<99 then
+			UserData["BigBombPropsAmount"] = UserData["BigBombPropsAmount"] + 1;
+			UserData["GoldCoins"] = UserData["GoldCoins"] - BigBombNeeds;
+		end
 	end
 end
 
@@ -243,8 +245,11 @@ function BuyAssistantPropsEvent()
 	if UserData["GoldCoins"] - AssistantPropsNeeds < 0 then
 		
 	else
-		UserData["AssistantPropsAmount"] = UserData["AssistantPropsAmount"] + 1;
-		UserData["GoldCoins"] = UserData["GoldCoins"] - AssistantPropsNeeds;
+		if UserData["AssistantPropsAmount"]<99 then
+			UserData["AssistantPropsAmount"] = UserData["AssistantPropsAmount"] + 1;
+			
+			UserData["GoldCoins"] = UserData["GoldCoins"] - AssistantPropsNeeds;
+		end
 	end
 	
 end
