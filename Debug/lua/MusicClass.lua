@@ -52,7 +52,7 @@ function bgmMusicClass:Play(S)
 		self.Timer = self.Timer + 1;
 		if self.Timer >= (self.Time[self.last]+self.Delay)*100 or S == ForcedSwitch then
 			--math.randomseed(os.time());
-			local RandNum = math.random(1,5);
+			local RandNum = math.random(1,7);
 			if self.last == RandNum then
 				if RandNum == 7 then
 					self.last = RandNum - 1;

@@ -18,5 +18,9 @@ require "BackpackKeyControl"
 
 require "MainKeyFunc"
 
-goShopView();
---goStartView(); -- 转到开始界面
+require "Recode"
+
+Read()
+--Preserve();
+--goShopView();;
+goStartView(); -- 转到开始界面
