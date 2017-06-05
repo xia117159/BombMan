@@ -1,6 +1,7 @@
 require "include"
 require "ImageClass"
 require "MusicClass"
+require "ActorAssistant"
 require "UserData"
 
 
@@ -20,5 +21,5 @@ require "MainKeyFunc"
 
 
 DetectPropsAmount();
-goShopView();
---goStartView(); -- 转到开始界面
+--goShopView();
+goStartView(); -- 转到开始界面
