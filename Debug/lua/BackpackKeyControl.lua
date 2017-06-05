@@ -272,6 +272,9 @@ function LotteryHAPEvent()
 			local Str1 = "这一次抽奖你中奖啦!!! 恭喜你获得【金币】："
 			local GoldRandom = math.random(5,45);
 			UserData["GoldCoins"] = UserData["GoldCoins"] + GoldRandom;
+			if UserData["GoldCoins"] > 9999 then
+						UserData["GoldCoins"] = 9999;
+					end
 			local Str2 = " 个"
 			local Str3 = Str1..tostring(GoldRandom)..Str2;
 			MessageBox(Str3,"真幸运",MB_OK);
@@ -287,6 +290,9 @@ function LotteryHAPEvent()
 				if UserData["BigBombPropsAmount"] >= 99 then
 					UserData["BigBombPropsAmount"] = 99;
 					UserData["GoldCoins"] = UserData["GoldCoins"] + BigBombNeeds;
+					if UserData["GoldCoins"] > 9999 then
+						UserData["GoldCoins"] = 9999;
+					end
 				end
 			elseif 50<= bbpProbability and  bbpProbability< 80 then --bbp+2为30%的概率
 				bbpNum = 2;
@@ -295,6 +301,9 @@ function LotteryHAPEvent()
 				if UserData["BigBombPropsAmount"] >= 99 then
 					UserData["BigBombPropsAmount"] = 99;
 					UserData["GoldCoins"] = UserData["GoldCoins"] + (2-(99 - temp))*BigBombNeeds;
+					if UserData["GoldCoins"] > 9999 then
+						UserData["GoldCoins"] = 9999;
+					end
 				end
 			elseif 80<= bbpProbability and  bbpProbability<= 100 then --bbp+3为20%的概率
 				bbpNum = 3;
@@ -303,6 +312,9 @@ function LotteryHAPEvent()
 				if UserData["BigBombPropsAmount"] >= 99 then
 					UserData["BigBombPropsAmount"] = 99;
 					UserData["GoldCoins"] = UserData["GoldCoins"] + (3-(99 - temp))*BigBombNeeds;
+					if UserData["GoldCoins"] > 9999 then
+						UserData["GoldCoins"] = 9999;
+					end
 				end
 			end
 			local Str2 = " 个"
@@ -321,6 +333,9 @@ function LotteryHAPEvent()
 				if UserData["AssistantPropsAmount"] > 99 then
 					UserData["AssistantPropsAmount"] = 99;
 					UserData["GoldCoins"] = UserData["GoldCoins"] + AssistantPropsNeeds;
+					if UserData["GoldCoins"] > 9999 then
+						UserData["GoldCoins"] = 9999;
+					end
 					temp = 1;
 				end
 			elseif 50<= apProbability and  apProbability< 80 then --ap+2为30%的概率
@@ -330,6 +345,9 @@ function LotteryHAPEvent()
 				if UserData["AssistantPropsAmount"] > 99 then
 					UserData["AssistantPropsAmount"] = 99;
 					UserData["GoldCoins"] = UserData["GoldCoins"] + (2-(99 - temp))*AssistantPropsNeeds;
+					if UserData["GoldCoins"] > 9999 then
+						UserData["GoldCoins"] = 9999;
+					end
 					temp = 1;
 				end
 			elseif 80<= apProbability and  apProbability<= 100 then --ap+3为20%的概率
@@ -339,6 +357,9 @@ function LotteryHAPEvent()
 				if UserData["AssistantPropsAmount"] > 99 then
 					UserData["AssistantPropsAmount"] = 99;
 					UserData["GoldCoins"] = UserData["GoldCoins"] + (3-(99 - temp))*AssistantPropsNeeds;
+					if UserData["GoldCoins"] > 9999 then
+						UserData["GoldCoins"] = 9999;
+					end
 					temp = 1;
 				end
 			end
@@ -370,6 +391,9 @@ function LotteryNAPEvent()
 			local Str1 = "这一次抽奖你中奖啦!!! 恭喜你获得【金币】："
 			local GoldRandom = math.random(5,45);
 			UserData["GoldCoins"] = UserData["GoldCoins"] + GoldRandom;
+			if UserData["GoldCoins"] > 9999 then
+				UserData["GoldCoins"] = 9999;
+			end
 			local Str2 = " 个"
 			local Str3 = Str1..tostring(GoldRandom)..Str2;
 			MessageBox(Str3,"真幸运",MB_OK);
@@ -385,6 +409,9 @@ function LotteryNAPEvent()
 				if UserData["BigBombPropsAmount"] >= 99 then
 					UserData["BigBombPropsAmount"] = 99;
 					UserData["GoldCoins"] = UserData["GoldCoins"] + BigBombNeeds;
+					if UserData["GoldCoins"] > 9999 then
+						UserData["GoldCoins"] = 9999;
+					end
 				end
 			elseif 50<= bbpProbability and  bbpProbability< 80 then --bbp+2为30%的概率
 				bbpNum = 2;
@@ -393,6 +420,9 @@ function LotteryNAPEvent()
 				if UserData["BigBombPropsAmount"] >= 99 then
 					UserData["BigBombPropsAmount"] = 99;
 					UserData["GoldCoins"] = UserData["GoldCoins"] + (2-(99 - temp))*BigBombNeeds;
+					if UserData["GoldCoins"] > 9999 then
+						UserData["GoldCoins"] = 9999;
+					end
 				end
 			elseif 80<= bbpProbability and  bbpProbability<= 100 then --bbp+3为20%的概率
 				bbpNum = 3;
@@ -401,6 +431,9 @@ function LotteryNAPEvent()
 				if UserData["BigBombPropsAmount"] >= 99 then
 					UserData["BigBombPropsAmount"] = 99;
 					UserData["GoldCoins"] = UserData["GoldCoins"] + (3-(99 - temp))*BigBombNeeds;
+					if UserData["GoldCoins"] > 9999 then
+						UserData["GoldCoins"] = 9999;
+					end
 				end
 			end
 			local Str2 = " 个"

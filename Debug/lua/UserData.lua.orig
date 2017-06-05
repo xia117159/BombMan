@@ -5,7 +5,11 @@ UserData =
 	AssistantProps = GirlsAssistant,--解锁的助手类型
 	BigBombPropsAmount = 0, -- 超级炸弹拥有的个数
 	ShortCutBarBBP = 0,--所放置快捷栏
+<<<<<<< HEAD
 	AssistantPropsAmount = 0, --助手所有个数
+=======
+	AssistantPropsAmount = 100, --助手所有个数
+>>>>>>> 8b260f0a8ad92fc783404c06f4a14971a59abc0e
 	ShortCutBarAP = 0 --所放置快捷栏
 }
 
@@ -25,11 +29,6 @@ function DetectPropsAmount()
 		UserData["AssistantPropsAmount"] = 0; --助手所有个数
 		UserData["ShortCutBarAP"] = 0;--所放置快捷栏
 	end
-	
-	if UserData["GoldCoins"] > 9999 then
-		UserData["GoldCoins"] = 9999;
-	end
-	
 end
 
 

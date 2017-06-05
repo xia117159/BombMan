@@ -30,8 +30,13 @@ function initParams(s,n,maptype,groundtype,AcStPosX,AcStPosY,RelativeWindowPos)
 	--mapTable[i][j][1]代表位置X，mapTable[i][j][2]代表位置Y，
 	--mapTable[i][j][3]代表砖，mapTable[i][j][4]代表墙，0为无，1为存在
 
+<<<<<<< HEAD
 	if maptype == 1 then   --1型地图
+		for i=1,s do
+=======
+	if maptype == 1 then 
 		for i=1,s do 
+>>>>>>> 3d67ab589bf9179fa4a2f1cb37daa52f137eace0
 			mapTable[i] = {};	
 			if i % 2 == 0 then
 				temp = true;
@@ -172,6 +177,7 @@ function DrawActor()
 	if(movestatus == 0) then
 		--actor:setImage(500, 500, BlockSize, BlockSize, 0, 208, 0, 184, 9.0);
 	end
+<<<<<<< HEAD
 	if movestatus == 1 and actorinf:getAbsolutePosX()+48 < TotalWidthPixels then		
 		if ImpactChecking(actorinf:getAbsolutePosX()+48+UnitXOffset,actorinf:getAbsolutePosY(),1) then
 			if originX>-BlockSize*(TotalLines-20) and actorinf:getWindowPosX()>=16*BlockSize then
@@ -184,6 +190,12 @@ function DrawActor()
 			end						
 		end			
 			
+=======
+
+	
+	if(movestatus == 1) then
+		actor:setRelativelyStartPos(1,0);
+>>>>>>> 3d67ab589bf9179fa4a2f1cb37daa52f137eace0
 	end
 	if movestatus == 2 and actorinf:getAbsolutePosY() < TotalHeightPixels then
 		if originY>-BlockSize*(TotalRows-12) and actorinf:getWindowPosY()>=9*BlockSize then

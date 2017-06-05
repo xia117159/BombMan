@@ -20,6 +20,9 @@
         <LuaFile RelativePath=".\BackpackVeiw.lua" />
         <LuaFile RelativePath=".\BackpackKeyControl.lua" />
     </Filter>
- <LuaFile RelativePath=".\ActorAssistant.lua" />
-  <LuaFile RelativePath=".\Recode.lua" />
+<<<<<<< HEAD
+    <LuaFile RelativePath=".\ActorAssistant.lua" />
+=======
+    <LuaFile RelativePath=".\Recode.lua" />
+>>>>>>> 3d67ab589bf9179fa4a2f1cb37daa52f137eace0
 </Project>
