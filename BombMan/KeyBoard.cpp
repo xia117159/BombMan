@@ -2,7 +2,11 @@
 
 KeyBoard::KeyBoard() :directInput_( 0 ), keyboardDevice_( 0 )
 {
-
+	int i=0;
+	for(i=0;i<256;i++)
+	{
+		Keys[i] = Release;
+	}
 }
 
 KeyBoard::~KeyBoard()
@@ -20,7 +24,6 @@ bool KeyBoard::Initialize( HINSTANCE hInstance, HWND hwnd )
 	HRESULT result;
 
 	ZeroMemory( keyboardKeys_, sizeof( keyboardKeys_ ) );
-    ZeroMemory( prevKeyboardKeys_, sizeof( prevKeyboardKeys_ ) );
 
 	
 	result = DirectInput8Create( hInstance_, DIRECTINPUT_VERSION, IID_IDirectInput8, ( void** )&directInput_, 0 );
@@ -67,22 +70,20 @@ int KeyBoard::DetectKey(int Key)
 	int Result = 0;
 	keyboardDevice_->GetDeviceState( sizeof( keyboardKeys_ ), ( LPVOID )&keyboardKeys_ );
 
-	if( KEYDOWN( prevKeyboardKeys_, Key ) && KEYDOWN( keyboardKeys_, Key ))
+	if( Keys[Key] == Press && KEYDOWN( keyboardKeys_, Key ))
 	{ 
 		Result = KeepPressing;
 	}
-	else if( !KEYDOWN( prevKeyboardKeys_, Key ) && KEYDOWN( keyboardKeys_, Key ))
+	else if( Keys[Key] == Release && KEYDOWN( keyboardKeys_, Key ))
 	{ 
 		Result = Press;
+		Keys[Key] = Press;
 	}
-	else if( KEYDOWN( prevKeyboardKeys_, Key ) && !KEYDOWN( keyboardKeys_, Key ))
+	else if( Keys[Key] == Press && !KEYDOWN( keyboardKeys_, Key ))
 	{ 
 		Result = Release;
+		Keys[Key] = Release;
 	}
-
-	
-
-	memcpy( prevKeyboardKeys_, keyboardKeys_, sizeof( keyboardKeys_ ) );
 
 	return Result;
 }
