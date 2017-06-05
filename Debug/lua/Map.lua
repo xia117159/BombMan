@@ -446,7 +446,7 @@ function ActorKey()
 		releasestatus = 1;--]]
 	--[[elseif KeyResult_Up == KeepPressing then
 		movestatus = 2;--]]
-	elseif KeyResult_Up == KeepPressing then
+	elseif KeyResult_Up == Release then
 		movestatus = 2;--releasestatus = 2;
 	elseif KeyResult_Left == KeepPressing then
 		movestatus = 3;
