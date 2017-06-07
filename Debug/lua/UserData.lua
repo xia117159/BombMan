@@ -7,8 +7,8 @@ UserData =
 	ShortCutBarBBP = 0,--所放置快捷栏
 	AssistantPropsAmount = 0, --助手所有个数
 	ShortCutBarAP = 0, --所放置快捷栏
-	SpeedX = 5,
-	SpeedY = 5
+	SpeedX = 3,
+	SpeedY = 3
 }
 
 
