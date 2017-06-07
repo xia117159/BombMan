@@ -107,5 +107,35 @@ Gamebgm["Time"] = {31,237,229,156,98,195,287}
 
 
 
+--[[-±³¾°ÒôÀÖÀà
+MseMusicClass = 
+{
+	File = "",
+	Time = 0,
+	Timer = 0,
+	Delay = 1 --ÑÓÊ±1s
+}
 
+function MseMusicClass:Play()
+	
+	if seMusicStopStatus == 0 and seMusicPauseStatus == 0 then
+		self.Timer = self.Timer + 1;
+		if self.Timer >= (self.Time+self.Delay)*100 then
+			self.Timer = 0;
+			PlayMusic(SEDevice,self.File);
+		end
+	end
+end
 
+function MseMusicClass:Init(FN, T)
+	self.File = FN;
+	self.Timer = T;
+end
+
+function MseMusicClass:new()
+	
+	o = {}
+	setmetatable(o, {__index = self});
+	return o;
+end
+--]]
