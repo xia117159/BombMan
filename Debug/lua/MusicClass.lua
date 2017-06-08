@@ -81,6 +81,8 @@ function SetWinFoucsStatus(c)
 	WinFocus = c;
 end
 
+
+
 function bgmMusicPlayControl(c)
 	if c == MusicStop then
 		bgmMusicStopStatus = 1;
@@ -105,37 +107,38 @@ Gamebgm["Time"] = {31,237,229,156,98,195,287}
 
 
 
-
-
---[[-±³¾°ÒôÀÖÀà
-MseMusicClass = 
+--½ÇÉ«ÒÆ¶¯°´¼ü±³¾°ÒôÀÖ
+MoveseMusicClass = 
 {
 	File = "",
 	Time = 0,
-	Timer = 0,
+	Timer = 100,
 	Delay = 1 --ÑÓÊ±1s
 }
 
-function MseMusicClass:Play()
+function MoveseMusicClass:Play()
 	
 	if seMusicStopStatus == 0 and seMusicPauseStatus == 0 then
 		self.Timer = self.Timer + 1;
-		if self.Timer >= (self.Time+self.Delay)*100 then
+		if self.Timer >= self.Time then
 			self.Timer = 0;
 			PlayMusic(SEDevice,self.File);
 		end
 	end
 end
 
-function MseMusicClass:Init(FN, T)
+function MoveseMusicClass:Init(FN, T)
 	self.File = FN;
 	self.Timer = T;
 end
 
-function MseMusicClass:new()
+function MoveseMusicClass:new()
 	
-	o = {}
-	setmetatable(o, {__index = self});
-	return o;
+	oo = {}
+	setmetatable(oo, {__index = self});
+	return oo;
 end
---]]
+
+ActorKeyBgm = MoveseMusicClass:new();
+ActorKeyBgm["File"] = "music/FootSoundEffect.wav"
+ActorKeyBgm["Time"] = 100

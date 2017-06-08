@@ -1,5 +1,5 @@
---s行n列矩阵 maptype：地图类型 groundtype：地表类型 角色初始位置X,Y 相对与角色的视野位置
-function initParams(s,n,maptype,groundtype,AcStPosX,AcStPosY,RelativeWindowPos)
+--s行n列矩阵 maptype：地图类型 Randrate：箱子随机概率 角色初始位置X,Y 相对与角色的视野位置
+function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,RelativeWindowPos)
 	
 	local i ;
 	local j;
@@ -13,6 +13,7 @@ function initParams(s,n,maptype,groundtype,AcStPosX,AcStPosY,RelativeWindowPos)
 	TotalWidthPixels = n*BlockSize;
 	TotalHeightPixels = s*BlockSize;
 	
+	BoxRandRate = Randrate;
 	
 	--可丢掷炸弹数量
 	local BombNumAva = 1;
@@ -21,11 +22,11 @@ function initParams(s,n,maptype,groundtype,AcStPosX,AcStPosY,RelativeWindowPos)
 	--block = {posX,posY,brick=nil,wall=nil}; --0为无，1为存在
 	--brick = 砖；wall = 墙 
 	mapTable = {};
-	math.randomseed(os.time()); --设置时间种子
+	
 
 	--mapTable[i][j][k]	i,j代表行数，列数，
 	--mapTable[i][j][1]代表位置X，mapTable[i][j][2]代表位置Y，
-	--mapTable[i][j][3]代表砖，mapTable[i][j][4]代表墙，0为无，1为存在
+	--mapTable[i][j][3]代表砖，mapTable[i][j][4]代表墙，0为无，1为存在 mapTable[i][j][5]代表墙的类型X轴标号 mapTable[i][j][6]代表墙的类型Y轴标号
 
 	if maptype == 1 then   --1型地图
 		for i=1,s do 
@@ -43,7 +44,14 @@ function initParams(s,n,maptype,groundtype,AcStPosX,AcStPosY,RelativeWindowPos)
 					mapTable[i][j][4] = 0;				
 				else
 					mapTable[i][j][3] = 0;
-					mapTable[i][j][4] = math.random(0,5);				
+					mapTable[i][j][4] = math.random(0,100);	
+					if  mapTable[i][j][4] <= BoxRandRate then
+						mapTable[i][j][5] = math.random(0,11);
+						mapTable[i][j][6] = math.random(0,3);
+						if mapTable[i][j][5] == 5 and mapTable[i][j][6] == 1 then
+							mapTable[i][j][4] = 0;
+						end
+					end			
 				end	
 				
 			end
@@ -60,7 +68,15 @@ function initParams(s,n,maptype,groundtype,AcStPosX,AcStPosY,RelativeWindowPos)
 			mapTable[i][j][3] = math.random(0,20);	
 			if(mapTable[i][j][3] == 1)	then  --该位置有铁墙
 			mapTable[i][j][4] = 0;
-			else mapTable[i][j][4] = math.random(0,2);
+			else 
+				mapTable[i][j][4] = math.random(0,2);
+				if mapTable[i][j][4] == 1 then
+					mapTable[i][j][5] = math.random(0,11);
+					mapTable[i][j][6] = math.random(0,3);
+					if mapTable[i][j][5] == 5 and mapTable[i][j][6] == 1 then
+						mapTable[i][j][4] = 0;
+					end
+				end			
 			end
 		
 		end
@@ -91,7 +107,12 @@ end
 	actorimg = ImageClass:new();
 	actorimg:setImageFileSize(192, 384);
 	
-
+	--[[Bossimg = ImageClass:new();
+	Bossimg:setImageFileSize(175, 162);
+	Bossimg:setImage(500,400,BlockSize, BlockSize,0,175,0,162,9.1);
+	Bossinf = BossClass:new();
+	Bossinf:setAbsolutePos(500,400);--]]
+	
 	
 	ExitButtonWidth = 150;
 	ExitButtonHeight = 64;
@@ -108,8 +129,11 @@ end
 	--ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 200, 11.0);
 	
 	ExitDialog = ImageClass:new();
-	ExitDialog:setImageFileSize(1081, 820);
-	ExitDialog:setImage(230, 95, 540, 410, 0, 1081, 0, 820, 8.0);
+	ExitDialog:setImageFileSize(1081, 410);
+	ExitDialog:setImage(230, 95, 540, 410, 0, 540, 0, 410, 8.0);
+	BackGroundColor = ImageClass:new();
+	BackGroundColor:setImageFileSize(1081, 410);
+	BackGroundColor:setImage(0,0,1000,600,540,1081,0,410,8.1);
 	
 	ExitButton = ImageClass:new();
 	ExitButton:setImageFileSize(ExitButtonWidth*3, ExitButtonHeight*2);
@@ -117,10 +141,13 @@ end
 	CancelButton = ImageClass:new();
 	CancelButton:setImageFileSize(ExitButtonWidth*3, ExitButtonHeight*2);
 	CancelButton:setImage(300+1.5*ExitButtonWidth, 185, ExitButtonWidth, ExitButtonHeight, 0, ExitButtonWidth, ExitButtonHeight*1, ExitButtonHeight*2, 5.99);
+	
+	
 
 function DrawDialog()
 	if ISGameNotPause == false  then
 		ExitDialog:DrawImage();	
+		BackGroundColor:DrawImage();
 	end
 	
 end
@@ -159,8 +186,8 @@ function DrawMap()
 				BrickWall:setAbsoluteStartPos(x,y);															
 				BrickWall:DrawImage();				
 			end												
-			if mapTable[i][j][4] == 1 then								
-				BrickWall:setImagePos(32*BoxNum, 32*(BoxNum+1), 32, 32*2);	
+			if 0 < mapTable[i][j][4] and mapTable[i][j][4] <= BoxRandRate then								
+				BrickWall:setImagePos(32*mapTable[i][j][5], 32*(mapTable[i][j][5]+1), 32*mapTable[i][j][6], 32*(mapTable[i][j][6]+1));	
 				BrickWall:setAbsoluteStartPos(x,y);							
 				BrickWall:DrawImage();								
 			end		
@@ -172,21 +199,26 @@ function DrawMap()
 end
 
 function ReleaseMoving()
+	local ReviseNum = 0;
 	if releasestatus == 0 then
 		
 	elseif releasestatus == 1 then  --右键释放
 		local RemainNum = (NowActorPosX+50) % BlockSize;
-		if  40 < RemainNum and RemainNum < 50 then
+		if  37 < RemainNum and RemainNum < 50 then
 			NeedISRevise = true;
+			ReviseNum = BlockSize-RemainNum;
+		elseif 0 < RemainNum and RemainNum < 13 then
+			NeedISRevise = true;
+			ReviseNum = -RemainNum;
 		else NeedISRevise = false;			
 		end
 		if NeedISRevise then
 			if originX>-BlockSize*(TotalLines-20) and actorinf:getWindowPosX()>=16*BlockSize then	--判断视野移动
-				originX=originX-(BlockSize-RemainNum);
-				actorinf:setRelativePos(BlockSize-RemainNum,0);			
+				originX=originX-ReviseNum;
+				actorinf:setRelativePos(ReviseNum,0);			
 			else 
-				actorimg:setRelativelyStartPos(BlockSize-RemainNum,0);	
-				actorinf:moveTOALL(BlockSize-RemainNum,0);
+				actorimg:setRelativelyStartPos(ReviseNum,0);	
+				actorinf:moveTOALL(ReviseNum,0);
 			end							
 		end
 		actorimg:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*5, ActorHeight*6);
@@ -194,17 +226,21 @@ function ReleaseMoving()
 	elseif releasestatus == 2  then
 		local RemainNum = NowActorPosY % BlockSize;
 		--MessageBox(tostring(actorinf:getAbsolutePosX()),tostring(actorinf:getAbsolutePosY()) , MB_OK);
-		if  40 < RemainNum and RemainNum < 50 then
+		if  37 < RemainNum and RemainNum < 50 then
 			NeedISRevise = true;
+			ReviseNum = BlockSize-RemainNum;
+		elseif 0 < RemainNum and RemainNum < 13 then
+			NeedISRevise = true;
+			ReviseNum = -RemainNum;
 		else NeedISRevise = false;			
 		end
 		if NeedISRevise  then
 			if originY>-BlockSize*(TotalRows-12) and actorinf:getWindowPosY()>=9*BlockSize then			
-				originY=originY-(BlockSize-RemainNum);
-				actorinf:setRelativePos(0,(BlockSize-RemainNum));		
+				originY=originY-ReviseNum;
+				actorinf:setRelativePos(0,ReviseNum);		
 			else 			
-				actorimg:setRelativelyStartPos(0,(BlockSize-RemainNum));	
-				actorinf:moveTOALL(0,(BlockSize-RemainNum));											
+				actorimg:setRelativelyStartPos(0,ReviseNum);	
+				actorinf:moveTOALL(0,ReviseNum);											
 			end	
 					
 		end	
@@ -214,34 +250,42 @@ function ReleaseMoving()
 	
 	elseif releasestatus == 3 then
 		local RemainNum = NowActorPosX % BlockSize;
-		if  0 < RemainNum and RemainNum < 10 then
+		if  0 < RemainNum and RemainNum < 13 then
 			NeedISRevise = true;
+			ReviseNum = RemainNum;
+		elseif 37 < RemainNum and RemainNum < 50 then
+			NeedISRevise = true;
+			ReviseNum = RemainNum-BlockSize;
 		else NeedISRevise = false;			
 		end
 		if NeedISRevise then
 			if originX<0 and actorinf:getWindowPosX()<=3*BlockSize then
-				originX=originX + RemainNum;
-				actorinf:setRelativePos(-RemainNum,0);		
+				originX=originX + ReviseNum;
+				actorinf:setRelativePos(-ReviseNum,0);		
 			else 
-				actorimg:setRelativelyStartPos(-RemainNum,0);
-				actorinf:moveTOALL(-RemainNum,0);
+				actorimg:setRelativelyStartPos(-ReviseNum,0);
+				actorinf:moveTOALL(-ReviseNum,0);
 			end
 		end	
 		actorimg:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*2, ActorHeight*3);								
 	
 	elseif releasestatus == 4 then
 		local RemainNum = (NowActorPosY-50) % BlockSize;
-		if  0 < RemainNum and RemainNum < 10 then
+		if  0 < RemainNum and RemainNum < 13 then
 			NeedISRevise = true;
+			ReviseNum = RemainNum;
+		elseif 37 < RemainNum and RemainNum < 50 then
+			NeedISRevise = true;
+			ReviseNum = RemainNum-BlockSize;
 		else NeedISRevise = false;			
 		end
 		if NeedISRevise then
 			if originY<0 and actorinf:getWindowPosY()<=4*BlockSize then
-				originY=originY+ RemainNum;
-				actorinf:setRelativePos(0,-RemainNum);	
+				originY=originY+ ReviseNum;
+				actorinf:setRelativePos(0,-ReviseNum);	
 			else	
-				actorimg:setRelativelyStartPos(0,-RemainNum);
-				actorinf:moveTOALL(0,-RemainNum);	
+				actorimg:setRelativelyStartPos(0,-ReviseNum);
+				actorinf:moveTOALL(0,-ReviseNum);	
 			end	
 		end	
 		actorimg:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*0, ActorHeight*1);									
@@ -287,11 +331,9 @@ function ActorAnimationRecord:new()
 end
 
 Actor1 = ActorAnimationRecord:new();
-Actor1:SetValue(10, 2);
+Actor1:SetValue(14, 2);
 
 function DrawActorGesture(sx, sy, fr, gesturetype ,actortype)
-	--[[local ActorGesture = ImageClass:new();
-	ActorGesture :setImageFileSize(785, 628);--]]
 	actortype:setRelativelyStartPos(sx,sy);
 	if gesturetype == 1 then	--方向向右
 		--if keystatus == 1 then  --1代表按键按下 0代表按键松开
@@ -332,76 +374,79 @@ end
 
 
 function PressingMoving()
-	if movestatus == 1 and BorderChecking(NowActorPosX,1) then		
-		if ImpactChecking(NowActorPosX+UnitXOffset,NowActorPosY,1) then
-			if originX>-BlockSize*(TotalLines-20) and actorinf:getWindowPosX()>=16*BlockSize then
-				originX=originX-UnitXOffset;
-				--actorimg:setRelativelyStartPos(0,0);
-				--actorimg:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*5, ActorHeight*6);
-				DrawActorGesture(0, 0, Actor1:TimerGo(), 1, actorimg);
-				actorinf:setRelativePos(UnitXOffset,0);			
-			else 
-				--actorimg:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*5, ActorHeight*6);	
-				--actorimg:setRelativelyStartPos(UnitXOffset,0);	
-				DrawActorGesture(UnitXOffset, 0, Actor1:TimerGo(), 1, actorimg);
-				actorinf:moveTOALL(UnitXOffset,0);
-			end		
-		else	DrawActorGesture(0, 0, Actor1:TimerGo(), 1, actorimg);			
-		end			
-			
+	if movestatus == 1 then
+		if BorderChecking(NowActorPosX,1) then		
+			if ImpactChecking(NowActorPosX+UnitXOffset,NowActorPosY,1) then
+				if originX>-BlockSize*(TotalLines-20) and actorinf:getWindowPosX()>=16*BlockSize then
+					originX=originX-UnitXOffset;					
+					DrawActorGesture(0, 0, Actor1:TimerGo(), 1, actorimg);
+					actorinf:setRelativePos(UnitXOffset,0);			
+				else 	
+					DrawActorGesture(UnitXOffset, 0, Actor1:TimerGo(), 1, actorimg);
+					actorinf:moveTOALL(UnitXOffset,0);
+				end	
+			else		DrawActorGesture(0, 0, Actor1:TimerGo(), 1, actorimg);				
+			end	
+		else	DrawActorGesture(0, 0, Actor1:TimerGo(), 1, actorimg);
+		end
+		ActorKeyBgm:Play();
+					
 	
-	elseif movestatus == 2 and BorderChecking(NowActorPosY,2) then
-		if ImpactChecking(NowActorPosX,NowActorPosY+UnitYOffset,2) then
-			if originY>-BlockSize*(TotalRows-12) and actorinf:getWindowPosY()>=9*BlockSize then
-				originY=originY-UnitYOffset;
-				--actorimg:setRelativelyStartPos(0,0);	
-				DrawActorGesture(0, 0, Actor1:TimerGo(), 2, actorimg);
-				--actorimg:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*1, ActorHeight*2);	
-				actorinf:setRelativePos(0,UnitYOffset);	
-			else
-				--[[actorimg:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*1, ActorHeight*2);
-				actorimg:setRelativelyStartPos(0,UnitYOffset);	--]]
-				DrawActorGesture(0, UnitYOffset, Actor1:TimerGo(), 2, actorimg);
-				actorinf:moveTOALL(0,UnitYOffset);	
-			end
+	elseif movestatus == 2  then
+		if  BorderChecking(NowActorPosY,2) then
+			if ImpactChecking(NowActorPosX,NowActorPosY+UnitYOffset,2) then
+				if originY>-BlockSize*(TotalRows-12) and actorinf:getWindowPosY()>=9*BlockSize then
+					originY=originY-UnitYOffset;
+					DrawActorGesture(0, 0, Actor1:TimerGo(), 2, actorimg);			
+					actorinf:setRelativePos(0,UnitYOffset);	
+				else			
+					DrawActorGesture(0, UnitYOffset, Actor1:TimerGo(), 2, actorimg);
+					actorinf:moveTOALL(0,UnitYOffset);	
+				end
+			else	DrawActorGesture(0, 0, Actor1:TimerGo(), 2, actorimg);	
+			end	
 		else	DrawActorGesture(0, 0, Actor1:TimerGo(), 2, actorimg);	
 		end
 		
 		
+		
+		
 			
 	
-	elseif movestatus == 3 and BorderChecking(NowActorPosX,3) then
-		if ImpactChecking(NowActorPosX-UnitXOffset,NowActorPosY,3) then
-			if originX<0 and actorinf:getWindowPosX()<=3*BlockSize then
-				originX=originX+UnitXOffset;
-			--	actorimg:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*2, ActorHeight*3);
-				DrawActorGesture(0, 0, Actor1:TimerGo(), 3, actorimg);
-				actorinf:setRelativePos(-UnitXOffset,0);		
-			else 
-				--[[actorimg:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*2, ActorHeight*3);
-				actorimg:setRelativelyStartPos(-UnitXOffset,0);--]]
-				DrawActorGesture(-UnitXOffset, 0, Actor1:TimerGo(), 3, actorimg);
-				actorinf:moveTOALL(-UnitXOffset,0);
-			end	
-		else	DrawActorGesture(0, 0, Actor1:TimerGo(), 3, actorimg);	
+	elseif movestatus == 3  then
+		if BorderChecking(NowActorPosX,3) then
+			if ImpactChecking(NowActorPosX-UnitXOffset,NowActorPosY,3) then
+				if originX<0 and actorinf:getWindowPosX()<=3*BlockSize then
+					originX=originX+UnitXOffset;
+					DrawActorGesture(0, 0, Actor1:TimerGo(), 3, actorimg);
+					actorinf:setRelativePos(-UnitXOffset,0);		
+				else 
+					DrawActorGesture(-UnitXOffset, 0, Actor1:TimerGo(), 3, actorimg);
+					actorinf:moveTOALL(-UnitXOffset,0);
+				end	
+			else	DrawActorGesture(0, 0, Actor1:TimerGo(), 3, actorimg);
+			end
+		else	DrawActorGesture(0, 0, Actor1:TimerGo(), 3, actorimg);
 		end
+			
 				
 	
-	elseif movestatus == 4 and BorderChecking(NowActorPosY,4) then
-		if ImpactChecking(NowActorPosX,NowActorPosY-UnitYOffset,4) then
-			if originY<0 and actorinf:getWindowPosY()<=4*BlockSize then
-				originY=originY+UnitYOffset;
-				--actorimg:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*0, ActorHeight*1);
-				DrawActorGesture(0, 0, Actor1:TimerGo(), 4, actorimg);
-				actorinf:setRelativePos(0,-UnitYOffset);	
-			else
-				--[[actorimg:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*0, ActorHeight*1);	
-				actorimg:setRelativelyStartPos(0,-UnitYOffset);--]]
-				DrawActorGesture(0, -UnitYOffset, Actor1:TimerGo(), 4, actorimg);
-				actorinf:moveTOALL(0,-UnitYOffset);	
+	elseif movestatus == 4  then
+		if BorderChecking(NowActorPosY,4) then
+			if ImpactChecking(NowActorPosX,NowActorPosY-UnitYOffset,4) then
+				if originY<0 and actorinf:getWindowPosY()<=4*BlockSize then
+					originY=originY+UnitYOffset;
+					DrawActorGesture(0, 0, Actor1:TimerGo(), 4, actorimg);
+					actorinf:setRelativePos(0,-UnitYOffset);	
+				else
+					DrawActorGesture(0, -UnitYOffset, Actor1:TimerGo(), 4, actorimg);
+					actorinf:moveTOALL(0,-UnitYOffset);	
+				end	
+			else	DrawActorGesture(0, 0, Actor1:TimerGo(), 4, actorimg);			
 			end	
 		else	DrawActorGesture(0, 0, Actor1:TimerGo(), 4, actorimg);	
-		end				
+		end
+						
 	end
 end
 
@@ -458,16 +503,16 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 		CheckingY1 = math.ceil(CheckingPosX/BlockSize);
 		CheckingYRemainder = CheckingPosY % BlockSize;
 		if  CheckingYRemainder == 0 then  --判断人物是否在一个方格内
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or  mapTable[CheckingX1][CheckingY1][4] == 1 then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
 				return false;
 			else return true;			
 			end	
 			return true;				
 		else 
 			CheckingX2 = CheckingX1-1;
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or mapTable[CheckingX1][CheckingY1][4] == 1 then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
 				return false;
-			elseif mapTable[CheckingX2][CheckingY1][3] == 1 or mapTable[CheckingX2][CheckingY1][4] == 1 then
+			elseif mapTable[CheckingX2][CheckingY1][3] == 1 or 0 < mapTable[CheckingX2][CheckingY1][4] and mapTable[CheckingX2][CheckingY1][4] <= BoxRandRate then
 				return false;			
 			else return true;
 			end
@@ -478,16 +523,16 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 		CheckingXRemainder = CheckingPosX % BlockSize;
 		if CheckingXRemainder == 0 then
 			CheckingY1 = math.ceil(CheckingPosX/BlockSize)+1;
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or  mapTable[CheckingX1][CheckingY1][4] == 1 then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
 				return false;
 			else return true;			
 			end	
 		else
 			CheckingY1 = math.ceil(CheckingPosX/BlockSize);
 			CheckingY2 = CheckingY1+1;
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or mapTable[CheckingX1][CheckingY1][4] == 1 then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
 				return false;
-			elseif mapTable[CheckingX1][CheckingY2][3] == 1 or mapTable[CheckingX1][CheckingY2][4] == 1 then
+			elseif mapTable[CheckingX1][CheckingY2][3] == 1 or 0 < mapTable[CheckingX1][CheckingY2][4] and mapTable[CheckingX1][CheckingY2][4] <= BoxRandRate then
 				return false;			
 			else return true;
 			end		
@@ -502,16 +547,16 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 		CheckingYRemainder = CheckingPosY % BlockSize;
 		if CheckingYRemainder == 0 then
 			CheckingX1 = math.ceil(CheckingPosY/BlockSize);	
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or  mapTable[CheckingX1][CheckingY1][4] == 1 then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
 				return false;
 			else return true;			
 			end	
 		else 
 			CheckingX1 = math.ceil(CheckingPosY/BlockSize);
 			CheckingX2 = CheckingX1-1;
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or mapTable[CheckingX1][CheckingY1][4] == 1 then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
 				return false;
-			elseif mapTable[CheckingX2][CheckingY1][3] == 1 or mapTable[CheckingX2][CheckingY1][4] == 1 then
+			elseif mapTable[CheckingX2][CheckingY1][3] == 1 or 0 < mapTable[CheckingX2][CheckingY1][4] and mapTable[CheckingX2][CheckingY1][4] <= BoxRandRate then
 				return false;			
 			else return true;
 			end
@@ -527,16 +572,16 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 		CheckingXRemainder = CheckingPosX % BlockSize;
 		if CheckingXRemainder == 0 then
 			CheckingY1 = math.ceil(CheckingPosX/BlockSize)+1;
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or  mapTable[CheckingX1][CheckingY1][4] == 1 then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
 				return false;
 			else return true;			
 			end
 		else
 			CheckingY1 = math.ceil(CheckingPosX/BlockSize);
 			CheckingY2 = CheckingY1+1;
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or mapTable[CheckingX1][CheckingY1][4] == 1 then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
 				return false;
-			elseif mapTable[CheckingX1][CheckingY2][3] == 1 or mapTable[CheckingX1][CheckingY2][4] == 1 then
+			elseif mapTable[CheckingX1][CheckingY2][3] == 1 or 0 < mapTable[CheckingX1][CheckingY2][4] and mapTable[CheckingX1][CheckingY2][4] <= BoxRandRate then
 				return false;			
 			else return true;
 			end		
@@ -545,6 +590,22 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 			
 		
 end	
+	
+--[[function BossMoveDirection(BOSS)
+	MinimunDistanceX = actorinf:getAbsolutePosX()- Bossinf:getAbsolutePosX();  --Boss位置（500，500）
+	MinimunDistanceY = actorinf:getAbsolutePosY()-Bossinf:getAbsolutePosY();
+	if	math.abs(MinimunDistanceX) > 50 or math.abs(MinimunDistanceY) > 50 then
+		if	 then
+			
+		elseif	
+		end 
+	else	DrawActorGesture(0, 0, Actor1:TimerGo(), 5, actorimg);
+	end
+	BOSS:getAbsolutePosX() = 
+	
+end	--]]
+	
+	
 	
 function ExitButtonEvent(Num, ButtonClass, GoFunc)
 	ExitNotReSetButton(Num);
@@ -593,16 +654,16 @@ end
 
 
 function LoadMapViewImageFile()
-	initParams(24,40,1,0,0,550,200); --初始化地图参数
+	initParams(24,40,1,math.random(30,70),0,550,200); --初始化地图参数
 	ISGameNotPause = true;	--判断游戏是否没有暂停
-	GroundTypeRandNum = math.random(1,5);
-	BoxNum = math.random(1,32);
+	GroundTypeRandNum = math.random(1,5); --地表随机
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
 	ground:LoadImage("Image/Map/ground2.png","DrawGround()", "Image_0");
 	BrickWall:LoadImage("Image/Map/material.png","DrawMap()", "Image_1");
 	actorimg:LoadImage("Image/Map/actor.png","DrawActor()", "Image_2");
-	ExitDialog:LoadImage("Image/Map/ExitShowDialog.png","DrawDialog()", "Image_3");
+	ExitDialog:LoadImage("Image/Map/BackgroundColor4.png","DrawDialog()", "Image_3");
 	ExitButton:LoadImage("Image/Map/ExitButtons.png","DrawButtons()", "Image_4");
+	
 end
 
 
@@ -650,15 +711,21 @@ function ActorKey()
 		movestatus = 0;
 	end
 	
-	ExitResult = 0;
-	if DetectMousePos(ExitButton) == 1 then
-		ExitButtonEvent(1,ExitButton, GoToMainMenu);
-	elseif DetectMousePos(CancelButton) == 1 then
-		ExitButtonEvent(2,CancelButton, CancelBack);
-	elseif ExitResult == 0 then
-		GetMouseStatus();
-		ExitNotReSetButton(0);
+	
+	if ISGameNotPause == false then
+		ExitResult = 0;
+		if DetectMousePos(ExitButton) == 1  then
+			ExitButtonEvent(1,ExitButton, GoToMainMenu);
+		elseif DetectMousePos(CancelButton) == 1 then
+			ExitButtonEvent(2,CancelButton, CancelBack);
+		elseif ExitResult == 0 then
+			GetMouseStatus();
+			ExitNotReSetButton(0);
+		end
 	end
+	
+	
+	
 	
 	
 end	

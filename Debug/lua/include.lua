@@ -1,4 +1,6 @@
 
+
+math.randomseed(os.time()); --设置时间种子
 --警告：win32 自带的MessageBox在用户没有确认的情况下会造成程序暂停运行
 --MessageBox 选项按钮选项
 MB_OK                    =   0x00000000
