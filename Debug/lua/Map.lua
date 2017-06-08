@@ -642,9 +642,7 @@ function ExitNotReSetButton(TempB)
 end
 	
 function GoToMainMenu()
-	ReleaseImageData();--清除图片资源以便目标页面加载
-	LoadStartViewImageFile();--加载主页面
-	NowView = StartV;--设置视图位于主页面
+	goStartView();
 end	
 
 function CancelBack()
@@ -653,16 +651,23 @@ end
 
 
 
-function LoadMapViewImageFile()
+
+function IintMapData()
 	initParams(24,40,1,math.random(30,70),0,550,200); --初始化地图参数
 	ISGameNotPause = true;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
-	ground:LoadImage("Image/Map/ground2.png","DrawGround()", "Image_0");
-	BrickWall:LoadImage("Image/Map/material.png","DrawMap()", "Image_1");
-	actorimg:LoadImage("Image/Map/actor.png","DrawActor()", "Image_2");
-	ExitDialog:LoadImage("Image/Map/BackgroundColor4.png","DrawDialog()", "Image_3");
-	ExitButton:LoadImage("Image/Map/ExitButtons.png","DrawButtons()", "Image_4");
+end
+
+
+
+function LoadMapViewImageFile()
+	local ImageLoad = ImageClass:new();
+	ImageLoad:LoadImage(PlotV,"Image/Map/ground2.png","DrawGround()", "Image_0");
+	ImageLoad:LoadImage(PlotV,"Image/Map/material.png","DrawMap()", "Image_1");
+	ImageLoad:LoadImage(PlotV,"Image/Map/actor.png","DrawActor()", "Image_2");
+	ImageLoad:LoadImage(PlotV,"Image/Map/BackgroundColor4.png","DrawDialog()", "Image_3");
+	ImageLoad:LoadImage(PlotV,"Image/Map/ExitButtons.png","DrawButtons()", "Image_4");
 	
 end
 

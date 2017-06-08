@@ -18,6 +18,8 @@ static int PlayMusic(lua_State *L);
 static int StopMusic(lua_State *L);
 static int PlayToPauseMusic(lua_State *L);
 static int PauseToPlayMusic(lua_State *L);
+static int SetMusicVol(lua_State *L);
+static int SetNowWindowView(lua_State *L);
 //全局对象声明
 extern GameStateInterface demo;
 
@@ -43,6 +45,8 @@ void LuaInterfaceInit()
 	LuaConnect.CFuncRegister("PlayToPauseMusic", PlayToPauseMusic);
 	LuaConnect.CFuncRegister("PauseToPlayMusic", PauseToPlayMusic);
 	LuaConnect.CFuncRegister("ReleaseImageData", ReleaseImageData);
+	LuaConnect.CFuncRegister("SetNowWindowView", SetNowWindowView);
+	LuaConnect.CFuncRegister("SetMusicVol", SetMusicVol);
 	LuaConnect.CFuncRegister("Exit", ExitGame);
 
 	LuaConnect.LuaDoFile();
@@ -82,7 +86,7 @@ static int SetViewIamgePath(lua_State *L)
 	 //返回栈中元素的个数  
     int n = lua_gettop(L);
 	if(n < 3) return 0;
-	demo.SetImagePath( AnsiToUnicode(lua_tolstring(L, 1, NULL)), lua_tolstring(L, 2, NULL), lua_tolstring(L, 3, NULL));
+	demo.SetImagePath( lua_tonumber(L, 1), AnsiToUnicode(lua_tolstring(L, 2, NULL)), lua_tolstring(L, 3, NULL), lua_tolstring(L, 4, NULL));
 	return 0;
 }
 
@@ -125,6 +129,17 @@ static int LuaGetMouseStatus(lua_State *L)
 
 	return 1;
 }
+//提供给Lua调用的函数的接口
+//定义第一方法：返回值必须为int,参数必须为lua_State *L，（L）可变
+static int SetNowWindowView(lua_State *L)
+{
+	 //返回栈中元素的个数  
+    int n = lua_gettop(L);
+
+	demo.SetWindowView((int)lua_tonumber(L, 1));
+
+	return 0;
+}
 
 //提供给Lua调用的函数的接口
 //定义第一方法：返回值必须为int,参数必须为lua_State *L，（L）可变
@@ -133,12 +148,29 @@ static int ReleaseImageData(lua_State *L)
 	 //返回栈中元素的个数  
     int n = lua_gettop(L);
 
-	demo.ReleseImageData();
+	demo.ReleaseViewImagePath((int)lua_tonumber(L, 1));
 
 	return 0;
 }
 
-
+//提供给Lua调用的函数的接口
+//定义第一方法：返回值必须为int,参数必须为lua_State *L，（L）可变
+static int SetMusicVol(lua_State *L)
+{
+	 //返回栈中元素的个数  
+    int n = lua_gettop(L);
+	if (n < 2) return 0;
+	int Device = lua_tonumber(L, 1);
+	if(Device == BGMDevice)
+	{
+		BGMPlayMusicDevice.SetVolume(lua_tonumber(L, 2));
+	}
+	else if(Device == SEDevice)
+	{
+		SEPlayMusicDevice.SetVolume(lua_tonumber(L, 2));
+	}
+	return 0;
+}
 
 //提供给Lua调用的函数的接口
 //定义第一方法：返回值必须为int,参数必须为lua_State *L，（L）可变

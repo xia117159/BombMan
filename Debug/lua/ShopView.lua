@@ -324,14 +324,14 @@ end
 function LoadShopImageFile()
 
 	local ImageLoad = ImageClass:new();
-	ImageLoad:LoadImage("Image/Shop/ShopBackGoundIMage.png","DrawShopBackGroundFunc()", "Image_0");
-	ImageLoad:LoadImage("Image/Return.png","DrawShopReturn()", "Image_1");
-	ImageLoad:LoadImage("Image/Gold.png","DrawGold()", "Image_2");
-	ImageLoad:LoadImage("Image/Number.png","DrawNumber()", "Image_3");
-	ImageLoad:LoadImage("Image/Font.png","DrawFont()", "Image_4");
-	ImageLoad:LoadImage("Image/Shop/BuyButton.png","DrawBuyButton()", "Image_5");
-	ImageLoad:LoadImage("Image/Shop/backpack1.png","Drawbackpack()", "Image_6");
-	ImageLoad:LoadImage("Image/Shop/ShopProps.png","DrawShopProps()", "Image_7");
+	ImageLoad:LoadImage(ShopV,"Image/Shop/ShopBackGoundIMage.png","DrawShopBackGroundFunc()", "Image_0");
+	ImageLoad:LoadImage(ShopV,"Image/Return.png","DrawShopReturn()", "Image_1");
+	ImageLoad:LoadImage(ShopV,"Image/Gold.png","DrawGold()", "Image_2");
+	ImageLoad:LoadImage(ShopV,"Image/Number.png","DrawNumber()", "Image_3");
+	ImageLoad:LoadImage(ShopV,"Image/Font.png","DrawFont()", "Image_4");
+	ImageLoad:LoadImage(ShopV,"Image/Shop/BuyButton.png","DrawBuyButton()", "Image_5");
+	ImageLoad:LoadImage(ShopV,"Image/Shop/backpack1.png","Drawbackpack()", "Image_6");
+	ImageLoad:LoadImage(ShopV,"Image/Shop/ShopProps.png","DrawShopProps()", "Image_7");
 	
 	ShowPropsIntro(0);
 end

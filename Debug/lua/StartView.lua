@@ -57,14 +57,15 @@ function DrawButtonFunc()
 	bzButton:DrawImage();
 	cdButton:DrawImage();
 	tcButton:DrawImage();
-	
 end
 
 
-function LoadStartViewImageFile()
-	BackGround:LoadImage("Image/BackGround.png","DrawBackGroundFunc()", "Image_0");
-	ksButton:LoadImage(ButtonImagePath,"DrawButtonFunc()", "Image_1");
 
+
+function LoadStartViewImageFile()
+	local ImageLoad = ImageClass:new();
+	ImageLoad:LoadImage(StartV,"Image/BackGround.png","DrawBackGroundFunc()", "Image_0");
+	ImageLoad:LoadImage(StartV,ButtonImagePath,"DrawButtonFunc()", "Image_1");
 end
 
 

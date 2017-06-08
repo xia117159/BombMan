@@ -66,7 +66,12 @@ DWORD CPlayMusic::Play(HWND hWnd, LPCTSTR pFileName)
           
         MCI_PLAY_PARMS mciPlayParms;  
         mciPlayParms.dwCallback = (DWORD)hWnd;
-        dwResult = mciSendCommand(m_ElementID, MCI_PLAY, 0, (DWORD)(LPVOID)&mciPlayParms);  
+        dwResult = mciSendCommand(m_ElementID, MCI_PLAY, 0, (DWORD)(LPVOID)&mciPlayParms);
+		MCI_DGV_SETAUDIO_PARMS  mciSetAudioPara;  
+		mciSetAudioPara.dwCallback  = NULL;  
+		mciSetAudioPara.dwItem   = MCI_DGV_SETAUDIO_VOLUME;  
+		mciSetAudioPara.dwValue  = MusicVol*10; //此处就是音量大小 (0--1000)  
+		mciSendCommand(m_ElementID, MCI_SETAUDIO,  MCI_DGV_SETAUDIO_ITEM | MCI_DGV_SETAUDIO_VALUE, (DWORD)(LPVOID)&mciSetAudioPara);
     }  
   
     return dwResult;  
@@ -108,3 +113,22 @@ DWORD CPlayMusic::Pause()
   
     return dwResult;  
 }  
+
+void CPlayMusic::SetVolume(DWORD vol)
+{
+	MusicVol = vol;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -323,20 +323,22 @@ function DrawbpLotteryButton()
 end
 
 
+
+function SetBackPackData()
+	ShowPropsIntro(0);
+end
 function LoadBakcpackImageFile()
 
 	local ImageLoad = ImageClass:new();
-	ImageLoad:LoadImage("Image/Shop/BackpackBackGround.png","DrawbpBackGroundFunc()", "Image_0");
-	ImageLoad:LoadImage("Image/Return.png","DrawbpReturn()", "Image_1");
-	ImageLoad:LoadImage("Image/Gold.png","DrawbpGold()", "Image_2");
-	ImageLoad:LoadImage("Image/Number.png","DrawbpNumber()", "Image_3");
-	ImageLoad:LoadImage("Image/Font.png","DrawbpFont()", "Image_4");
-	ImageLoad:LoadImage("Image/ShortcutBar2.png","bpDrawShortCutBar()", "Image_5");
-	ImageLoad:LoadImage("Image/Shop/LotteryBackGround.png","DrawbpLottery()", "Image_6");
-	ImageLoad:LoadImage("Image/Shop/LotteryButton.png","DrawbpLotteryButton()", "Image_7");
-	ImageLoad:LoadImage("Image/Shop/ShopProps.png","DrawbpProps()", "Image_8");
-	
-	ShowPropsIntro(0);
+	ImageLoad:LoadImage(BackpackV,"Image/Shop/BackpackBackGround.png","DrawbpBackGroundFunc()", "Image_0");
+	ImageLoad:LoadImage(BackpackV,"Image/Return.png","DrawbpReturn()", "Image_1");
+	ImageLoad:LoadImage(BackpackV,"Image/Gold.png","DrawbpGold()", "Image_2");
+	ImageLoad:LoadImage(BackpackV,"Image/Number.png","DrawbpNumber()", "Image_3");
+	ImageLoad:LoadImage(BackpackV,"Image/Font.png","DrawbpFont()", "Image_4");
+	ImageLoad:LoadImage(BackpackV,"Image/ShortcutBar2.png","bpDrawShortCutBar()", "Image_5");
+	ImageLoad:LoadImage(BackpackV,"Image/Shop/LotteryBackGround.png","DrawbpLottery()", "Image_6");
+	ImageLoad:LoadImage(BackpackV,"Image/Shop/LotteryButton.png","DrawbpLotteryButton()", "Image_7");
+	ImageLoad:LoadImage(BackpackV,"Image/Shop/ShopProps.png","DrawbpProps()", "Image_8");
 end
 
 
@@ -344,9 +346,8 @@ end
 
 
 function GoBackpackVeiw()
-	
-	ReleaseImageData();--清除图片资源以便目标页面加载
-	LoadBakcpackImageFile();---加载商城界面自行添加
+	SetNowWindowView(BackpackV);
+	SetBackPackData();
 	NowView = BackpackV;--设置视图位于商城
 end
 

@@ -17,7 +17,12 @@ struct VertexPos
 GameStateInterface::GameStateInterface() : effect_(0),inputLayout_(0),ImageMap_(0),colorMapSampler_(0),
 										   vertexBuffer_(0),alphaBlendState_(0),/*,BackGroundImage_(0),*/mvpCB_(0)
 {
-	NowNode = 0;
+	int i = 0;
+	for(i = 0;i<MaxNode;i++)
+	{
+		Node[i] = 0;
+	}
+	NowView = 0;
 	ImagePath = NULL;
 }
 
@@ -85,18 +90,6 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 		DXTRACE_MSG( L"Error creating the input layout!" );
 		return false;
 	}
-
-
-	/*int i = 0;
-	for( ; i < NowNode ; i++)
-	{
-		result = D3DX11CreateShaderResourceViewFromFile( d3dDevice_, ImageData_[i].ImagePath, 0, 0, &ImageData_[i].ImageMap_, 0 );
-		if( FAILED( result ) )
-		{
-			DXTRACE_MSG( L"Failed to load the texture image!" );
-			return false;
-		}
-	}*/
 
 	D3D11_SAMPLER_DESC colorMapDesc;
 	ZeroMemory( &colorMapDesc, sizeof( colorMapDesc ) );
@@ -263,31 +256,42 @@ void GameStateInterface::Render()
     {
         ID3DX11EffectPass* pass = colorInvTechnique->GetPassByIndex( p );
 		pass->Apply( 0, d3dContext_ );
-		if( pass != 0 && p < NowNode)
+		if( pass != 0 && p < Node[NowView])
 		{
 			ID3DX11EffectShaderResourceVariable* colorMap;
-			colorMap = effect_->GetVariableByName( ImageData_[p].effectMap )->AsShaderResource( );
-			colorMap->SetResource( ImageData_[p].ImageMap_);
-			LuaConnect.LuaFuncUse(ImageData_[p].DrawImageFunc);
+			colorMap = effect_->GetVariableByName( ImageData_[NowView][p].effectMap )->AsShaderResource( );
+			colorMap->SetResource( ImageData_[NowView][p].ImageMap_);
+			LuaConnect.LuaFuncUse(ImageData_[NowView][p].DrawImageFunc);
 		}
     }
     swapChain_->Present( 0, 0 );
 }
 
-void GameStateInterface::SetImagePath(LPCWSTR Path, const char * DrawImageFunc, const char * effectMap)
+
+
+
+void GameStateInterface::SetImagePath(int View, LPCWSTR Path, const char * DrawImageFunc, const char * effectMap)
 {
-	if(NowNode < MaxNode)
+	if(Node[View] < MaxNode)
 	{
-		ImageData_[NowNode].ImagePath = Path;
-		ImageData_[NowNode].DrawImageFunc = DrawImageFunc;
-		ImageData_[NowNode].effectMap = effectMap;
-		D3DX11CreateShaderResourceViewFromFile( d3dDevice_, ImageData_[NowNode].ImagePath, 0, 0, &ImageData_[NowNode].ImageMap_, 0 );
-		NowNode++;
+		ImageData_[View][Node[View]].ImagePath = Path;
+		ImageData_[View][Node[View]].DrawImageFunc = DrawImageFunc;
+		ImageData_[View][Node[View]].effectMap = effectMap;
+		D3DX11CreateShaderResourceViewFromFile( d3dDevice_, ImageData_[View][Node[View]].ImagePath, 0, 0, &ImageData_[View][Node[View]].ImageMap_, 0 );
+		Node[View]++;
 	}
 }
-void GameStateInterface::ReleseImageData()
+
+
+
+void GameStateInterface::SetWindowView(int View)
 {
-	NowNode = 0;
+	NowView = View;
+}
+
+void GameStateInterface::ReleaseViewImagePath(int View)
+{
+	Node[View] = 0;
 }
 void GameStateInterface::SetBackGroundPath(LPCWSTR Path)
 {

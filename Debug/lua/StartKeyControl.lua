@@ -65,16 +65,15 @@ end
 --跳转开始画面页面并进行相关设置的函数
 function goStartView()
 	
-	ReleaseImageData();--清除图片资源以便目标页面加载
-	LoadStartViewImageFile();--加载商城界面
+	SetNowWindowView(StartV);
 	NowView = StartV;--设置视图位于商城
 end
 
 --跳转剧情模式页面并进行相关设置的函数
 function goPlotView()
-	
-	ReleaseImageData();--清除图片资源以便目标页面加载
-	LoadMapViewImageFile()--加载商城界面自行添加
+
+	SetNowWindowView(PlotV);
+	IintMapData();
 	NowView = PlotV;--设置视图位于商城
 end
 
@@ -82,7 +81,6 @@ end
 --跳转挑战模式页面并进行相关设置的函数
 function goChallengeView()
 	
-	--ReleaseImageData();--清除图片资源以便目标页面加载
 	---加载商城界面自行添加
 	--NowView = ShopV;--设置视图位于商城
 end
@@ -90,9 +88,7 @@ end
 
 --跳转商城页面并进行相关设置的函数
 function goShopView()
-	
-	ReleaseImageData();--清除图片资源以便目标页面加载
-	LoadShopImageFile();--加载商城界面
+	SetNowWindowView(ShopV);
 	NowView = ShopV;--设置视图位于商城
 end
 
@@ -100,7 +96,6 @@ end
 --跳转帮助页面并进行相关设置的函数
 function goHelpView()
 	
-	--ReleaseImageData();--清除图片资源以便目标页面加载
 	--加载商城界面
 	--NowView = ShopV;--设置视图位于商城
 end
@@ -109,7 +104,6 @@ end
 --跳转商城页面并进行相关设置的函数
 function goSaveView()
 	
-	--ReleaseImageData();--清除图片资源以便目标页面加载
 	--加载商城界面
 	--NowView = ShopV;--设置视图位于商城
 end
@@ -118,9 +112,6 @@ end
 --退出程序并进行相关设置的函数
 function goEndView()
 	Exit();
-	--ReleaseImageData();--清除图片资源以便目标页面加载
-	--加载商城界面
-	--NowView = ShopV;--设置视图位于商城
 end
 
 function NotReSetButton(TempB)

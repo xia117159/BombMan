@@ -60,9 +60,9 @@ function ImageClass:setscaling_ratio(sr)
 	self.scaling_ratio = sr;
 
 end
-function ImageClass:LoadImage(path, funcName, ShaderName)
+function ImageClass:LoadImage(View,path, funcName, ShaderName)
 	self.ImagePath = path;
-	SetViewIamgePath(self.ImagePath, funcName, ShaderName);
+	SetViewIamgePath(View,self.ImagePath, funcName, ShaderName);
 end
 --参数依次为：X轴位置、Y轴位置、图片宽、图片高、图片开始X轴、图片结束X轴、图片开始Y轴、图片结束Y轴、优先层级
 function ImageClass:setImage(sx, sy, w, h, isx, iex, isy, iey, p)
