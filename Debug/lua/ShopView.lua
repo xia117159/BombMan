@@ -1,15 +1,16 @@
 
 
-ShopPriorityBGI   = 10
-ShopPriorityRB = 9
-ShopPriorityGold = 8
-ShopPriorityNumber = 7
-ShopPriorityFont   = 6
-ShopPriorityBB  = 5
-ShopPriorityBackPack = 4
-ShopPriorityBBP = 3
-ShopPriorityTwo   = 2
-ShopPriorityOne   = 1
+ShopPriorityBGI   = 20
+ShopPriorityRB = 19
+ShopPriorityGold = 18
+ShopPriorityNumber = 17
+ShopPriorityFont   = 16
+ShopPriorityBB  = 15
+ShopPriorityBackPack = 14
+ShopPriorityBBP = 13
+-----------------------------------------
+ShopPriorityTwo   = 12
+ShopPriorityOne   = 11
 
 ShopReturnButton = ImageClass:new();
 ShopReturnButton:setImageFileSize(521, 172);
@@ -305,9 +306,9 @@ function DrawBuyButton()
 end
 -------------------------------------------------»­±³°ü
 backpack = ImageClass:new();
-backpack :setImageFileSize(639, 410);
-backpack :setscaling_ratio(0.2);
-backpack :setImage(900, 50 ,300, 410, 0, 300, 0, 410, ShopPriorityBackPack+0.9);
+backpack :setImageFileSize(535, 184);
+backpack :setscaling_ratio(0.5);
+backpack :setImage(900, 50 ,178, 184, 0, 178, 0, 184, ShopPriorityBackPack+0.9);
 
 function Drawbackpack()
 	backpack:DrawImage();
@@ -330,7 +331,7 @@ function LoadShopImageFile()
 	ImageLoad:LoadImage(ShopV,"Image/Number.png","DrawNumber()", "Image_3");
 	ImageLoad:LoadImage(ShopV,"Image/Font.png","DrawFont()", "Image_4");
 	ImageLoad:LoadImage(ShopV,"Image/Shop/BuyButton.png","DrawBuyButton()", "Image_5");
-	ImageLoad:LoadImage(ShopV,"Image/Shop/backpack1.png","Drawbackpack()", "Image_6");
+	ImageLoad:LoadImage(ShopV,"Image/Shop/backpack.png","Drawbackpack()", "Image_6");
 	ImageLoad:LoadImage(ShopV,"Image/Shop/ShopProps.png","DrawShopProps()", "Image_7");
 	
 	ShowPropsIntro(0);

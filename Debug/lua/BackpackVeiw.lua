@@ -1,16 +1,16 @@
 
 
-bpPriorityBGI   = 10
-bpPriorityRB = 9
-bpPriorityGold = 8
-bpPriorityNumber = 7
-bpPriorityFont   = 6
-bpPrioritySCB = 5
-bpPriorityLottery = 4
-bpPriorityBBP = 3
--------------
-bpPriorityTwo   = 2
-bpPriorityOne   = 1
+bpPriorityBGI   = 20
+bpPriorityRB = 19
+bpPriorityGold = 18
+bpPriorityNumber = 17
+bpPriorityFont   = 16
+bpPrioritySCB = 15
+bpPriorityLottery = 14
+bpPriorityBBP = 13
+bpPriorityLR   = 12
+------------------------
+bpPriorityOne   = 11
 
 bpReturnButton = ImageClass:new();
 bpReturnButton:setImageFileSize(521, 172);
@@ -311,7 +311,7 @@ function DrawbpLottery()
 end
 
 
---画抽奖按钮
+----------------------------------------------------------画抽奖按钮
 bpLotteryButton = ImageClass:new();
 bpLotteryButton :setImageFileSize(556, 506);
 bpLotteryButton :setscaling_ratio(0.3);
@@ -322,6 +322,299 @@ function DrawbpLotteryButton()
 	bpLotteryButton:DrawImage();
 end
 
+
+
+
+----------------------------------------------------------画抽奖结果
+
+--抽奖结果弹框状态量
+bpLRWinStatus = false;
+
+
+--抽奖结果素材图大小
+bpLRWidth = 1600;
+bpLRHeight = 829;
+--抽奖弹框大小
+bpLRWinWidth = 400;
+bpLRWinHeight = 301;
+--弹框位置,初始化位于中心！
+bpLRPosX = 500 - bpLRWinWidth/2;
+bpLRPosY = 300 - bpLRWinHeight/2;
+
+
+--半透明背景
+bpLRTransBGI = ImageClass:new();
+bpLRTransBGI :setImageFileSize(bpLRWidth, bpLRHeight);
+bpLRTransBGI :setImage(0, 0 ,1000, 600,  200, 300,500, 560, bpPriorityLR+0.99);
+--窗口
+bpLRWindow = ImageClass:new();
+bpLRWindow :setImageFileSize(bpLRWidth, bpLRHeight);
+bpLRWindow :setImage(bpLRPosX, bpLRPosY ,bpLRWinWidth, bpLRWinHeight,  0, bpLRWinWidth,0, bpLRWinHeight, bpPriorityLR+0.9);
+--再来一次抽奖按钮
+bpLRAgainBtnW = 160
+bpLRAgainBtnH = 48
+bpLRAgainBtn = ImageClass:new();
+bpLRAgainBtn :setImageFileSize(bpLRWidth, bpLRHeight);
+bpLRAgainBtn :setImage(bpLRPosX+120, bpLRPosY+20 ,bpLRAgainBtnW, bpLRAgainBtnH,  bpLRWinWidth, bpLRWinWidth+bpLRAgainBtnW,bpLRWinHeight+3, bpLRWinHeight+3+bpLRAgainBtnH, bpPriorityLR+0.7);
+
+--关闭按钮
+bpLRCloseBtn = ImageClass:new();
+bpLRCloseBtn :setImageFileSize(bpLRWidth, bpLRHeight);
+bpLRCloseBtn :setImage(bpLRPosX+350, bpLRPosY+230 ,44, 44,  406, 406+44,456, 456+44, bpPriorityLR+0.7);
+
+
+
+PrizeStatus = false;
+--中奖提示
+bpLRTile = ImageClass:new();
+bpLRTile :setImageFileSize(bpLRWidth, bpLRHeight);
+bpLRTile :setImage(bpLRPosX+125, bpLRPosY+220 ,150, 40,  0, 150, bpLRWinHeight+3, bpLRWinHeight+3+40, bpPriorityLR+0.7);
+--未中奖提示
+bpLRNotPrize = ImageClass:new();
+bpLRNotPrize :setImageFileSize(bpLRWidth, bpLRHeight);
+bpLRNotPrize :setImage(bpLRPosX+20, bpLRPosY+200 ,400, 40,  1200, 1600, 306, 346, bpPriorityLR+0.7);
+
+
+GoldPropsStatus = false;
+
+bpLRPromptPosX = 0;
+--奖励道具
+bpLRRewardProps = ImageClass:new();
+bpLRRewardProps :setImageFileSize(bpLRWidth, bpLRHeight);
+bpLRRewardProps :setImage(bpLRPosX+83+bpLRPromptPosX, bpLRPosY+95 ,100, 109,  0, 100, 611, 720, bpPriorityLR+0.7);
+--金币的数据：setImage(bpLRPosX+113+bpLRPromptPosX, bpLRPosY+130 ,70, 40,  400, 470, 500, 540, bpPriorityLR+0.7);
+--炸弹的数据：setImage(bpLRPosX+83+bpLRPromptPosX, bpLRPosY+100 ,100, 100,  0, 100, 500, 600, bpPriorityLR+0.7);
+--男助手的数据：setImage(bpLRPosX+83+bpLRPromptPosX, bpLRPosY+95 ,100, 109,  0, 100, 611, 720, bpPriorityLR+0.7);
+--女助手的数据：setImage(bpLRPosX+83+bpLRPromptPosX, bpLRPosY+95 ,100, 109,  0, 100, 720, 829, bpPriorityLR+0.7);
+------------------------------------------------------------------------------------------
+
+bpLRRewardGold = ImageClass:new();
+bpLRRewardGold :setImageFileSize(bpLRWidth, bpLRHeight);
+bpLRRewardGold :setImage(bpLRPosX+113+bpLRPromptPosX, bpLRPosY+130 ,70, 40,  400, 470, 500, 540, bpPriorityLR+0.7);
+
+
+--数字
+bpLRRewardNumberW = 23.6
+bpLRRewardNumberH = 30
+
+bpLRRewardNumberRed = 349
+bpLRRewardNumberBlue = 380
+bpLRRewardNumberGreen = 411
+bpLRRewardNumberS = bpLRRewardNumberBlue -- 起始的Y位置
+
+bpLRRewardNumber = ImageClass:new();
+bpLRRewardNumber :setImageFileSize(bpLRWidth, bpLRHeight);
+bpLRRewardNumber :setImage(bpLRPosX+217+bpLRPromptPosX, bpLRPosY+135 ,bpLRRewardNumberW, bpLRRewardNumberH,  0, 0, 0, 0, bpPriorityLR+0.7);
+
+bpLRRewardPlus = ImageClass:new();
+bpLRRewardPlus :setImageFileSize(bpLRWidth, bpLRHeight);
+bpLRRewardPlus :setImage(bpLRPosX+188+bpLRPromptPosX, bpLRPosY+135 ,bpLRRewardNumberW, bpLRRewardNumberH,  0, bpLRRewardNumberW, bpLRRewardNumberS, bpLRRewardNumberS+bpLRRewardNumberH, bpPriorityLR+0.7);
+
+--表情
+bpLRExpreesion = ImageClass:new();
+bpLRExpreesion :setImageFileSize(bpLRWidth, bpLRHeight);
+bpLRExpreesion :setImage(bpLRPosX+280, bpLRPosY+100 ,110, 100,  800, 910, 346, 446, bpPriorityLR+0.89);
+--未中奖表情
+bpLRNPExpreesion = ImageClass:new();
+bpLRNPExpreesion:setImageFileSize(bpLRWidth, bpLRHeight);
+bpLRNPExpreesion:setImage(bpLRPosX+145, bpLRPosY+100 ,110, 100,  1200, 1310, 346, 446, bpPriorityLR+0.89);
+
+bpLRNumberStatus = 0;
+DrawNumberValue1 = 0;
+DrawNumberValue2 = 0;
+function DrawbpLotteryResult()
+	
+	if bpLRWinStatus then
+		SetbpLRWinPos();
+		
+		
+		bpLRTransBGI:DrawImage();
+		
+		
+
+		bpLRWindow:DrawImage();
+		bpLRAgainBtn:DrawImage();
+		bpLRCloseBtn:DrawImage();
+		
+		if PrizeStatus == true then
+			bpLRTile:DrawImage();
+			bpLRExpreesion:DrawImage();
+			bpLRRewardPlus:DrawImage();
+			if GoldPropsStatus == false then
+				bpLRRewardProps:DrawImage();
+			else
+				bpLRRewardGold:DrawImage();
+			end
+		else
+			bpLRNotPrize:DrawImage();
+			bpLRNPExpreesion:DrawImage();
+		end
+		
+		if bpLRNumberStatus == 1 then
+			DrawRewardOneNum(DrawNumberValue1)
+		elseif bpLRNumberStatus == 2 then
+			DrawRewardTwoNum(DrawNumberValue1, DrawNumberValue2);
+		end
+		
+		
+	end
+end
+
+
+
+
+function SetbpLRWinPos()
+	if MouseStatus == MouseLeftDown then
+		bpLRWindow:setRelativelyStartPos(MousePosX-LastMouseDownPosX , LastMouseDownPosY-MousePosY );
+		bpLRAgainBtn:setRelativelyStartPos(MousePosX-LastMouseDownPosX , LastMouseDownPosY-MousePosY);
+		bpLRCloseBtn:setRelativelyStartPos(MousePosX-LastMouseDownPosX , LastMouseDownPosY-MousePosY);
+		
+		bpLRTile:setRelativelyStartPos(MousePosX-LastMouseDownPosX , LastMouseDownPosY-MousePosY);
+		bpLRRewardPlus:setRelativelyStartPos(MousePosX-LastMouseDownPosX , LastMouseDownPosY-MousePosY);
+		bpLRRewardNumber:setRelativelyStartPos(MousePosX-LastMouseDownPosX , LastMouseDownPosY-MousePosY);
+		bpLRExpreesion:setRelativelyStartPos(MousePosX-LastMouseDownPosX , LastMouseDownPosY-MousePosY);
+		bpLRNotPrize:setRelativelyStartPos(MousePosX-LastMouseDownPosX , LastMouseDownPosY-MousePosY);
+		bpLRRewardProps:setRelativelyStartPos(MousePosX-LastMouseDownPosX , LastMouseDownPosY-MousePosY);
+		bpLRRewardGold:setRelativelyStartPos(MousePosX-LastMouseDownPosX , LastMouseDownPosY-MousePosY);
+		bpLRNPExpreesion:setRelativelyStartPos(MousePosX-LastMouseDownPosX , LastMouseDownPosY-MousePosY);
+		
+		LastMouseDownPosX = MousePosX;
+		LastMouseDownPosY = MousePosY;
+	end
+end
+
+
+
+
+--奖励显示设置函数
+
+
+bpLRMusic1 = seMusicClass:new();
+bpLRMusic1:SetMusicData("music/LotteryResult1.wav");
+bpLRMusic2 = seMusicClass:new();
+bpLRMusic2:SetMusicData("music/LotteryResult2.wav");
+bpLRMusic3 = seMusicClass:new();
+bpLRMusic3:SetMusicData("music/LotteryResult3.wav");
+
+function PrizeOfBigBomb(Bit)
+	GoldPropsStatus = false;
+	PrizeStatus = true;
+	bpLRWinStatus = true;
+	bpLRNumberStatus = 1;
+	DrawNumberValue1 = Bit;
+	if Bit == 1 then 
+		bpLRPromptPosX = 0;
+		bpLRRewardNumberS = bpLRRewardNumberBlue;
+		bpLRExpreesion["DrawStatus"] = 0;
+		bpLRTile:setImagePos(0, 150, bpLRWinHeight+3, bpLRWinHeight+3+40);
+		bpLRMusic1:Play();
+	elseif Bit == 2 then 
+		bpLRPromptPosX = 0;
+		bpLRRewardNumberS = bpLRRewardNumberGreen;
+		bpLRExpreesion["DrawStatus"] = 0;
+		bpLRTile:setImagePos(0, 150, bpLRWinHeight+3, bpLRWinHeight+3+40);
+		bpLRMusic2:Play();
+	elseif Bit == 3 then
+		bpLRExpreesion["DrawStatus"] = 1;
+		bpLRRewardNumberS = bpLRRewardNumberRed;
+		bpLRTile:setImagePos(bpLRWinWidth*2, bpLRWinWidth*2+150, bpLRWinHeight+3, bpLRWinHeight+3+40);
+		bpLRMusic3:Play();
+	end
+	bpLRRewardProps :setImagePos( 0, 100, 500, 600);
+	bpLRWindow:setImagePos(bpLRWinWidth*(Bit-1), bpLRWinWidth*Bit,0, bpLRWinHeight);
+end
+
+function PrizeOfAssistant(Bit)
+	GoldPropsStatus = false;
+	PrizeStatus = true;
+	bpLRWinStatus = true;
+	bpLRWindow:setImagePos(bpLRWinWidth*(Bit-1), bpLRWinWidth*Bit,0, bpLRWinHeight);
+	bpLRNumberStatus = 1;
+	DrawNumberValue1 = Bit;
+	if Bit == 1 then 
+		bpLRPromptPosX = 0;
+		bpLRRewardNumberS = bpLRRewardNumberBlue;
+		bpLRExpreesion["DrawStatus"] = 0;
+		bpLRTile:setImagePos(0, 150, bpLRWinHeight+3, bpLRWinHeight+3+40);
+		bpLRMusic1:Play();
+	elseif Bit == 2 then 
+		bpLRPromptPosX = 0;
+		bpLRRewardNumberS = bpLRRewardNumberGreen;
+		bpLRExpreesion["DrawStatus"] = 0;
+		bpLRTile:setImagePos(0, 150, bpLRWinHeight+3, bpLRWinHeight+3+40);
+		bpLRMusic2:Play();
+	elseif Bit == 3 then
+		bpLRExpreesion["DrawStatus"] = 1;
+		bpLRRewardNumberS = bpLRRewardNumberRed;
+		bpLRTile:setImagePos(bpLRWinWidth*2, bpLRWinWidth*2+150, bpLRWinHeight+3, bpLRWinHeight+3+40);
+		bpLRMusic3:Play();
+	end
+	
+	if UserData["AssistantProps"] == GirlsAssistant then
+		bpLRRewardProps:setImagePos(0, 100, 720, 829);
+	elseif UserData["AssistantProps"] == BoysAssistant then
+		bpLRRewardProps:setImagePos( 0, 100, 611, 720);
+	end
+	
+	
+end
+
+function PrizeOfGoldCoins(Value)
+	PrizeStatus = true;
+	bpLRRewardGold["DrawStatus"] = 1;
+	GoldPropsStatus = true;
+	bpLRWinStatus = true;
+	bpLRNumberStatus = 2;
+	DrawNumberValue1 = GetBitNum(Value,1);
+	DrawNumberValue2 = GetBitNum(Value,2);
+	if Value <= 25 then
+		bpLRWindow:setImagePos(bpLRWinWidth*(1-1), bpLRWinWidth*1,0, bpLRWinHeight);
+		bpLRPromptPosX = 0;
+		bpLRRewardNumberS = bpLRRewardNumberBlue;
+		bpLRExpreesion["DrawStatus"] = 0;
+		bpLRTile:setImagePos(0, 150, bpLRWinHeight+3, bpLRWinHeight+3+40);
+		bpLRMusic1:Play();
+	elseif 25 < Value and Value <= 35 then
+		bpLRWindow:setImagePos(bpLRWinWidth*(2-1), bpLRWinWidth*2,0, bpLRWinHeight);
+		bpLRPromptPosX = 0;
+		bpLRRewardNumberS = bpLRRewardNumberGreen;
+		bpLRExpreesion["DrawStatus"] = 0;
+		bpLRTile:setImagePos(0, 150, bpLRWinHeight+3, bpLRWinHeight+3+40);
+		bpLRMusic2:Play();
+	elseif 35 < Value and Value <= 45 then
+		bpLRExpreesion["DrawStatus"] = 1;
+		bpLRWindow:setImagePos(bpLRWinWidth*(3-1), bpLRWinWidth*3,0, bpLRWinHeight);
+		bpLRRewardNumberS = bpLRRewardNumberRed;
+		bpLRTile:setImagePos(bpLRWinWidth*2, bpLRWinWidth*2+150, bpLRWinHeight+3, bpLRWinHeight+3+40);
+		bpLRMusic3:Play();
+	end
+	
+end
+bpLRMusic4 = seMusicClass:new();
+bpLRMusic4:SetMusicData("music/LotteryResult4.wav");
+function NoPrize()
+	PrizeStatus = false;
+	GoldPropsStatus = true;
+	bpLRNumberStatus = 0;
+	bpLRWindow:setImagePos(bpLRWinWidth*(4-1), bpLRWinWidth*4,0, bpLRWinHeight);
+	bpLRMusic4:Play();
+end
+-----------------------------------------
+
+function DrawRewardOneNum(Bit)
+	bpLRRewardNumber:setImagePos( bpLRRewardNumberW*(Bit+1), bpLRRewardNumberW*(Bit+2), bpLRRewardNumberS, bpLRRewardNumberS+bpLRRewardNumberH);
+	bpLRRewardNumber:DrawImage();
+end
+
+function DrawRewardTwoNum(Ten, Bit)
+	bpLRRewardNumber:setRelativelyStartPos(24,0);
+	bpLRRewardNumber:setImagePos( bpLRRewardNumberW*(Bit+1), bpLRRewardNumberW*(Bit+2), bpLRRewardNumberS, bpLRRewardNumberS+bpLRRewardNumberH);
+	bpLRRewardNumber:DrawImage();
+	bpLRRewardNumber:setRelativelyStartPos(-24,0);
+	bpLRRewardNumber :setImagePos( bpLRRewardNumberW*(Ten+1), bpLRRewardNumberW*(Ten+2), bpLRRewardNumberS, bpLRRewardNumberS+bpLRRewardNumberH);
+	bpLRRewardNumber:DrawImage();
+	
+end
 
 
 function SetBackPackData()
@@ -339,6 +632,7 @@ function LoadBakcpackImageFile()
 	ImageLoad:LoadImage(BackpackV,"Image/Shop/LotteryBackGround.png","DrawbpLottery()", "Image_6");
 	ImageLoad:LoadImage(BackpackV,"Image/Shop/LotteryButton.png","DrawbpLotteryButton()", "Image_7");
 	ImageLoad:LoadImage(BackpackV,"Image/Shop/ShopProps.png","DrawbpProps()", "Image_8");
+	ImageLoad:LoadImage(BackpackV,"Image/Shop/LotteryResult.png","DrawbpLotteryResult()", "Image_9");
 end
 
 
