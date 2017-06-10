@@ -68,6 +68,9 @@ function bgmMusicClass:Play(S)
 	end
 end
 
+
+
+
 function bgmMusicClass:new()
 	
 	o = {}
@@ -80,6 +83,8 @@ end
 function SetWinFoucsStatus(c)
 	WinFocus = c;
 end
+
+
 
 function bgmMusicPlayControl(c)
 	if c == MusicStop then
@@ -96,16 +101,49 @@ function bgmMusicPlayControl(c)
 	end
 end
 
-
 --只用这个！
 Gamebgm = bgmMusicClass:new();
 Gamebgm["File"] = {"music/BGM/1.wav","music/BGM/2.mp3","music/BGM/3.mp3","music/BGM/4.mp3","music/BGM/5.mp3","music/BGM/6.mp3","music/BGM/7.mp3"}
 Gamebgm["Time"] = {31,237,229,156,98,195,287}
 
 
+--@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+SetMusicVol(BGMDevice, 100);--音量设置函数
+--@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
+--角色移动按键背景音乐
+MoveseMusicClass = 
+{
+	File = "",
+	Time = 0,
+	Timer = 100,
+	Delay = 1 --延时1s
+}
 
+function MoveseMusicClass:Play()
+	
+	if seMusicStopStatus == 0 and seMusicPauseStatus == 0 then
+		self.Timer = self.Timer + 1;
+		if self.Timer >= self.Time then
+			self.Timer = 0;
+			PlayMusic(SEDevice,self.File);
+		end
+	end
+end
 
+function MoveseMusicClass:Init(FN, T)
+	self.File = FN;
+	self.Timer = T;
+end
 
+function MoveseMusicClass:new()
+	
+	oo = {}
+	setmetatable(oo, {__index = self});
+	return oo;
+end
 
+ActorKeyBgm = MoveseMusicClass:new();
+ActorKeyBgm["File"] = "music/FootSoundEffect.wav"
+ActorKeyBgm["Time"] = 100

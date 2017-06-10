@@ -34,7 +34,7 @@ private:
         
     LPDIRECTINPUTDEVICE8 keyboardDevice_; //键盘设备
 	char keyboardKeys_[256];      //目前键盘按键
-    char prevKeyboardKeys_[256];  //之前键盘按键
+    char Keys[256];  //之前键盘按键
 
 };
 

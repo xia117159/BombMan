@@ -27,6 +27,10 @@ ImageClass =
 function ImageClass:setRelativelyStartPos(sx, sy)
 	self.StartX = self.StartX + sx;
 	self.StartY = self.StartY + sy;
+	
+	self.EndX =  self.StartX + self.Width;
+	self.pStartY = self.WindowsHeight - self.StartY - self.Height;
+	self.EndY = self.WindowsHeight - self.StartY;
 end
 
 
@@ -34,7 +38,7 @@ function ImageClass:setAbsoluteStartPos(sx, sy)
 	self.StartX = sx;
 	self.EndX =  sx + self.Width;
 	self.StartY =  sy;
-	self.pStartY = self.WindowsHeight - sy;
+	self.pStartY = self.WindowsHeight - sy - self.Height;
 	self.EndY = self.WindowsHeight - self.StartY;
 end
 function ImageClass:setImageShowSize(w, h)
@@ -60,9 +64,9 @@ function ImageClass:setscaling_ratio(sr)
 	self.scaling_ratio = sr;
 
 end
-function ImageClass:LoadImage(path, funcName, ShaderName)
+function ImageClass:LoadImage(View,path, funcName, ShaderName)
 	self.ImagePath = path;
-	SetViewIamgePath(self.ImagePath, funcName, ShaderName);
+	SetViewIamgePath(View,self.ImagePath, funcName, ShaderName);
 end
 --参数依次为：X轴位置、Y轴位置、图片宽、图片高、图片开始X轴、图片结束X轴、图片开始Y轴、图片结束Y轴、优先层级
 function ImageClass:setImage(sx, sy, w, h, isx, iex, isy, iey, p)

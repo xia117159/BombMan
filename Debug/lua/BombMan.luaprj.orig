@@ -22,7 +22,9 @@
     </Filter>
     <LuaFile RelativePath=".\ActorAssistant.lua" />
     <LuaFile RelativePath=".\Recode.lua" />
+<<<<<<< HEAD
     <LuaFile RelativePath=".\Bomb.lua" />
+=======
     <LuaFile RelativePath=".\BossClass.lua" />
-    <LuaFile RelativePath=".\ActorAssistant.lua" />
+>>>>>>> e35e64066505cfa54b8f95c3be4422badf9a1e40
 </Project>

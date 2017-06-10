@@ -1,7 +1,10 @@
 require "include"
 require "ImageClass"
 require "MusicClass"
+require "ActorAssistant"
 require "UserData"
+
+
 
 
 require "StartView"
@@ -20,12 +23,23 @@ require "MainKeyFunc"
 require "Bomb"
 
 require "Recode"
+
+
+
+LoadStartViewImageFile();
+LoadMapViewImageFile();
+LoadShopImageFile();
+LoadBakcpackImageFile();
+
+
+
 Read()
 --Preserve();
 --goShopView();;
 goStartView(); -- 转到开始界面
 UserBomb = AllBombClass:new();
 BombBlaze = AllBlazeClass:new();
+
 Init()
 UserBomb[1]:Init(600,300)
 UserBomb[1]["IsWrite"] = 1

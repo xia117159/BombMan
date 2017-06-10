@@ -3,8 +3,8 @@
 #include "luaClass.h"
 #include "GetMatrix.h"
 
-
-#define MaxNode 10
+#define MaxView 20
+#define MaxNode 20
 
 
 struct ImageData
@@ -25,24 +25,24 @@ public:
 	GameStateInterface();
 	~GameStateInterface(void);
 
-	void SetImagePath(LPCWSTR Path, const char * DrawImageFunc, const char * effectMap);
+	void SetImagePath(int View, LPCWSTR Path, const char * DrawImageFunc, const char * effectMap);
 	void SetBackGroundPath(LPCWSTR Path);
 	bool LoadContent(HWND hwnd);
     void UnloadContent( );
 	bool DrawImage(float StartX,float StartY, float Width, float Height,float tuStartX, float tuEndX, float tuStartY, float tuEndY, float Priority);
     void Update( float dt );
     void Render( );
-	void ReleseImageData();
-	int GetNode(){ return NowNode; };
-
+	void SetWindowView(int View);
+	void ReleaseViewImagePath(int View);
+	int GetNode(){return Node[NowView];};
 private:
 
 
 
 
-	ImageData ImageData_[MaxNode];
-	int NowNode;
-
+	ImageData ImageData_[MaxView][MaxNode];
+	int Node[MaxView];
+	int NowView;
 
 	LPCWSTR ImagePath;
 	LPCWSTR BackGroundImage;
@@ -52,7 +52,6 @@ private:
 	ID3D11InputLayout* inputLayout_; // ‰»Î≤ºæ÷
 
 	ID3D11ShaderResourceView* ImageMap_;
-//	ID3D11ShaderResourceView* BackGroundImage_;
     ID3D11SamplerState* colorMapSampler_;
 	ID3D11Buffer* vertexBuffer_;
 	ID3D11BlendState* alphaBlendState_;

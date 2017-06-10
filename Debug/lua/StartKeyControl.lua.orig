@@ -65,10 +65,14 @@ end
 --跳转开始画面页面并进行相关设置的函数
 function goStartView()
 	
-	SetNowWindowView(StartV);
---SetNowWindowView(ShopV);
-
+<<<<<<< HEAD
+	ReleaseImageData();--清除图片资源以便目标页面加载
+	LoadStartViewImageFile();--加载开始界面
 	NowView = StartV;--设置视图位于开始界面
+=======
+	SetNowWindowView(StartV);
+	NowView = StartV;--设置视图位于商城
+>>>>>>> e35e64066505cfa54b8f95c3be4422badf9a1e40
 end
 
 --跳转剧情模式页面并进行相关设置的函数
@@ -94,7 +98,6 @@ function goShopView()
 	NowView = ShopV;--设置视图位于商城
 end
 
-SetNowWindowView(ShopV);
 
 --跳转帮助页面并进行相关设置的函数
 function goHelpView()

@@ -1,4 +1,6 @@
 
+
+math.randomseed(os.time()); --设置时间种子
 --警告：win32 自带的MessageBox在用户没有确认的情况下会造成程序暂停运行
 --MessageBox 选项按钮选项
 MB_OK                    =   0x00000000
@@ -18,12 +20,12 @@ IDNO       =         7
 
 
 --视图位置
-NowView    =   0x1001
-StartV     =   0x1001
-ChallengeV =   0x1002
-ShopV      =   0x1003
-PlotV      =   0x1004
-BackpackV  =   0x1005
+NowView    =   0x0000
+StartV     =   0x0000
+PlotV      =   0x0001
+ChallengeV =   0x0002
+ShopV      =   0x0003
+BackpackV  =   0x0004
 
 --按键状态
 KeepPressing  = 101  --一直按下
@@ -47,7 +49,9 @@ MouseHover     = 0x05   --鼠标悬停
 
 MousePosX      = 0      --鼠标当前X位置
 MousePosY      = 0		--鼠标当前Y位置
-
+LastMouseDownPosX = 0;  --上一次鼠标按下时的X位置
+LastMouseDownPosY = 0;	--上一次鼠标按下时的Y位置
+MouseStatus = 0x00
 
 
 --音乐设备名
@@ -101,7 +105,7 @@ BigBombNeeds = 15
 AssistantPropsNeeds = 30 
 
 --C++程序接口
---SetViewIamgePath("路劲", "画图函数名()", "Image_数值"); @加载图片
+--SetViewIamgePath(界面,"路劲", "画图函数名()", "Image_数值");   @加载图片
 --LuaDrawImage                                            @此函数已封装，不可单独使用
 --KeyDetect(按键值);                                      @检测目标按键状态，==0 表示一直未被操作过
 --MouseDetect(起始X, 起始Y, 终止X, 终止Y);                @检测鼠标在此区域的操作状态， ==0 表示未进入此区域
@@ -111,7 +115,9 @@ AssistantPropsNeeds = 30
 --StopMusic(设备名);                                      @停止指定设备名所播放的音乐
 --PlayToPauseMusic(设备名);                               @暂停播放指定设备名所播放的音乐
 --PauseToPlayMusic(设备名);                               @恢复播放指定设备名所播放的音乐
---ReleaseImageData();                                     @释放当前已加载的图片资源
+--SetMusicVol(设备名, 音量大小);                          @音量设置函数，范围为0~100
+--ReleaseImageData(界面);                                 @释放已加载的某界面的图片资源
+--SetNowWindowView(界面);                                 @设置当前的界面位置
 
 
 

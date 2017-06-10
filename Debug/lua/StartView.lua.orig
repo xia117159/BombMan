@@ -60,11 +60,18 @@ function DrawButtonFunc()
 end
 
 
+<<<<<<< HEAD
+function LoadStartViewImageFile()
+	BackGround:LoadImage("Image/BackGround.png","DrawBackGroundFunc()", "Image_0");
+	ksButton:LoadImage(ButtonImagePath,"DrawButtonFunc()", "Image_1");
+=======
+
 
 function LoadStartViewImageFile()
 	local ImageLoad = ImageClass:new();
 	ImageLoad:LoadImage(StartV,"Image/BackGround.png","DrawBackGroundFunc()", "Image_0");
 	ImageLoad:LoadImage(StartV,ButtonImagePath,"DrawButtonFunc()", "Image_1");
+>>>>>>> e35e64066505cfa54b8f95c3be4422badf9a1e40
 end
 
 

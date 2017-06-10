@@ -13,7 +13,16 @@ Texture2D Image_6 : register( t6 );
 Texture2D Image_7 : register( t7 );
 Texture2D Image_8 : register( t8 );
 Texture2D Image_9 : register( t9 );
-
+Texture2D Image_10 : register( t10 );
+Texture2D Image_11 : register( t11 );
+Texture2D Image_12 : register( t12 );
+Texture2D Image_13 : register( t13 );
+Texture2D Image_14 : register( t14 );
+Texture2D Image_15 : register( t15 );
+Texture2D Image_16 : register( t16 );
+Texture2D Image_17 : register( t17 );
+Texture2D Image_18 : register( t18 );
+Texture2D Image_19 : register( t19 );
 
 SamplerState colorSampler : register( s0 );
 
@@ -89,7 +98,55 @@ float4 PS_Main9( PS_Input frag ) : SV_TARGET
 {
     return Image_9.Sample( colorSampler, frag.tex0 );
 }
+float4 PS_Main10( PS_Input frag ) : SV_TARGET
+{
+    return Image_10.Sample( colorSampler, frag.tex0 );
+}
 
+float4 PS_Main11( PS_Input frag ) : SV_TARGET
+{
+    return Image_11.Sample( colorSampler, frag.tex0 );
+}
+
+float4 PS_Main12( PS_Input frag ) : SV_TARGET
+{
+    return Image_12.Sample( colorSampler, frag.tex0 );
+}
+
+float4 PS_Main13( PS_Input frag ) : SV_TARGET
+{
+    return Image_13.Sample( colorSampler, frag.tex0 );
+}
+
+float4 PS_Main14( PS_Input frag ) : SV_TARGET
+{
+    return Image_14.Sample( colorSampler, frag.tex0 );
+}
+
+float4 PS_Main15( PS_Input frag ) : SV_TARGET
+{
+    return Image_15.Sample( colorSampler, frag.tex0 );
+}
+
+float4 PS_Main16( PS_Input frag ) : SV_TARGET
+{
+    return Image_16.Sample( colorSampler, frag.tex0 );
+}
+
+float4 PS_Main17( PS_Input frag ) : SV_TARGET
+{
+    return Image_17.Sample( colorSampler, frag.tex0 );
+}
+
+float4 PS_Main18( PS_Input frag ) : SV_TARGET
+{
+    return Image_18.Sample( colorSampler, frag.tex0 );
+}
+
+float4 PS_Main19( PS_Input frag ) : SV_TARGET
+{
+    return Image_19.Sample( colorSampler, frag.tex0 );
+}
 technique11 StartInterface
 {
     pass P0
@@ -151,5 +208,65 @@ technique11 StartInterface
         SetVertexShader( CompileShader( vs_5_0, VS_Main() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PS_Main9() ) );
+    }
+    pass P10
+    {
+        SetVertexShader( CompileShader( vs_5_0, VS_Main() ) );
+        SetGeometryShader( NULL );
+        SetPixelShader( CompileShader( ps_5_0, PS_Main10() ) );
+    }
+    pass P11
+    {
+        SetVertexShader( CompileShader( vs_5_0, VS_Main() ) );
+        SetGeometryShader( NULL );
+        SetPixelShader( CompileShader( ps_5_0, PS_Main11() ) );
+    }
+    pass P12
+    {
+        SetVertexShader( CompileShader( vs_5_0, VS_Main() ) );
+        SetGeometryShader( NULL );
+        SetPixelShader( CompileShader( ps_5_0, PS_Main12() ) );
+    }
+    pass P13
+    {
+        SetVertexShader( CompileShader( vs_5_0, VS_Main() ) );
+        SetGeometryShader( NULL );
+        SetPixelShader( CompileShader( ps_5_0, PS_Main13() ) );
+    }
+    pass P14
+    {
+        SetVertexShader( CompileShader( vs_5_0, VS_Main() ) );
+        SetGeometryShader( NULL );
+        SetPixelShader( CompileShader( ps_5_0, PS_Main14() ) );
+    }
+    pass P15
+    {
+        SetVertexShader( CompileShader( vs_5_0, VS_Main() ) );
+        SetGeometryShader( NULL );
+        SetPixelShader( CompileShader( ps_5_0, PS_Main15() ) );
+    }
+    pass P16
+    {
+        SetVertexShader( CompileShader( vs_5_0, VS_Main() ) );
+        SetGeometryShader( NULL );
+        SetPixelShader( CompileShader( ps_5_0, PS_Main16() ) );
+    }
+    pass P17
+    {
+        SetVertexShader( CompileShader( vs_5_0, VS_Main() ) );
+        SetGeometryShader( NULL );
+        SetPixelShader( CompileShader( ps_5_0, PS_Main17() ) );
+    }
+    pass P18
+    {
+        SetVertexShader( CompileShader( vs_5_0, VS_Main() ) );
+        SetGeometryShader( NULL );
+        SetPixelShader( CompileShader( ps_5_0, PS_Main18() ) );
+    }
+    pass P19
+    {
+        SetVertexShader( CompileShader( vs_5_0, VS_Main() ) );
+        SetGeometryShader( NULL );
+        SetPixelShader( CompileShader( ps_5_0, PS_Main19() ) );
     }
 }

@@ -15,9 +15,11 @@ public:
     DWORD TerminalDevice();  
     DWORD Play(HWND hWnd, LPCTSTR pFileName);  
     DWORD Stop();  
-    DWORD Pause();  
+    DWORD Pause();
+	void SetVolume(DWORD vol);
   
 protected:  
+	DWORD MusicVol;
     MCIDEVICEID m_DeviceID;  
     MCIDEVICEID m_ElementID;  
 }; 
