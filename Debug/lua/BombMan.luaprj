@@ -21,4 +21,5 @@
         <LuaFile RelativePath=".\BackpackKeyControl.lua" />
     </Filter>
     <LuaFile RelativePath=".\Recode.lua" />
+    <LuaFile RelativePath=".\Bomb.lua" />
 </Project>

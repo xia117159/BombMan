@@ -64,7 +64,6 @@ end
 function LoadStartViewImageFile()
 	BackGround:LoadImage("Image/BackGround.png","DrawBackGroundFunc()", "Image_0");
 	ksButton:LoadImage(ButtonImagePath,"DrawButtonFunc()", "Image_1");
-
 end
 
 

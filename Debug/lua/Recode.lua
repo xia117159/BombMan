@@ -17,6 +17,10 @@ function Preserve()
 	io.write("AssistantPropsAmount = "..UserData["AssistantPropsAmount"].."\n")
 	
 	io.write("ShortCutBarAP = "..UserData["ShortCutBarAP"].."\n")
+	
+	io.write("Power = "..UserData["Power"].."\n")
+	
+	io.write("HaveBombNumber = "..UserData["HaveBombNumber"].."\n")
 
 	io.close(file) --¹Ø±ÕÎÄ¼þ
 end
@@ -50,4 +54,8 @@ function Read()
 	UserData["AssistantPropsAmount"] = tonumber(string.match(data[6],"AssistantPropsAmount = (%w+)"))
 	
 	UserData["ShortCutBarAP"] = tonumber(string.match(data[7],"ShortCutBarAP = (%w+)"))
+	
+	UserData["Power"] = tonumber(string.match(data[8],"Power = (%w+)"))
+	
+	UserData["HaveBombNumber"] = tonumber(string.match(data[9],"HaveBombNumber = (%w+)"))
 end

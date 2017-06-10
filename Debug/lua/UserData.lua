@@ -6,7 +6,9 @@ UserData =
 	BigBombPropsAmount = 0, -- 超级炸弹拥有的个数
 	ShortCutBarBBP = 0,--所放置快捷栏
 	AssistantPropsAmount = 0, --助手所有个数
-	ShortCutBarAP = 0 --所放置快捷栏
+	ShortCutBarAP = 0, --所放置快捷栏
+	Power = 9, --炸弹威力
+	HaveBombNumber = 3 --拥有炸弹个数
 }
 
 

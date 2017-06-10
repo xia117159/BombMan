@@ -1,7 +1,9 @@
-GoldCoins = 9999
+GoldCoins = 0
 AssistantLock = 1
 AssistantProps = 0
 BigBombPropsAmount = 0
 ShortCutBarBBP = 0
 AssistantPropsAmount = 0
 ShortCutBarAP = 0
+Power = 3
+HaveBombNumber = 3

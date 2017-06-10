@@ -66,8 +66,8 @@ end
 function goStartView()
 	
 	ReleaseImageData();--清除图片资源以便目标页面加载
-	LoadStartViewImageFile();--加载商城界面
-	NowView = StartV;--设置视图位于商城
+	LoadStartViewImageFile();--加载开始界面
+	NowView = StartV;--设置视图位于开始界面
 end
 
 --跳转剧情模式页面并进行相关设置的函数
