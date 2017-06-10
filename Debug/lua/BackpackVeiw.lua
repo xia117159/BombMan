@@ -119,8 +119,8 @@ end
 
 
 bpBackGround = ImageClass:new();
-bpBackGround:setImageFileSize(1875, 1125);
-bpBackGround:setImage(0, 0, 1000, 600, 0, 1875, 0, 1125, bpPriorityBGI+0.99);
+bpBackGround:setImageFileSize(1000, 600);
+bpBackGround:setImage(0, 0, 1000, 600, 0, 1000, 0, 600, bpPriorityBGI+0.99);
 
 function DrawbpBackGroundFunc()
 	bpBackGround:DrawImage();
@@ -300,9 +300,9 @@ function bpDrawShortCutBar()
 end
 
 bpLottery = ImageClass:new();
-bpLottery :setImageFileSize(1217, 1200);
-bpLottery :setscaling_ratio(0.41);
-bpLottery :setImage(0, 100 ,1217, 1200,  0, 1217,0, 1200, bpPriorityLottery+0.9);
+bpLottery :setImageFileSize(600, 592);
+bpLottery :setscaling_ratio(0.84);
+bpLottery :setImage(0, 100 ,600, 592,  0, 600,0, 592, bpPriorityLottery+0.9);
 
 
 

@@ -91,14 +91,13 @@ end
 
 
 ShopBackGround = ImageClass:new();
-ShopBackGround:setImageFileSize(1875, 2250);
-ShopBackGround:setImage(0, 0, 1000, 600, 0, 1875, 0, 1125, ShopPriorityBGI+0.99);
+ShopBackGround:setImageFileSize(1000, 1200);
+ShopBackGround:setImage(0, 0, 1000, 600, 0, 1000, 0, 600, ShopPriorityBGI+0.99);
 
 ShopIntroDefault = ImageClass:new();
-ShopIntroDefault :setImageFileSize(1875, 2250);
-ShopIntroDefault:setscaling_ratio(0.52);
-
-ShopIntroDefault :setImage(30, 10, 860, 1123, 0, 860, 1126, 2249, ShopPriorityBGI+0.98);
+ShopIntroDefault :setImageFileSize(1000, 1200);
+ShopIntroDefault:setscaling_ratio(0.973);
+ShopIntroDefault :setImage(30, 10, 461, 600, 0, 461, 601, 1200, ShopPriorityBGI+0.98);
 
 function DrawShopBackGroundFunc()
 	ShopBackGround:DrawImage();

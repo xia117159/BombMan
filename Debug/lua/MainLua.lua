@@ -34,7 +34,7 @@ LoadBakcpackImageFile();
 
 Read()
 --Preserve();
---goShopView();;
+goShopView();
 --goStartView(); -- 转到开始界面
-GoBackpackVeiw();
+--GoBackpackVeiw();
 
