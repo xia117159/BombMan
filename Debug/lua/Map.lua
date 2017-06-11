@@ -964,9 +964,32 @@ function ActorKey()
 	end
 
 	if KeyResult_J == Press then
-		
-		UserBomb[1]:Init(ActorClass["AcStPosX"],ActorClass["AcStPosY"]-50)
-		UserBomb[1]["IsWrite"] = 1
+		local BombX = 0
+		local BombY = 0
+		local i = 1
+		while(BombX <= TotalWidthPixels) do
+			--MessageBox("1","1",MB_OK)
+			if(BombX <= actorinf["AcStPosX"] and actorinf["AcStPosX"] < BombX + 50) then
+				break
+			end
+			BombX = BombX + 50
+		end
+		while(BombY <= TotalHeightPixels) do
+			if(BombY <= actorinf["AcStPosY"] - 50 and actorinf["AcStPosY"] - 50 < BombY + 50) then
+				break
+			end
+			BombY = BombY + 50
+		end
+		while(i <= UserData["HaveBombNumber"]) do
+			if(UserBomb[i]["IsWrite"] == 0) then
+				UserBomb[i]:Init(BombX,BombY)
+				UserBomb[i]["IsWrite"] = 1
+				break
+			end
+			i = i + 1
+		end	
+		--UserBomb[1]:Init(actorinf["AcStPosX"],actorinf["AcStPosY"]-50)
+		--UserBomb[1]["IsWrite"] = 1
 	end 
 	
 	if ISGameNotPause == false then

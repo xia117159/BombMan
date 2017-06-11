@@ -215,9 +215,3 @@ function DrawBlazeFunc(i)
 	BombBlaze[i]["UpBlazeAnimation"]:DrawImage();
 	BombBlaze[i]["DownBlazeAnimation"]:DrawImage();
 end
-
---º”‘ÿ’®µØ∫Õª—ÊÕº∆¨
-function LoadBombImageFile()
-	local ImageLoad = ImageClass:new();
-	
-end
