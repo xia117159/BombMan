@@ -1,5 +1,3 @@
-
-
 --Õ¨µ¯
 BombClass = {
 	IsWrite = 0,
@@ -103,17 +101,17 @@ function Init()
 	UserBomb[6] = BombClass:new()
 	
 	BombBlaze[1] = BlazeClass:new()
-	BombBlaze[1]["depth"] = 8.5
+	BombBlaze[1]["depth"] = 1.5
 	BombBlaze[2] = BlazeClass:new()
-	BombBlaze[2]["depth"] = 8.4
+	BombBlaze[2]["depth"] = 1.4
 	BombBlaze[3] = BlazeClass:new()
-	BombBlaze[3]["depth"] = 8.3
+	BombBlaze[3]["depth"] = 1.3
 	BombBlaze[4] = BlazeClass:new()
-	BombBlaze[4]["depth"] = 8.2
+	BombBlaze[4]["depth"] = 1.2
 	BombBlaze[5] = BlazeClass:new()
-	BombBlaze[5]["depth"] = 8.1
+	BombBlaze[5]["depth"] = 1.1
 	BombBlaze[6] = BlazeClass:new()
-	BombBlaze[6]["depth"] = 8.0
+	BombBlaze[6]["depth"] = 1.0
 end
 
 --ÅÐ¶ÏÌõ¼þµ÷ÓÃ»­Õ¨µ¯º¯Êý
@@ -140,8 +138,8 @@ end
 
 --»­Õ¨µ¯
 function DrawBombFunc(i)
-	local startX = UserBomb[i]["Bomb"]["StartX"]
-	local startY = UserBomb[i]["Bomb"]["StartY"]
+	local startX = UserBomb[i]["Bomb"]["StartX"] + originX
+	local startY = UserBomb[i]["Bomb"]["StartY"] + originY
 	local b = 1
 	local fr = UserBomb[i]["Bomb"]:TimerGo()
 	if UserBomb[i]["IsBlast"] == 1 and fr == 1 then	
@@ -176,8 +174,8 @@ end
 
 --»­»ðÑæ
 function DrawBlazeFunc(i)
-	local startX = BombBlaze[i]["Blaze"]["StartX"]
-	local startY = BombBlaze[i]["Blaze"]["StartY"]
+	local startX = BombBlaze[i]["Blaze"]["StartX"] + originX
+	local startY = BombBlaze[i]["Blaze"]["StartY"] + originY
 	local fr = BombBlaze[i]["Blaze"]:TimerGo()
 	local power = UserData["Power"]
 	if BombBlaze[i]["IsEnd"] == 1 and fr == 1 then
@@ -221,6 +219,5 @@ end
 --¼ÓÔØÕ¨µ¯ºÍ»ðÑæÍ¼Æ¬
 function LoadBombImageFile()
 	local ImageLoad = ImageClass:new();
-	ImageLoad:LoadImage("Image/Bomb/Bomb.png","DrawBomb()", "Image_2");
-	ImageLoad:LoadImage("Image/Bomb/Blaze.png","DrawBlaze()", "Image_3");
+	
 end

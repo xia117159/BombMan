@@ -653,7 +653,7 @@ end
 
 
 function IintMapData()
-	initParams(24,40,1,math.random(30,70),0,550,200); --初始化地图参数
+	initParams(24,40,1,math.random(0,0),0,550,200); --初始化地图参数
 	ISGameNotPause = true;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
@@ -668,6 +668,8 @@ function LoadMapViewImageFile()
 	ImageLoad:LoadImage(PlotV,"Image/Map/actor.png","DrawActor()", "Image_2");
 	ImageLoad:LoadImage(PlotV,"Image/Map/BackgroundColor4.png","DrawDialog()", "Image_3");
 	ImageLoad:LoadImage(PlotV,"Image/Map/ExitButtons.png","DrawButtons()", "Image_4");
+	ImageLoad:LoadImage(PlotV,"Image/Bomb/Bomb.png","DrawBomb()", "Image_5");
+	ImageLoad:LoadImage(PlotV,"Image/Bomb/Blaze.png","DrawBlaze()", "Image_6");
 	
 end
 
@@ -680,6 +682,7 @@ function ActorKey()
 	local KeyResult_Left = KeyDetect(Left);
 	local KeyResult_Down = KeyDetect(Down);
 	local KeyResult_Esc = KeyDetect(0x01);
+	local KeyResult_J = KeyDetect(0x24);
 	if KeyResult_Esc == Release then
 		if ISGameNotPause == true then
 			ISGameNotPause = false;
@@ -715,7 +718,12 @@ function ActorKey()
 		releasestatus = 0;
 		movestatus = 0;
 	end
-	
+
+	if KeyResult_J == Press then
+		
+		UserBomb[1]:Init(ActorClass["AcStPosX"],ActorClass["AcStPosY"]-50)
+		UserBomb[1]["IsWrite"] = 1
+	end 
 	
 	if ISGameNotPause == false then
 		ExitResult = 0;

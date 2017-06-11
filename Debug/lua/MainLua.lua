@@ -25,7 +25,7 @@ require "Bomb"
 require "Recode"
 
 
-
+--LoadBombImageFile();
 LoadStartViewImageFile();
 LoadMapViewImageFile();
 LoadShopImageFile();
@@ -41,10 +41,6 @@ UserBomb = AllBombClass:new();
 BombBlaze = AllBlazeClass:new();
 
 Init()
-UserBomb[1]:Init(600,300)
-UserBomb[1]["IsWrite"] = 1
 
-UserBomb[2]:Init(400,200)
-UserBomb[2]["IsWrite"] = 1
 
-LoadBombImageFile();
+
