@@ -105,8 +105,8 @@ end
 	BlockSize = 50;
 	UnitXOffset = UserData["SpeedX"];
 	UnitYOffset = UserData["SpeedY"];				
-    BossUnitXOffset = 1;
-	BossUnitYOffset = 1;
+    BossUnitXOffset = 2;
+	BossUnitYOffset = 2;
 	ActorWidth = 64;
 	ActorHeight = 64;
 	actorimg = ImageClass:new();
@@ -946,7 +946,7 @@ end
 
 
 function IintMapData()
-	initParams(24,40,1,math.random(14,30),0,550,200); --初始化地图参数		
+initParams(24,40,1,math.random(15,30),0,550,200); --初始化地图参数	
 	ISGameNotPause = true;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
@@ -1031,9 +1031,32 @@ function ActorKey()
 	end
 
 	if KeyResult_J == Press then
-		
-		UserBomb[1]:Init(actorinf["AcStPosX"],actorinf["AcStPosY"]-50)
-		UserBomb[1]["IsWrite"] = 1
+		local BombX = 0
+		local BombY = 0
+		local i = 1
+		while(BombX <= TotalWidthPixels) do
+			--MessageBox("1","1",MB_OK)
+			if(BombX <= actorinf["AcStPosX"] and actorinf["AcStPosX"] < BombX + 50) then
+				break
+			end
+			BombX = BombX + 50
+		end
+		while(BombY <= TotalHeightPixels) do
+			if(BombY <= actorinf["AcStPosY"] - 50 and actorinf["AcStPosY"] - 50 < BombY + 50) then
+				break
+			end
+			BombY = BombY + 50
+		end
+		while(i <= UserData["HaveBombNumber"]) do
+			if(UserBomb[i]["IsWrite"] == 0) then
+				UserBomb[i]:Init(BombX,BombY)
+				UserBomb[i]["IsWrite"] = 1
+				break
+			end
+			i = i + 1
+		end	
+		--UserBomb[1]:Init(actorinf["AcStPosX"],actorinf["AcStPosY"]-50)
+		--UserBomb[1]["IsWrite"] = 1
 	end 
 	
 	if ISGameNotPause == false then

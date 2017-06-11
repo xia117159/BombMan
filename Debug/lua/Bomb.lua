@@ -14,7 +14,7 @@ end
 
 function BombClass:Init(NowX,NowY)
 	self.Bomb = AnimationRecord:new();
-	self.Bomb:SetValue(NowX, NowY, 100, 6);
+	self.Bomb:SetValue(NowX, NowY, 50, 6);
 	
 	self.BombAnimation = ImageClass:new();
 	self.BombAnimation :setImageFileSize(200, 600);
@@ -41,7 +41,7 @@ end
 
 function BlazeClass:Init(NowX,NowY)
 	self.Blaze = AnimationRecord:new();
-	self.Blaze:SetValue(NowX, NowY, 150, 4);
+	self.Blaze:SetValue(NowX, NowY, 25, 4);
 	
 	self.leftBlazeAnimation = ImageClass:new();
 	self.leftBlazeAnimation :setImageFileSize(352, 512);
@@ -214,10 +214,4 @@ function DrawBlazeFunc(i)
 	BombBlaze[i]["centreBlazeAnimation"]:DrawImage();
 	BombBlaze[i]["UpBlazeAnimation"]:DrawImage();
 	BombBlaze[i]["DownBlazeAnimation"]:DrawImage();
-end
-
---º”‘ÿ’®µØ∫Õª—ÊÕº∆¨
-function LoadBombImageFile()
-	local ImageLoad = ImageClass:new();
-	
 end
