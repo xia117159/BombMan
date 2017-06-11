@@ -37,7 +37,7 @@ function LoadVKeyFunc()
 	LoadMapViewImageFile();
 	if NowLoadPos == AllImageNum + 1 then
 		JumpPageDelay = JumpPageDelay - 1;
-		if JumpPageDelay == 0 then
+		if JumpPageDelay <= 0 then
 			goStartView(); 
 		end
 	else

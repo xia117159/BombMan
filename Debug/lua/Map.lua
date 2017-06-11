@@ -903,10 +903,15 @@ function LoadMapViewImageFile()
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 25 then
 		ImageLoad:LoadImage(PlotV,"Image/Map/ExitButtons.png","DrawButtons()", "Image_4");
-	NowLoadPos = NowLoadPos + 1;
+		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 26 then
-
 		ImageLoad:LoadImage(PlotV,"Image/Map/actor1.png","DrawBoss()", "Image_5");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 27 then
+		ImageLoad:LoadImage(PlotV,"Image/Bomb/Bomb.png","DrawBomb()", "Image_6");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 28 then
+		ImageLoad:LoadImage(PlotV,"Image/Bomb/Blaze.png","DrawBlaze()", "Image_7");
 		NowLoadPos = NowLoadPos + 1;
 	end
 	
