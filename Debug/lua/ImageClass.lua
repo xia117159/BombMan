@@ -27,6 +27,10 @@ ImageClass =
 function ImageClass:setRelativelyStartPos(sx, sy)
 	self.StartX = self.StartX + sx;
 	self.StartY = self.StartY + sy;
+	
+	self.EndX =  self.StartX + self.Width;
+	self.pStartY = self.WindowsHeight - self.StartY - self.Height;
+	self.EndY = self.WindowsHeight - self.StartY;
 end
 
 
@@ -34,7 +38,7 @@ function ImageClass:setAbsoluteStartPos(sx, sy)
 	self.StartX = sx;
 	self.EndX =  sx + self.Width;
 	self.StartY =  sy;
-	self.pStartY = self.WindowsHeight - sy;
+	self.pStartY = self.WindowsHeight - sy - self.Height;
 	self.EndY = self.WindowsHeight - self.StartY;
 end
 function ImageClass:setImageShowSize(w, h)

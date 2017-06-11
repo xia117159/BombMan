@@ -141,17 +141,17 @@ function ShopViewKC()
 			
 			if backpack["Hover"] == 0 then
 				backpack["Hover"] = 1;
-				backpack :setscaling_ratio(0.23);
-				backpack:setImage(890, 45 ,339, 410, 300, 639, 0, 410, ShopPriorityBackPack+0.9);
+				backpack :setscaling_ratio(0.50);
+				backpack:setImage(900, 50 ,178, 184, 178, 356, 0, 184, ShopPriorityBackPack+0.9);
 				ShoptViewPropsse:Play();
 			end
 		elseif Result == MouseLeftDown then --鼠标左键按下
 			backpack["Event"] = 1;
-			backpack :setscaling_ratio(0.2);
-			backpack:setImage(900, 50 ,300, 410, 0, 300, 0, 410, ShopPriorityBackPack+0.9);
+			backpack :setscaling_ratio(0.5);
+			backpack:setImage(900, 50 ,178, 184, 356, 535, 0, 184, ShopPriorityBackPack+0.9);
 		elseif Result == MouseLeftUp then --鼠标左键松开
-			backpack :setscaling_ratio(0.2);
-			backpack:setImage(900, 50 ,300, 410, 0, 300, 0, 410, ShopPriorityBackPack+0.9);
+			backpack :setscaling_ratio(0.5);
+			backpack:setImage(900, 50 ,178, 184, 0, 178, 0, 184, ShopPriorityBackPack+0.9);
 			if backpack["Event"] == 1 then
 				backpack["Event"] = 0;
 				GoBackpackVeiw();
@@ -195,8 +195,8 @@ function NotReSetShopButton(value)
 	end
 	if value ~= 6 then
 		backpack["Hover"] = 0;
-		backpack :setscaling_ratio(0.2);
-		backpack:setImage(900, 50 ,300, 410, 0, 300, 0, 410, ShopPriorityBackPack+0.9);
+		backpack :setscaling_ratio(0.5);
+		backpack:setImage(900, 50 ,178, 184, 0, 178, 0, 184, ShopPriorityBackPack+0.9);
 	end
 end
 

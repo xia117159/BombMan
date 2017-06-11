@@ -49,7 +49,9 @@ MouseHover     = 0x05   --鼠标悬停
 
 MousePosX      = 0      --鼠标当前X位置
 MousePosY      = 0		--鼠标当前Y位置
-
+LastMouseDownPosX = 0;  --上一次鼠标按下时的X位置
+LastMouseDownPosY = 0;	--上一次鼠标按下时的Y位置
+MouseStatus = 0x00
 
 
 --音乐设备名
