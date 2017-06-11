@@ -105,7 +105,8 @@ end
 	BlockSize = 50;
 	UnitXOffset = UserData["SpeedX"];
 	UnitYOffset = UserData["SpeedY"];				
-    
+    BossUnitXOffset = 1;
+	BossUnitYOffset = 1;
 	ActorWidth = 64;
 	ActorHeight = 64;
 	actorimg = ImageClass:new();
@@ -214,7 +215,7 @@ function ReleaseMoving()
 		else NeedISRevise = false;			
 		end
 		if NeedISRevise then
-			if originX>-BlockSize*(TotalLines-20) and actorinf:getWindowPosX()>=16*BlockSize then	--判断视野移动
+			if WindowMoveChecking(1) then	--判断视野移动
 				originX=originX-ReviseNum;
 				actorinf:setRelativePos(ReviseNum,0);			
 			else 
@@ -236,7 +237,7 @@ function ReleaseMoving()
 		else NeedISRevise = false;			
 		end
 		if NeedISRevise  then
-			if originY>-BlockSize*(TotalRows-12) and actorinf:getWindowPosY()>=9*BlockSize then			
+			if WindowMoveChecking(2) then			
 				originY=originY-ReviseNum;
 				actorinf:setRelativePos(0,ReviseNum);		
 			else 			
@@ -260,7 +261,7 @@ function ReleaseMoving()
 		else NeedISRevise = false;			
 		end
 		if NeedISRevise then
-			if originX<0 and actorinf:getWindowPosX()<=3*BlockSize then
+			if WindowMoveChecking(3) then
 				originX=originX + ReviseNum;
 				actorinf:setRelativePos(-ReviseNum,0);		
 			else 
@@ -281,7 +282,7 @@ function ReleaseMoving()
 		else NeedISRevise = false;			
 		end
 		if NeedISRevise then
-			if originY<0 and actorinf:getWindowPosY()<=4*BlockSize then
+			if WindowMoveChecking(4) then
 				originY=originY+ ReviseNum;
 				actorinf:setRelativePos(0,-ReviseNum);	
 			else	
@@ -367,7 +368,13 @@ function DrawActorGesture(sx, sy, fr, gesturetype ,actortype)
 			actortype:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*3, ActorHeight*4);				
 		elseif fr == 2 then 		
 			actortype:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*3, ActorHeight*4);
-		end		
+		end	
+	elseif 	gesturetype == 6 then	--倒地
+		if fr == 1 then  	
+			actortype:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*4, ActorHeight*5);				
+		elseif fr == 2 then 		
+			actortype:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*4, ActorHeight*5);
+		end	
 	end
 
 end
@@ -378,7 +385,7 @@ function PressingMoving()
 	if movestatus == 1 then
 		if BorderChecking(NowActorPosX,1) then		
 			if ImpactChecking(NowActorPosX+UnitXOffset,NowActorPosY,1) then
-				if originX>-BlockSize*(TotalLines-20) and actorinf:getWindowPosX()>=16*BlockSize then
+				if WindowMoveChecking(1) then
 					originX=originX-UnitXOffset;					
 					DrawActorGesture(0, 0, Actor1:TimerGo(), 1, actorimg);
 					actorinf:setRelativePos(UnitXOffset,0);			
@@ -396,7 +403,7 @@ function PressingMoving()
 	elseif movestatus == 2  then
 		if  BorderChecking(NowActorPosY,2) then
 			if ImpactChecking(NowActorPosX,NowActorPosY+UnitYOffset,2) then
-				if originY>-BlockSize*(TotalRows-12) and actorinf:getWindowPosY()>=9*BlockSize then
+				if WindowMoveChecking(2) then
 					originY=originY-UnitYOffset;
 					DrawActorGesture(0, 0, Actor1:TimerGo(), 2, actorimg);			
 					actorinf:setRelativePos(0,UnitYOffset);	
@@ -417,7 +424,7 @@ function PressingMoving()
 	elseif movestatus == 3  then
 		if BorderChecking(NowActorPosX,3) then
 			if ImpactChecking(NowActorPosX-UnitXOffset,NowActorPosY,3) then
-				if originX<0 and actorinf:getWindowPosX()<=3*BlockSize then
+				if WindowMoveChecking(3) then
 					originX=originX+UnitXOffset;
 					DrawActorGesture(0, 0, Actor1:TimerGo(), 3, actorimg);
 					actorinf:setRelativePos(-UnitXOffset,0);		
@@ -435,7 +442,7 @@ function PressingMoving()
 	elseif movestatus == 4  then
 		if BorderChecking(NowActorPosY,4) then
 			if ImpactChecking(NowActorPosX,NowActorPosY-UnitYOffset,4) then
-				if originY<0 and actorinf:getWindowPosY()<=4*BlockSize then
+				if WindowMoveChecking(4) then
 					originY=originY+UnitYOffset;
 					DrawActorGesture(0, 0, Actor1:TimerGo(), 4, actorimg);
 					actorinf:setRelativePos(0,-UnitYOffset);	
@@ -592,30 +599,62 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 		
 end	
 
+function WindowMoveChecking(Direction)
+	if originX>-BlockSize*(TotalLines-20) and actorinf:getWindowPosX()>=16*BlockSize and Direction == 1 then					
+		return true;		
+	elseif  originY>-BlockSize*(TotalRows-12) and actorinf:getWindowPosY()>=9*BlockSize and Direction == 2 then	
+		return true;
+	elseif originX<0 and actorinf:getWindowPosX()<=3*BlockSize and Direction == 3 then	
+		return true;
+	elseif originY<0 and actorinf:getWindowPosY()<=4*BlockSize and Direction == 4 then
+		return true;
+	else return false;
+	end	
+end
+
+
+
 function DrawBoss()
-	--[[Bossimg:setAbsoluteStartPos(100,500);
-	Bossimg:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*5, ActorHeight*6);--]]
-	--[[if BossMoveDirection() == 1 then
-		DrawActorGesture(UnitXOffset, 0, Actor1:TimerGo(), 1, Bossimg);
-		Bossinf:setBossRelativePos(UnitXOffset,0);	
+
+	Bossimg:setAbsoluteStartPos(Bossinf:getBossAbsolutePosX()+originX,Bossinf:getBossAbsolutePosY()+originY-BlockSize);
+	if BossMoveDirection() == 1 then
+		if WindowMoveChecking(1) then					
+			DrawActorGesture(0, 0, Actor1:TimerGo(), 1, Bossimg);	
+		else 	
+			DrawActorGesture(BossUnitXOffset, 0, Actor1:TimerGo(), 1, Bossimg);			
+		end	
+	Bossinf:setBossRelativePos(BossUnitXOffset,0);		
 	elseif BossMoveDirection() == 2 then
-		DrawActorGesture(0, UnitYOffset, Actor1:TimerGo(), 2, Bossimg);
-		Bossinf:setBossRelativePos(0,UnitYOffset);	
+		if WindowMoveChecking(2) then					
+			DrawActorGesture(0, 0, Actor1:TimerGo(), 2, Bossimg);		
+		else 	
+			DrawActorGesture(0, BossUnitYOffset, Actor1:TimerGo(), 2, Bossimg);		
+		end	
+	Bossinf:setBossRelativePos(0,BossUnitYOffset);		
 	elseif BossMoveDirection() == 3 then
-		DrawActorGesture(-UnitXOffset, 0, Actor1:TimerGo(), 3, Bossimg);
-		Bossinf:setBossRelativePos(-UnitXOffset,0);	
+		if WindowMoveChecking(3) then					
+			DrawActorGesture(0, 0, Actor1:TimerGo(), 3, Bossimg);			
+		else 	
+			DrawActorGesture(-BossUnitXOffset, 0, Actor1:TimerGo(), 3, Bossimg);		
+		end			
+	Bossinf:setBossRelativePos(-BossUnitXOffset,0);		
 	elseif BossMoveDirection() == 4 then
-		DrawActorGesture(0, -UnitYOffset, Actor1:TimerGo(), 4, Bossimg);
-		Bossinf:setBossRelativePos(0,-UnitYOffset);	
+		if WindowMoveChecking(4) then					
+			DrawActorGesture(0, 0, Actor1:TimerGo(), 4, Bossimg);			
+		else 	
+			DrawActorGesture(0, -BossUnitYOffset, Actor1:TimerGo(), 4, Bossimg);		
+		end		
+	Bossinf:setBossRelativePos(0,-BossUnitYOffset);	
 	else 
-		Bossimg:setAbsoluteStartPos(500,450);
+		DrawActorGesture(0, 0, Actor1:TimerGo(), 6, actorimg);
+		DrawActorGesture(0, 0, Actor1:TimerGo(), 5, Bossimg);		
 	end
-	Bossimg:DrawImage();--]]	
+	Bossimg:DrawImage();	
 	--DrawActorGesture(0, 0, Actor1:TimerGo(), 5, actorimg);
 end
 
 	
---[[function BossMoveDirection()
+function BossMoveDirection()
 	local ActorRow1;	--人物所占第一个位置的地图X坐标
 	local ActorRow2;	--人物所占第二个位置的地图X坐标
 	local ActorColumn1;	--人物所占第一个位置的地图Y坐标
@@ -628,7 +667,7 @@ end
 	local ActorPosY = actorinf:getAbsolutePosY();	--人物Y方向的像素坐标
 	local ActorXRemain;
 	local ActorYRemain;
-	local BossRandDirectionNum;
+	local BossRandDirectionNum1;
 	DistanceX = ActorPosX-Bossinf:getBossAbsolutePosX();  --人物与Boss的水平差
 	DistanceY = ActorPosY-Bossinf:getBossAbsolutePosY();   --人物与Boss的垂直差
 	BossDerterminationMove = 0;
@@ -711,8 +750,8 @@ end
 						TargetBlockX = ActorPosX;
 						return TargetXMove(TargetBlockX);
 					else	
-						BossRandDirectionNum = 1;	--1朝水平方向移动 --2朝竖直方向移动
-						if BossRandDirectionNum == 1 then
+						BossRandDirectionNum1 = math.random(1,2);	--1朝水平方向移动 --2朝竖直方向移动
+						if BossRandDirectionNum1 == 1 then
 							TargetBlockX = ActorPosX;
 							return TargetXMove(TargetBlockX);
 						else	
@@ -731,19 +770,20 @@ end
 	else  return 0;	 
 	end
 	
-end	--]]
+end	
 
---[[function ActorHOneBoxNoIronCaculate(ActorRow,ActorColumn)
+function ActorHOneBoxNoIronCaculate(ActorRow,ActorColumn)
 	if ActorRow % 2 == 0 and ActorColumn % 2 ~= 0 then  --行为偶数，列为奇数，人物只能竖直移动		
 		return 1;
 	elseif	ActorRow % 2 ~= 0 and ActorColumn % 2 == 0 then  --行为奇数，列为偶数，人物只能水平移动	
 		return 2;
 	else return 3; --人物可任意移动
 	end
-end--]]
+end
 
 
---[[function GetBossDerterminationMove(BossCouldMoveDirection,TargetBlockX,TargetBlockY)
+function GetBossDerterminationMove(BossCouldMoveDirection,TargetBlockX,TargetBlockY)
+	local BossRandDirectionNum2;
 	if BossCouldMoveDirection == 1 then --Boss只能水平移动
 		BossDerterminationMove = TargetXMove(TargetBlockX);
 	elseif	BossCouldMoveDirection == 2 then --Boss只能竖直移动
@@ -751,55 +791,78 @@ end--]]
 	elseif	BossCouldMoveDirection == 3 then --Boss只能竖直向下移动	
 		BossDerterminationMove = 4;
 	else	--Boss可以朝目标距离减少的两个方向移动
-		if Bossinf:getBossAbsolutePosX() ~= TargetBlockX then
+		if Bossinf:getBossAbsolutePosX() == TargetBlockX then
+			BossDerterminationMove =  TargetYMove(TargetBlockY);
+		elseif	Bossinf:getBossAbsolutePosY() == TargetBlockY then
+			BossDerterminationMove =  TargetXMove(TargetBlockX);
+		else	
+			BossRandDirectionNum2 = math.random(1,2);	--1朝水平方向移动 --2朝竖直方向移动
+			if BossRandDirectionNum2 == 1 then
+				BossDerterminationMove = TargetXMove(TargetBlockX);
+			else	
+				BossDerterminationMove =  TargetYMove(TargetBlockY);
+			end			
+		end
+					
+					
+		--[[BossRandDirectionNum2 = math.random(1,2);	--1朝水平方向移动 --2朝竖直方向移动
+		if BossRandDirectionNum2 == 1 and Bossinf:getBossAbsolutePosX() ~= TargetBlockX then
+			BossDerterminationMove = TargetXMove(TargetBlockX);
+		else BossDerterminationMove =  TargetYMove(TargetBlockY);
+		end
+		if BossRandDirectionNum2 == 2 and  Bossinf:getBossAbsolutePosY() ~= TargetBlockY then	
+			BossDerterminationMove =  TargetYMove(TargetBlockY);
+		else BossDerterminationMove =  TargetXMove(TargetBlockX);
+		end	--]]
+		--[[if Bossinf:getBossAbsolutePosX() ~= TargetBlockX then
 			BossDerterminationMove = TargetXMove(TargetBlockX);
 		else
 			BossDerterminationMove = TargetYMove(TargetBlockY);
-		end
+		end--]]
 	end
 	return BossDerterminationMove;		
 	
-end--]]
+end
 
 
---[[function TargetXMove(TargetBlockX)
+function TargetXMove(TargetBlockX)
 	if Bossinf:getBossAbsolutePosX() > TargetBlockX  then
 		return 3;  --Boss该往左移
 	else
 		return 1; -- Boss该往右移
 	end				
-end--]]
+end
 
---[[function TargetYMove(TargetBlockY)
+function TargetYMove(TargetBlockY)
 	if Bossinf:getBossAbsolutePosY() > TargetBlockY  then
 		return 4; --Boss该往下移
 	else	
 		return 2; --Boss该往上移
 	end			
-end--]]
+end
 
 
 
---[[function ActorHaveNoIronCaculate1(ActorColumn)	--角色列的分量
+function ActorHaveNoIronCaculate1(ActorColumn)	--角色列的分量
 	if ActorColumn % 2 == 0 then  --人物占水平方向前一列为偶数，即上下有铁墙，则无铁墙的为向右一格（后一列）
 			--mapTable[ActorRow1][ActorColumn2]
 		return ActorColumn+1
 	else	--人物占水平方向前一列为奇数，即上下无铁墙
 		return ActorColumn;
 	end
-end--]]
+end
 
---[[function ActorHaveNoIronCaculate2(ActorRow)	--角色行的分量
+function ActorHaveNoIronCaculate2(ActorRow)	--角色行的分量
 	if ActorRow % 2 == 0 then  --人物占竖直方向上面一行为偶数，即左右有铁墙，则无铁墙的为下面一行
 			--mapTable[ActorRow1][ActorColumn2]
 		return ActorRow-1;
 	else	--人物占竖直方向上面一行为奇数，即左右无铁墙
 		return ActorRow;
 	end
-end--]]
+end
 
 
---[[function BossImpactChecking()
+function BossImpactChecking()
 	BossPosX = Bossinf:getBossAbsolutePosX();
 	BossPosY = Bossinf:getBossAbsolutePosY();
 	BossLastX = BossPosX % BlockSize;
@@ -814,8 +877,11 @@ end--]]
 	else 								--Boss只占一个格子
 		BossCheckingLine = BossPosX/BlockSize;
 		BossCheckingRow = BossPosY/BlockSize;
-		if 	BossCheckingLine == 0 then	--Boss位于最左边	
-			return 2;
+		if 	BossCheckingLine == 0 then 
+			if mapTable[BossCheckingRow][BossCheckingLine+2][3] == 1 then	--Boss位于最左边	
+				return 2;
+			else return 0;
+			end
 		elseif 	BossCheckingRow == TotalRows then --Boss位于最上边
 			return 3;
 		elseif 	mapTable[BossCheckingRow][BossCheckingLine][3] == 1 then  --检查Boss左边是否有铁墙 
@@ -828,7 +894,7 @@ end--]]
 
 	end
 
-end	--]]
+end	
 	
 	
 	
@@ -879,7 +945,7 @@ end
 
 
 function IintMapData()
-	initParams(24,40,1,math.random(1,2),0,550,200); --初始化地图参数
+	initParams(24,40,1,math.random(10,30),0,550,200); --初始化地图参数
 	ISGameNotPause = true;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
