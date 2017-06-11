@@ -35,7 +35,7 @@ function LoadVKeyFunc()
 	LoadShopImageFile();
 	LoadBakcpackImageFile();
 	LoadMapViewImageFile();
-	if NowLoadPos == AllImageNum+1 then
+	if NowLoadPos == AllImageNum + 1 then
 		JumpPageDelay = JumpPageDelay - 1;
 		if JumpPageDelay == 0 then
 			goStartView(); 

@@ -906,6 +906,7 @@ function LoadMapViewImageFile()
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 26 then
 		ImageLoad:LoadImage(PlotV,"Image/Map/actor1.png","DrawBoss()", "Image_5");
+		NowLoadPos = NowLoadPos + 1;
 	end
 	
 end
