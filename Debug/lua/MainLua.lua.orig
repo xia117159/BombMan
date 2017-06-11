@@ -2,7 +2,10 @@ require "include"
 require "ImageClass"
 require "MusicClass"
 require "ActorAssistant"
+require "BossClass"
 require "UserData"
+
+
 
 
 require "StartView"
@@ -17,16 +20,45 @@ require "BackpackVeiw"
 require "BackpackKeyControl"
 
 
+require "LoadView"
+
 require "MainKeyFunc"
+require "Bomb"
+
+require "Recode"
+
 
 <<<<<<< HEAD
-
-DetectPropsAmount();
---goShopView();
+--LoadBombImageFile();
 =======
-require "Recode"
+LoadThisBackGroundImage();
+
+
+--[[
+>>>>>>> 00b2d22c51d15c552c2f90c7b0c8bb4d9dec2612
+LoadStartViewImageFile();
+LoadMapViewImageFile();
+LoadShopImageFile();
+LoadBakcpackImageFile();
+--]]
+
+
+
 Read()
 --Preserve();
+<<<<<<< HEAD
 --goShopView();;
->>>>>>> 3d67ab589bf9179fa4a2f1cb37daa52f137eace0
 goStartView(); -- 转到开始界面
+UserBomb = AllBombClass:new();
+BombBlaze = AllBlazeClass:new();
+
+Init()
+
+
+=======
+--goShopView();
+--goStartView(); -- 转到开始界面
+--GoBackpackVeiw();
+>>>>>>> 00b2d22c51d15c552c2f90c7b0c8bb4d9dec2612
+
+GoLoadView();

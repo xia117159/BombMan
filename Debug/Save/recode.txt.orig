@@ -1,5 +1,10 @@
+<<<<<<< HEAD
+GoldCoins = 0
+AssistantLock = 1
+=======
 GoldCoins = 9999
 AssistantLock = 0
+>>>>>>> e35e64066505cfa54b8f95c3be4422badf9a1e40
 AssistantProps = 0
 BigBombPropsAmount = 0
 ShortCutBarBBP = 0

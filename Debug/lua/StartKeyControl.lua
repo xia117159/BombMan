@@ -66,7 +66,9 @@ end
 function goStartView()
 	
 	SetNowWindowView(StartV);
-	NowView = StartV;--设置视图位于商城
+--SetNowWindowView(ShopV);
+
+	NowView = StartV;--设置视图位于开始界面
 end
 
 --跳转剧情模式页面并进行相关设置的函数
@@ -92,6 +94,7 @@ function goShopView()
 	NowView = ShopV;--设置视图位于商城
 end
 
+SetNowWindowView(ShopV);
 
 --跳转帮助页面并进行相关设置的函数
 function goHelpView()

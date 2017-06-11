@@ -945,7 +945,7 @@ end
 
 
 function IintMapData()
-	initParams(24,40,1,math.random(10,30),0,550,200); --初始化地图参数
+	initParams(24,40,1,math.random(30,70),0,550,200); --初始化地图参数		
 	ISGameNotPause = true;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
@@ -955,13 +955,31 @@ end
 
 function LoadMapViewImageFile()
 	local ImageLoad = ImageClass:new();
-	ImageLoad:LoadImage(PlotV,"Image/Map/ground2.png","DrawGround()", "Image_0");
-	ImageLoad:LoadImage(PlotV,"Image/Map/material.png","DrawMap()", "Image_1");
-	ImageLoad:LoadImage(PlotV,"Image/Map/actor.png","DrawActor()", "Image_2");
-	ImageLoad:LoadImage(PlotV,"Image/Map/BackgroundColor4.png","DrawDialog()", "Image_3");
-	ImageLoad:LoadImage(PlotV,"Image/Map/ExitButtons.png","DrawButtons()", "Image_4");
-	ImageLoad:LoadImage(PlotV,"Image/Map/actor1.png","DrawBoss()", "Image_5");
-	
+	if NowLoadPos == 21 then
+		ImageLoad:LoadImage(PlotV,"Image/Map/ground2.png","DrawGround()", "Image_0");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 22 then
+		ImageLoad:LoadImage(PlotV,"Image/Map/material.png","DrawMap()", "Image_1");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 23 then
+		ImageLoad:LoadImage(PlotV,"Image/Map/actor.png","DrawActor()", "Image_2");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 24 then
+		ImageLoad:LoadImage(PlotV,"Image/Map/BackgroundColor4.png","DrawDialog()", "Image_3");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 25 then
+		ImageLoad:LoadImage(PlotV,"Image/Map/ExitButtons.png","DrawButtons()", "Image_4");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 26 then
+		ImageLoad:LoadImage(PlotV,"Image/Map/actor1.png","DrawBoss()", "Image_5");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 27 then
+		ImageLoad:LoadImage(PlotV,"Image/Bomb/Bomb.png","DrawBomb()", "Image_6");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 28 then
+		ImageLoad:LoadImage(PlotV,"Image/Bomb/Blaze.png","DrawBlaze()", "Image_7");
+		NowLoadPos = NowLoadPos + 1;
+	end
 	
 end
 
@@ -974,6 +992,7 @@ function ActorKey()
 	local KeyResult_Left = KeyDetect(Left);
 	local KeyResult_Down = KeyDetect(Down);
 	local KeyResult_Esc = KeyDetect(0x01);
+	local KeyResult_J = KeyDetect(0x24);
 	if KeyResult_Esc == Release then
 		if ISGameNotPause == true then
 			ISGameNotPause = false;
@@ -1009,7 +1028,12 @@ function ActorKey()
 		releasestatus = 0;
 		movestatus = 0;
 	end
-	
+
+	if KeyResult_J == Press then
+		
+		UserBomb[1]:Init(ActorClass["AcStPosX"],ActorClass["AcStPosY"]-50)
+		UserBomb[1]["IsWrite"] = 1
+	end 
 	
 	if ISGameNotPause == false then
 		ExitResult = 0;

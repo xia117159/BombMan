@@ -21,4 +21,13 @@
         <LuaFile RelativePath=".\BackpackKeyControl.lua" />
     </Filter>
     <LuaFile RelativePath=".\Recode.lua" />
+    <LuaFile RelativePath=".\Bomb.lua" />
+    <LuaFile RelativePath=".\BossClass.lua" />
+<<<<<<< HEAD
+    <LuaFile RelativePath=".\ActorAssistant.lua" />
+=======
+    <Filter Name="LoadView" Toggle="false" >
+        <LuaFile RelativePath=".\LoadView.lua" />
+    </Filter>
+>>>>>>> 00b2d22c51d15c552c2f90c7b0c8bb4d9dec2612
 </Project>

@@ -595,6 +595,7 @@ bpLRMusic4:SetMusicData("music/LotteryResult4.wav");
 function NoPrize()
 	PrizeStatus = false;
 	GoldPropsStatus = true;
+	bpLRWinStatus = true;
 	bpLRNumberStatus = 0;
 	bpLRWindow:setImagePos(bpLRWinWidth*(4-1), bpLRWinWidth*4,0, bpLRWinHeight);
 	bpLRMusic4:Play();
@@ -623,16 +624,37 @@ end
 function LoadBakcpackImageFile()
 
 	local ImageLoad = ImageClass:new();
-	ImageLoad:LoadImage(BackpackV,"Image/Shop/BackpackBackGround.png","DrawbpBackGroundFunc()", "Image_0");
-	ImageLoad:LoadImage(BackpackV,"Image/Return.png","DrawbpReturn()", "Image_1");
-	ImageLoad:LoadImage(BackpackV,"Image/Gold.png","DrawbpGold()", "Image_2");
-	ImageLoad:LoadImage(BackpackV,"Image/Number.png","DrawbpNumber()", "Image_3");
-	ImageLoad:LoadImage(BackpackV,"Image/Font.png","DrawbpFont()", "Image_4");
-	ImageLoad:LoadImage(BackpackV,"Image/ShortcutBar2.png","bpDrawShortCutBar()", "Image_5");
-	ImageLoad:LoadImage(BackpackV,"Image/Shop/LotteryBackGround.png","DrawbpLottery()", "Image_6");
-	ImageLoad:LoadImage(BackpackV,"Image/Shop/LotteryButton.png","DrawbpLotteryButton()", "Image_7");
-	ImageLoad:LoadImage(BackpackV,"Image/Shop/ShopProps.png","DrawbpProps()", "Image_8");
-	ImageLoad:LoadImage(BackpackV,"Image/Shop/LotteryResult.png","DrawbpLotteryResult()", "Image_9");
+	if NowLoadPos == 11 then
+		ImageLoad:LoadImage(BackpackV,"Image/Shop/BackpackBackGround.png","DrawbpBackGroundFunc()", "Image_0");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 12 then
+		ImageLoad:LoadImage(BackpackV,"Image/Return.png","DrawbpReturn()", "Image_1");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 13 then
+		ImageLoad:LoadImage(BackpackV,"Image/Gold.png","DrawbpGold()", "Image_2");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 14 then
+		ImageLoad:LoadImage(BackpackV,"Image/Number.png","DrawbpNumber()", "Image_3");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 15 then
+		ImageLoad:LoadImage(BackpackV,"Image/Font.png","DrawbpFont()", "Image_4");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 16 then
+		ImageLoad:LoadImage(BackpackV,"Image/ShortcutBar2.png","bpDrawShortCutBar()", "Image_5");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 17 then
+		ImageLoad:LoadImage(BackpackV,"Image/Shop/LotteryBackGround.png","DrawbpLottery()", "Image_6");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 18 then
+		ImageLoad:LoadImage(BackpackV,"Image/Shop/LotteryButton.png","DrawbpLotteryButton()", "Image_7");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 19 then
+		ImageLoad:LoadImage(BackpackV,"Image/Shop/ShopProps.png","DrawbpProps()", "Image_8");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 20 then
+		ImageLoad:LoadImage(BackpackV,"Image/Shop/LotteryResult.png","DrawbpLotteryResult()", "Image_9");
+		NowLoadPos = NowLoadPos + 1;
+	end
 end
 
 

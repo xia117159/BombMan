@@ -20,22 +20,27 @@ require "BackpackVeiw"
 require "BackpackKeyControl"
 
 
+require "LoadView"
+
 require "MainKeyFunc"
+require "Bomb"
 
 require "Recode"
 
 
+LoadThisBackGroundImage();
 
-LoadStartViewImageFile();
-LoadMapViewImageFile();
-LoadShopImageFile();
-LoadBakcpackImageFile();
+
 
 
 
 Read()
---Preserve();
-goShopView();
---goStartView(); -- 转到开始界面
---GoBackpackVeiw();
 
+UserBomb = AllBombClass:new();
+BombBlaze = AllBlazeClass:new();
+
+Init()
+
+
+
+GoLoadView();
