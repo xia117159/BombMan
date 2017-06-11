@@ -2,6 +2,7 @@ require "include"
 require "ImageClass"
 require "MusicClass"
 require "ActorAssistant"
+require "BossClass"
 require "UserData"
 
 
