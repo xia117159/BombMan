@@ -95,7 +95,7 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,RelativeWindowPos)
 	actorimg:setImage(0, 550, BlockSize, BlockSize, 0, ActorWidth, 0, ActorHeight, 9.0);
 	Bossinf = BossClass:new();
 	Bossinf:setBossAbsolutePos(500,1100);
-	Bossimg:setImage(500,450,BlockSize,BlockSize,0,32,0,32,8.8);
+	Bossimg:setImage(500,450,BlockSize,BlockSize,0,32,0,32,9.1);
 	Bossimg:setAbsoluteStartPos(500,450);
 	
 	originX=0;
@@ -615,39 +615,40 @@ end
 
 
 function DrawBoss()
-
-	Bossimg:setAbsoluteStartPos(Bossinf:getBossAbsolutePosX()+originX,Bossinf:getBossAbsolutePosY()+originY-BlockSize);
-	if BossMoveDirection() == 1 then
-		if WindowMoveChecking(1) then					
-			DrawActorGesture(0, 0, Actor1:TimerGo(), 1, Bossimg);	
-		else 	
-			DrawActorGesture(BossUnitXOffset, 0, Actor1:TimerGo(), 1, Bossimg);			
+	if ISGameNotPause == true  then
+		Bossimg:setAbsoluteStartPos(Bossinf:getBossAbsolutePosX()+originX,Bossinf:getBossAbsolutePosY()+originY-BlockSize);
+		if BossMoveDirection() == 1 then
+			if WindowMoveChecking(1) then					
+				DrawActorGesture(0, 0, Actor1:TimerGo(), 1, Bossimg);	
+			else 	
+				DrawActorGesture(BossUnitXOffset, 0, Actor1:TimerGo(), 1, Bossimg);			
+			end	
+		Bossinf:setBossRelativePos(BossUnitXOffset,0);		
+		elseif BossMoveDirection() == 2 then
+			if WindowMoveChecking(2) then					
+				DrawActorGesture(0, 0, Actor1:TimerGo(), 2, Bossimg);		
+			else 	
+				DrawActorGesture(0, BossUnitYOffset, Actor1:TimerGo(), 2, Bossimg);		
+			end	
+		Bossinf:setBossRelativePos(0,BossUnitYOffset);		
+		elseif BossMoveDirection() == 3 then
+			if WindowMoveChecking(3) then					
+				DrawActorGesture(0, 0, Actor1:TimerGo(), 3, Bossimg);			
+			else 	
+				DrawActorGesture(-BossUnitXOffset, 0, Actor1:TimerGo(), 3, Bossimg);		
+			end			
+		Bossinf:setBossRelativePos(-BossUnitXOffset,0);		
+		elseif BossMoveDirection() == 4 then
+			if WindowMoveChecking(4) then					
+				DrawActorGesture(0, 0, Actor1:TimerGo(), 4, Bossimg);			
+			else 	
+				DrawActorGesture(0, -BossUnitYOffset, Actor1:TimerGo(), 4, Bossimg);		
+			end		
+		Bossinf:setBossRelativePos(0,-BossUnitYOffset);	
+		else 
+			DrawActorGesture(0, 0, Actor1:TimerGo(), 6, actorimg);
+			DrawActorGesture(0, 0, Actor1:TimerGo(), 5, Bossimg);		
 		end	
-	Bossinf:setBossRelativePos(BossUnitXOffset,0);		
-	elseif BossMoveDirection() == 2 then
-		if WindowMoveChecking(2) then					
-			DrawActorGesture(0, 0, Actor1:TimerGo(), 2, Bossimg);		
-		else 	
-			DrawActorGesture(0, BossUnitYOffset, Actor1:TimerGo(), 2, Bossimg);		
-		end	
-	Bossinf:setBossRelativePos(0,BossUnitYOffset);		
-	elseif BossMoveDirection() == 3 then
-		if WindowMoveChecking(3) then					
-			DrawActorGesture(0, 0, Actor1:TimerGo(), 3, Bossimg);			
-		else 	
-			DrawActorGesture(-BossUnitXOffset, 0, Actor1:TimerGo(), 3, Bossimg);		
-		end			
-	Bossinf:setBossRelativePos(-BossUnitXOffset,0);		
-	elseif BossMoveDirection() == 4 then
-		if WindowMoveChecking(4) then					
-			DrawActorGesture(0, 0, Actor1:TimerGo(), 4, Bossimg);			
-		else 	
-			DrawActorGesture(0, -BossUnitYOffset, Actor1:TimerGo(), 4, Bossimg);		
-		end		
-	Bossinf:setBossRelativePos(0,-BossUnitYOffset);	
-	else 
-		DrawActorGesture(0, 0, Actor1:TimerGo(), 6, actorimg);
-		DrawActorGesture(0, 0, Actor1:TimerGo(), 5, Bossimg);		
 	end
 	Bossimg:DrawImage();	
 	--DrawActorGesture(0, 0, Actor1:TimerGo(), 5, actorimg);
@@ -945,7 +946,7 @@ end
 
 
 function IintMapData()
-	initParams(24,40,1,math.random(30,70),0,550,200); --初始化地图参数		
+	initParams(24,40,1,math.random(14,30),0,550,200); --初始化地图参数		
 	ISGameNotPause = true;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
@@ -1031,7 +1032,7 @@ function ActorKey()
 
 	if KeyResult_J == Press then
 		
-		UserBomb[1]:Init(ActorClass["AcStPosX"],ActorClass["AcStPosY"]-50)
+		UserBomb[1]:Init(actorinf["AcStPosX"],actorinf["AcStPosY"]-50)
 		UserBomb[1]["IsWrite"] = 1
 	end 
 	
