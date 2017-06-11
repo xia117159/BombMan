@@ -19,22 +19,29 @@ require "BackpackVeiw"
 require "BackpackKeyControl"
 
 
+require "LoadView"
+
 require "MainKeyFunc"
 
 require "Recode"
 
 
+LoadThisBackGroundImage();
 
+
+--[[
 LoadStartViewImageFile();
 LoadMapViewImageFile();
 LoadShopImageFile();
 LoadBakcpackImageFile();
+--]]
 
 
 
 Read()
 --Preserve();
-goShopView();
+--goShopView();
 --goStartView(); -- 转到开始界面
 --GoBackpackVeiw();
 
+GoLoadView();

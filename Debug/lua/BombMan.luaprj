@@ -23,4 +23,7 @@
     <LuaFile RelativePath=".\ActorAssistant.lua" />
     <LuaFile RelativePath=".\Recode.lua" />
     <LuaFile RelativePath=".\BossClass.lua" />
+    <Filter Name="LoadView" Toggle="false" >
+        <LuaFile RelativePath=".\LoadView.lua" />
+    </Filter>
 </Project>

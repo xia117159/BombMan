@@ -13,7 +13,11 @@ function ShopViewKC()
 		ksButton:setRelativelyStartPos(CharacterRate, 0.0);
 	end--]]
 	Result = 0;
-	
+	local KeyResult_Esc = KeyDetect(0x01);
+	if KeyResult_Esc == Press then
+		Gamebgm:Play(ForcedSwitch);
+		goStartView();
+	end
 	--·µ»Ø¼üÇøÓò
 	if DetectMousePos(ShopReturnButton) == 1 then
 		

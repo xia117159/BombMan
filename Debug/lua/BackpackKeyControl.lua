@@ -10,6 +10,12 @@ function bpViewKC()
 	
 	if bpLRWinStatus == false then
 		
+		local KeyResult_Esc = KeyDetect(0x01);
+		if KeyResult_Esc == Press then
+			Gamebgm:Play(ForcedSwitch);
+			goShopView();
+		end
+		
 		Result = 0;
 		--返回键区域
 		if DetectMousePos(bpReturnButton) == 1 then
@@ -217,7 +223,10 @@ function bpViewKC()
 		end
 	else
 		
-		
+		local KeyResult_Esc = KeyDetect(0x01);
+		if KeyResult_Esc == Release then
+			bpLRWinStatus = false;
+		end
 		--关闭抽奖结果窗口按钮
 		if DetectMousePos(bpLRCloseBtn) == 1 then
 			Result = GetMouseStatus();
@@ -320,9 +329,9 @@ function LotteryHAPEvent()
 		
 		UserData["GoldCoins"] = UserData["GoldCoins"] - LotteryGoldSpend;
 		local RandNum = math.random(1,100);
-		if 1<= RandNum and RandNum <10 then
+		if 1<= RandNum and RandNum <20 then
 			NoPrize();
-		elseif 10<=RandNum and RandNum<50 then
+		elseif 20<=RandNum and RandNum<60 then
 
 			local GoldRandom = math.random(10,45);
 			UserData["GoldCoins"] = UserData["GoldCoins"] + GoldRandom;
@@ -330,7 +339,7 @@ function LotteryHAPEvent()
 				UserData["GoldCoins"] = 9999;
 			end
 			PrizeOfGoldCoins(GoldRandom);
-		elseif 50<=RandNum and RandNum<75 then
+		elseif 60<=RandNum and RandNum<80 then
 
 			local bbpNum = 0;
 			local bbpProbability = math.random(1,100);
@@ -369,7 +378,7 @@ function LotteryHAPEvent()
 				end
 			end
 			PrizeOfBigBomb(bbpNum);
-		elseif 75<=RandNum and RandNum<100 then
+		elseif 80<=RandNum and RandNum<100 then
 			
 			local apNum = 0;
 			local apProbability = math.random(1,100);
@@ -426,9 +435,9 @@ function LotteryNAPEvent()
 	else
 		UserData["GoldCoins"] = UserData["GoldCoins"] - LotteryGoldSpend;
 		local RandNum = math.random(1,100);
-		if 1<= RandNum and RandNum <15 then
+		if 1<= RandNum and RandNum <30 then
 			NoPrize();
-		elseif 15<=RandNum and RandNum<65 then
+		elseif 30<=RandNum and RandNum<75 then
 		
 			local GoldRandom = math.random(10,45);
 			UserData["GoldCoins"] = UserData["GoldCoins"] + GoldRandom;
@@ -436,7 +445,7 @@ function LotteryNAPEvent()
 				UserData["GoldCoins"] = 9999;
 			end
 			PrizeOfGoldCoins(GoldRandom);
-		elseif 65<=RandNum and RandNum<100 then
+		elseif 75<=RandNum and RandNum<100 then
 			
 			local bbpNum = 0;
 			local bbpProbability = math.random(1,100);

@@ -17,7 +17,9 @@ end
 --此函数名不可更改，否者无效
 function KeyFunc()
 	if WinFocus == WM_SETFOCUS then
-		if NowView == StartV then
+		if NowView == LoadV then
+			LoadVKeyFunc();
+		elseif NowView == StartV then
 			StartViewKC();
 		elseif NowView == ChallengeV then
 			NoFunc();

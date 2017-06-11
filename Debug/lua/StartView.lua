@@ -64,8 +64,13 @@ end
 
 function LoadStartViewImageFile()
 	local ImageLoad = ImageClass:new();
-	ImageLoad:LoadImage(StartV,"Image/BackGround.png","DrawBackGroundFunc()", "Image_0");
-	ImageLoad:LoadImage(StartV,ButtonImagePath,"DrawButtonFunc()", "Image_1");
+	if NowLoadPos == 1 then
+		ImageLoad:LoadImage(StartV,"Image/BackGround.png","DrawBackGroundFunc()", "Image_0");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 2 then
+		ImageLoad:LoadImage(StartV,ButtonImagePath,"DrawButtonFunc()", "Image_1");
+		NowLoadPos = NowLoadPos + 1;
+	end
 end
 
 

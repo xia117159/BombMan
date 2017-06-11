@@ -663,11 +663,22 @@ end
 
 function LoadMapViewImageFile()
 	local ImageLoad = ImageClass:new();
-	ImageLoad:LoadImage(PlotV,"Image/Map/ground2.png","DrawGround()", "Image_0");
-	ImageLoad:LoadImage(PlotV,"Image/Map/material.png","DrawMap()", "Image_1");
-	ImageLoad:LoadImage(PlotV,"Image/Map/actor.png","DrawActor()", "Image_2");
-	ImageLoad:LoadImage(PlotV,"Image/Map/BackgroundColor4.png","DrawDialog()", "Image_3");
-	ImageLoad:LoadImage(PlotV,"Image/Map/ExitButtons.png","DrawButtons()", "Image_4");
+	if NowLoadPos == 21 then
+		ImageLoad:LoadImage(PlotV,"Image/Map/ground2.png","DrawGround()", "Image_0");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 22 then
+		ImageLoad:LoadImage(PlotV,"Image/Map/material.png","DrawMap()", "Image_1");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 23 then
+		ImageLoad:LoadImage(PlotV,"Image/Map/actor.png","DrawActor()", "Image_2");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 24 then
+		ImageLoad:LoadImage(PlotV,"Image/Map/BackgroundColor4.png","DrawDialog()", "Image_3");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 25 then
+		ImageLoad:LoadImage(PlotV,"Image/Map/ExitButtons.png","DrawButtons()", "Image_4");
+		NowLoadPos = NowLoadPos + 1;
+	end
 	
 end
 
