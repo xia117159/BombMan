@@ -383,7 +383,7 @@ function LotteryHAPEvent()
 			local apNum = 0;
 			local apProbability = math.random(1,100);
 			local temp = 0;
-			if 1<= apProbability and  apProbability< 50 then  --ap+1为50%的概率
+			if 1<= apProbability and  apProbability< 60 then  --ap+1为60%的概率
 				apNum = 1;
 				
 				UserData["AssistantPropsAmount"] = UserData["AssistantPropsAmount"] + 1;
@@ -395,7 +395,7 @@ function LotteryHAPEvent()
 					end
 					temp = 1;
 				end
-			elseif 50<= apProbability and  apProbability< 80 then --ap+2为30%的概率
+			elseif 60<= apProbability and  apProbability< 85 then --ap+2为25%的概率
 				apNum = 2;
 				temp = UserData["AssistantPropsAmount"];
 				UserData["AssistantPropsAmount"] = UserData["AssistantPropsAmount"] + 2;
@@ -407,7 +407,7 @@ function LotteryHAPEvent()
 					end
 					temp = 1;
 				end
-			elseif 80<= apProbability and  apProbability<= 100 then --ap+3为20%的概率
+			elseif 85<= apProbability and  apProbability<= 100 then --ap+3为15%的概率
 				apNum = 3;
 				temp = UserData["AssistantPropsAmount"];
 				UserData["AssistantPropsAmount"] = UserData["AssistantPropsAmount"] + 3;
