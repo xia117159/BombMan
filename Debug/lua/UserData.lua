@@ -9,8 +9,8 @@ UserData =
 	ShortCutBarAP = 0, --所放置快捷栏
 	Power = 9, --炸弹威力
 	HaveBombNumber = 3, --拥有炸弹个数
-	SpeedX = 1.5,
-	SpeedY = 1.5
+	SpeedX = 2,
+	SpeedY = 2
 
 }
 

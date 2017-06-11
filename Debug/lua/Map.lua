@@ -105,8 +105,8 @@ end
 	BlockSize = 50;
 	UnitXOffset = UserData["SpeedX"];
 	UnitYOffset = UserData["SpeedY"];				
-    BossUnitXOffset = 1;
-	BossUnitYOffset = 1;
+    BossUnitXOffset = 2;
+	BossUnitYOffset = 2;
 	ActorWidth = 64;
 	ActorHeight = 64;
 	actorimg = ImageClass:new();
@@ -945,7 +945,7 @@ end
 
 
 function IintMapData()
-	initParams(24,40,1,math.random(30,70),0,550,200); --初始化地图参数		
+	initParams(24,40,1,math.random(15,40),0,550,200); --初始化地图参数		
 	ISGameNotPause = true;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
