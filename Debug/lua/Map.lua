@@ -92,12 +92,12 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitch)
 	--保存角色状态
 	--actorBlock ={AcStPosX,AcStPosY,BombNumAva,FireLevel};
 	
-	actorinf = ActorClass:new(1,1);
+	actorinf = ActorClass:new();
 	actorimg:setImage(0, 550, BlockSize, BlockSize, 0, ActorWidth, 0, ActorHeight, 9.0);
 	Bossinf = BossClass:new();
 	Bossinf:setBossAbsolutePos(500,1100);
 	
-	Bossimg:setImage(500,450,BlockSize,BlockSize,0,32,0,32,8.9);
+	Bossimg:setImage(500,450,BlockSize,BlockSize,0,32,0,64,8.9);
 	Bossimg:setAbsoluteStartPos(500,450);
 	
 	originX=0;
@@ -111,11 +111,13 @@ end
 	BossUnitYOffset = 2;
 	ActorWidth = 64;
 	ActorHeight = 64;
+	BossWidth = 32;
+	BossHeight = 48;
 	actorimg = ImageClass:new();
 	actorimg:setImageFileSize(192, 384);
 	
 	Bossimg = ImageClass:new();
-	Bossimg:setImageFileSize(192,384);
+	Bossimg:setImageFileSize(96,192);
 	
 	
 	ExitButtonWidth = 150;
@@ -336,6 +338,8 @@ end
 
 Actor1 = ActorAnimationRecord:new();
 Actor1:SetValue(14, 2);
+Boss1 = ActorAnimationRecord:new();
+Boss1:SetValue(14,3);
 
 function DrawActorGesture(sx, sy, fr, gesturetype ,actortype)
 	actortype:setRelativelyStartPos(sx,sy);
@@ -380,6 +384,48 @@ function DrawActorGesture(sx, sy, fr, gesturetype ,actortype)
 	end
 
 end
+
+function DrawBossGesture(sx, sy, fr, gesturetype ,actortype)
+	actortype:setRelativelyStartPos(sx,sy);
+	if gesturetype == 1 then	--方向向右
+		if fr == 1 then  --第一帧图片		
+			actortype:setImagePos(BossWidth*0, BossWidth*1, BossHeight*2, BossHeight*3);
+		elseif fr == 2 then  --第二帧图片		
+			actortype:setImagePos(BossWidth*1, BossWidth*2, BossHeight*2, BossHeight*3);							
+		elseif fr == 3 then --第三帧图片
+			actortype:setImagePos(BossWidth*2, BossWidth*3, BossHeight*2, BossHeight*3);
+		end		
+	elseif gesturetype == 2 then	--方向向上
+		if fr == 1 then  --第一帧图片		
+			actortype:setImagePos(BossWidth*0, BossWidth*1, BossHeight*3, BossHeight*4);
+		elseif fr == 2 then  --第二帧图片		
+			actortype:setImagePos(BossWidth*1, BossWidth*2, BossHeight*3, BossHeight*4);							
+		elseif fr == 3 then --第三帧图片
+			actortype:setImagePos(BossWidth*2, BossWidth*3, BossHeight*3, BossHeight*4);
+		end		
+	elseif gesturetype == 3 then	--方向向左
+		if fr == 1 then  --第一帧图片		
+			actortype:setImagePos(BossWidth*0, BossWidth*1, BossHeight*1, BossHeight*2);
+		elseif fr == 2 then  --第二帧图片		
+			actortype:setImagePos(BossWidth*1, BossWidth*2, BossHeight*1, BossHeight*2);							
+		elseif fr == 3 then --第三帧图片
+			actortype:setImagePos(BossWidth*2, BossWidth*3, BossHeight*1, BossHeight*2);
+		end	
+	elseif gesturetype == 4 then	--方向向下
+		if fr == 1 then  --第一帧图片		
+			actortype:setImagePos(BossWidth*0, BossWidth*1, BossHeight*0, BossHeight*1);
+		elseif fr == 2 then  --第二帧图片		
+			actortype:setImagePos(BossWidth*1, BossWidth*2, BossHeight*0, BossHeight*1);							
+		elseif fr == 3 then --第三帧图片
+			actortype:setImagePos(BossWidth*2, BossWidth*3, BossHeight*0, BossHeight*1);
+		end	
+	end
+
+end
+
+
+
+
 
 
 
@@ -621,36 +667,37 @@ function DrawBoss()
 		if ISGameNotPause  then
 			Bossimg:setAbsoluteStartPos(Bossinf:getBossAbsolutePosX()+originX,Bossinf:getBossAbsolutePosY()+originY-BlockSize);
 			if BossMoveDirection() == 1 then
-				if WindowMoveChecking(1) then					
-					DrawActorGesture(0, 0, Actor1:TimerGo(), 1, Bossimg);	
+				if WindowMoveChecking(1) then	
+					DrawBossGesture(0, 0, Boss1:TimerGo(), 1, Bossimg);				
+					--DrawActorGesture(0, 0, Actor1:TimerGo(), 1, Bossimg);	
 				else 	
-					DrawActorGesture(BossUnitXOffset, 0, Actor1:TimerGo(), 1, Bossimg);			
+					DrawBossGesture(BossUnitXOffset, 0, Boss1:TimerGo(), 1, Bossimg);			
 				end	
 			Bossinf:setBossRelativePos(BossUnitXOffset,0);		
 			elseif BossMoveDirection() == 2 then
 				if WindowMoveChecking(2) then					
-					DrawActorGesture(0, 0, Actor1:TimerGo(), 2, Bossimg);		
+					DrawBossGesture(0, 0, Boss1:TimerGo(), 2, Bossimg);		
 				else 	
-					DrawActorGesture(0, BossUnitYOffset, Actor1:TimerGo(), 2, Bossimg);		
+					DrawBossGesture(0, BossUnitYOffset, Boss1:TimerGo(), 2, Bossimg);		
 				end	
 			Bossinf:setBossRelativePos(0,BossUnitYOffset);		
 			elseif BossMoveDirection() == 3 then
 				if WindowMoveChecking(3) then					
-					DrawActorGesture(0, 0, Actor1:TimerGo(), 3, Bossimg);			
+					DrawBossGesture(0, 0, Boss1:TimerGo(), 3, Bossimg);			
 				else 	
-					DrawActorGesture(-BossUnitXOffset, 0, Actor1:TimerGo(), 3, Bossimg);		
+					DrawBossGesture(-BossUnitXOffset, 0, Boss1:TimerGo(), 3, Bossimg);		
 				end			
 			Bossinf:setBossRelativePos(-BossUnitXOffset,0);		
 			elseif BossMoveDirection() == 4 then
 				if WindowMoveChecking(4) then					
-					DrawActorGesture(0, 0, Actor1:TimerGo(), 4, Bossimg);			
+					DrawBossGesture(0, 0, Boss1:TimerGo(), 4, Bossimg);			
 				else 	
-					DrawActorGesture(0, -BossUnitYOffset, Actor1:TimerGo(), 4, Bossimg);		
+					DrawBossGesture(0, -BossUnitYOffset, Boss1:TimerGo(), 4, Bossimg);		
 				end		
 			Bossinf:setBossRelativePos(0,-BossUnitYOffset);	
 			else 
-				DrawActorGesture(0, 0, Actor1:TimerGo(), 6, actorimg);
-				DrawActorGesture(0, 0, Actor1:TimerGo(), 5, Bossimg);		
+				DrawActorGesture(0, 0, Acto1:TimerGo(), 6, actorimg);
+				DrawBossGesture(0, 0, Boss1:TimerGo(), 3, Bossimg);		
 			end	
 		end
 		Bossimg:DrawImage();	
@@ -952,7 +999,7 @@ end
 
 
 function IintMapData()
-initParams(24,40,1,math.random(15,30),0,550,false); --初始化地图参数	
+initParams(24,40,1,math.random(1,2),0,550,true); --初始化地图参数	
 	ISGameNotPause = true;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
@@ -972,7 +1019,7 @@ function LoadMapViewImageFile()
 		ImageLoad:LoadImage(PlotV,"Image/Map/actor.png","DrawActor()", "Image_2");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 24 then
-		ImageLoad:LoadImage(PlotV,"Image/Map/actor1.png","DrawBoss()", "Image_3");
+		ImageLoad:LoadImage(PlotV,"Image/Map/Boss.png","DrawBoss()", "Image_3");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 25 then
 		ImageLoad:LoadImage(PlotV,"Image/Map/BackgroundColor4.png","DrawDialog()", "Image_4");
