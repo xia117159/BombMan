@@ -91,14 +91,13 @@ end
 
 
 ShopBackGround = ImageClass:new();
-ShopBackGround:setImageFileSize(1875, 2250);
-ShopBackGround:setImage(0, 0, 1000, 600, 0, 1875, 0, 1125, ShopPriorityBGI+0.99);
+ShopBackGround:setImageFileSize(1000, 1200);
+ShopBackGround:setImage(0, 0, 1000, 600, 0, 1000, 0, 600, ShopPriorityBGI+0.99);
 
 ShopIntroDefault = ImageClass:new();
-ShopIntroDefault :setImageFileSize(1875, 2250);
-ShopIntroDefault:setscaling_ratio(0.52);
-
-ShopIntroDefault :setImage(30, 10, 860, 1123, 0, 860, 1126, 2249, ShopPriorityBGI+0.98);
+ShopIntroDefault :setImageFileSize(1000, 1200);
+ShopIntroDefault:setscaling_ratio(0.973);
+ShopIntroDefault :setImage(30, 10, 461, 600, 0, 461, 601, 1200, ShopPriorityBGI+0.98);
 
 function DrawShopBackGroundFunc()
 	ShopBackGround:DrawImage();
@@ -325,14 +324,31 @@ end
 function LoadShopImageFile()
 
 	local ImageLoad = ImageClass:new();
-	ImageLoad:LoadImage(ShopV,"Image/Shop/ShopBackGoundIMage.png","DrawShopBackGroundFunc()", "Image_0");
-	ImageLoad:LoadImage(ShopV,"Image/Return.png","DrawShopReturn()", "Image_1");
-	ImageLoad:LoadImage(ShopV,"Image/Gold.png","DrawGold()", "Image_2");
-	ImageLoad:LoadImage(ShopV,"Image/Number.png","DrawNumber()", "Image_3");
-	ImageLoad:LoadImage(ShopV,"Image/Font.png","DrawFont()", "Image_4");
-	ImageLoad:LoadImage(ShopV,"Image/Shop/BuyButton.png","DrawBuyButton()", "Image_5");
-	ImageLoad:LoadImage(ShopV,"Image/Shop/backpack.png","Drawbackpack()", "Image_6");
-	ImageLoad:LoadImage(ShopV,"Image/Shop/ShopProps.png","DrawShopProps()", "Image_7");
+	if NowLoadPos == 3 then
+		ImageLoad:LoadImage(ShopV,"Image/Shop/ShopBackGoundIMage.png","DrawShopBackGroundFunc()", "Image_0");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 4 then
+		ImageLoad:LoadImage(ShopV,"Image/Return.png","DrawShopReturn()", "Image_1");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 5 then
+		ImageLoad:LoadImage(ShopV,"Image/Gold.png","DrawGold()", "Image_2");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 6 then
+		ImageLoad:LoadImage(ShopV,"Image/Number.png","DrawNumber()", "Image_3");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 7 then
+		ImageLoad:LoadImage(ShopV,"Image/Font.png","DrawFont()", "Image_4");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 8 then
+		ImageLoad:LoadImage(ShopV,"Image/Shop/BuyButton.png","DrawBuyButton()", "Image_5");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 9 then
+		ImageLoad:LoadImage(ShopV,"Image/Shop/backpack.png","Drawbackpack()", "Image_6");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 10 then
+		ImageLoad:LoadImage(ShopV,"Image/Shop/ShopProps.png","DrawShopProps()", "Image_7");
+		NowLoadPos = NowLoadPos + 1;
+	end
 	
 	ShowPropsIntro(0);
 end

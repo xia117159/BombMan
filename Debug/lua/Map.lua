@@ -93,6 +93,10 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,RelativeWindowPos)
 	
 	actorinf = ActorClass:new(1,1);
 	actorimg:setImage(0, 550, BlockSize, BlockSize, 0, ActorWidth, 0, ActorHeight, 9.0);
+	Bossinf = BossClass:new();
+	Bossinf:setBossAbsolutePos(500,1100);
+	Bossimg:setImage(500,450,BlockSize,BlockSize,0,32,0,32,8.8);
+	Bossimg:setAbsoluteStartPos(500,450);
 	
 	originX=0;
 	originY=-(TotalRows-12)*BlockSize;
@@ -107,11 +111,8 @@ end
 	actorimg = ImageClass:new();
 	actorimg:setImageFileSize(192, 384);
 	
-	--[[Bossimg = ImageClass:new();
-	Bossimg:setImageFileSize(175, 162);
-	Bossimg:setImage(500,400,BlockSize, BlockSize,0,175,0,162,9.1);
-	Bossinf = BossClass:new();
-	Bossinf:setAbsolutePos(500,400);--]]
+	Bossimg = ImageClass:new();
+	Bossimg:setImageFileSize(192,384);
 	
 	
 	ExitButtonWidth = 150;
@@ -357,15 +358,15 @@ function DrawActorGesture(sx, sy, fr, gesturetype ,actortype)
 		end	
 	elseif gesturetype == 4 then	--方向向下
 		if fr == 1 then  	
-			actorimg:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*0, ActorHeight*1);				
+			actortype:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*0, ActorHeight*1);				
 		elseif fr == 2 then 		
-			actorimg:setImagePos(ActorWidth*2, ActorWidth*3, ActorHeight*0, ActorHeight*1);
+			actortype:setImagePos(ActorWidth*2, ActorWidth*3, ActorHeight*0, ActorHeight*1);
 		end	
 	elseif gesturetype == 5 then	--欢呼
 		if fr == 1 then  	
-			actorimg:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*3, ActorHeight*4);				
+			actortype:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*3, ActorHeight*4);				
 		elseif fr == 2 then 		
-			actorimg:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*3, ActorHeight*4);
+			actortype:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*3, ActorHeight*4);
 		end		
 	end
 
@@ -590,20 +591,245 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 			
 		
 end	
-	
---[[function BossMoveDirection(BOSS)
-	MinimunDistanceX = actorinf:getAbsolutePosX()- Bossinf:getAbsolutePosX();  --Boss位置（500，500）
-	MinimunDistanceY = actorinf:getAbsolutePosY()-Bossinf:getAbsolutePosY();
-	if	math.abs(MinimunDistanceX) > 50 or math.abs(MinimunDistanceY) > 50 then
-		if	 then
-			
-		elseif	
-		end 
-	else	DrawActorGesture(0, 0, Actor1:TimerGo(), 5, actorimg);
+
+function DrawBoss()
+	--[[Bossimg:setAbsoluteStartPos(100,500);
+	Bossimg:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*5, ActorHeight*6);--]]
+	--[[if BossMoveDirection() == 1 then
+		DrawActorGesture(UnitXOffset, 0, Actor1:TimerGo(), 1, Bossimg);
+		Bossinf:setBossRelativePos(UnitXOffset,0);	
+	elseif BossMoveDirection() == 2 then
+		DrawActorGesture(0, UnitYOffset, Actor1:TimerGo(), 2, Bossimg);
+		Bossinf:setBossRelativePos(0,UnitYOffset);	
+	elseif BossMoveDirection() == 3 then
+		DrawActorGesture(-UnitXOffset, 0, Actor1:TimerGo(), 3, Bossimg);
+		Bossinf:setBossRelativePos(-UnitXOffset,0);	
+	elseif BossMoveDirection() == 4 then
+		DrawActorGesture(0, -UnitYOffset, Actor1:TimerGo(), 4, Bossimg);
+		Bossinf:setBossRelativePos(0,-UnitYOffset);	
+	else 
+		Bossimg:setAbsoluteStartPos(500,450);
 	end
-	BOSS:getAbsolutePosX() = 
+	Bossimg:DrawImage();--]]	
+	--DrawActorGesture(0, 0, Actor1:TimerGo(), 5, actorimg);
+end
+
+	
+--[[function BossMoveDirection()
+	local ActorRow1;	--人物所占第一个位置的地图X坐标
+	local ActorRow2;	--人物所占第二个位置的地图X坐标
+	local ActorColumn1;	--人物所占第一个位置的地图Y坐标
+	local ActorColumn2;	--人物所占第二个位置的地图Y坐标
+	local BossCouldMoveDirection;	--Boss可以移动的方向
+	local ActorHaveUnitStatus;	--人物所占格数状况 1代表所占一格
+	-- 2代表所占水平方向两格且位置为mapTable[ActorRow1][ActorColumn1]，mapTable[ActorRow1][ActorColumn2]
+	-- 3代表所占竖直方向两格且位置为mapTable[ActorRow1][ActorColumn1]，mapTable[ActorRow2][ActorColumn1]
+	local ActorPosX = actorinf:getAbsolutePosX();	--人物X方向的像素坐标
+	local ActorPosY = actorinf:getAbsolutePosY();	--人物Y方向的像素坐标
+	local ActorXRemain;
+	local ActorYRemain;
+	local BossRandDirectionNum;
+	DistanceX = ActorPosX-Bossinf:getBossAbsolutePosX();  --人物与Boss的水平差
+	DistanceY = ActorPosY-Bossinf:getBossAbsolutePosY();   --人物与Boss的垂直差
+	BossDerterminationMove = 0;
+	
+	
+	--计算角色所占格子
+	ActorXRemain = ActorPosX%BlockSize;
+	ActorYRemain = ActorPosY%BlockSize;
+	if ActorXRemain == 0 and ActorYRemain == 0 then
+		ActorColumn1 = ActorPosX/BlockSize + 1;
+		ActorRow1 = ActorPosY/BlockSize;
+		ActorHaveUnitStatus = 1; 	--人物所占位置mapTable[ActorRow1][ActorColumn1]
+	elseif ActorXRemain ~= 0 then
+		ActorColumn1 = math.ceil(ActorPosX/BlockSize);
+		ActorColumn2 = ActorColumn1+1;
+		ActorRow1 = ActorPosY/BlockSize;
+		ActorHaveUnitStatus = 2;  --人物所占位置mapTable[ActorRow1][ActorColumn1]，mapTable[ActorRow1][ActorColumn2]
+	elseif ActorYRemain ~= 0 then
+		ActorRow1 = math.ceil(ActorPosY/BlockSize);
+		ActorRow2 = ActorRow1-1;
+		ActorColumn1 = ActorPosX/BlockSize + 1;	--人物所占位置mapTable[ActorRow1][ActorColumn1]，mapTable[ActorRow2][ActorColumn1]
+		ActorHaveUnitStatus = 3;
+	end
+	
+	if	math.abs(DistanceX) > 50 or math.abs(DistanceY) > 50 then		
+		BossCouldMoveDirection = BossImpactChecking();
+		local TargetBlockX;
+		local TargetBlockY;
+		if ActorHaveUnitStatus == 2 then	--人物占水平方向两格
+			TargetBlockX = (ActorHaveNoIronCaculate1(ActorColumn1)-1)*BlockSize;
+			TargetBlockY = ActorPosY;
+			return GetBossDerterminationMove(BossCouldMoveDirection,TargetBlockX,TargetBlockY);
+		elseif	ActorHaveUnitStatus == 3 then	--人物占竖直方向两格
+			TargetBlockX = ActorPosX;
+			TargetBlockY = 	ActorHaveNoIronCaculate2(ActorRow1)*BlockSize;
+			return GetBossDerterminationMove(BossCouldMoveDirection,TargetBlockX,TargetBlockY);
+		elseif	ActorHaveUnitStatus == 1 then	--人物只占一格
+			if ActorHOneBoxNoIronCaculate(ActorRow1,ActorColumn1) == 1 then	--人物只能竖直移动	
+				if Bossinf:getBossAbsolutePosX() == ActorPosX then	--Boss与人物X像素相同
+					TargetBlockY = ActorPosY;
+					return TargetYMove(TargetBlockY);	--Boss朝缩小Y像素方向移动
+				elseif	BossCouldMoveDirection == 2 or BossCouldMoveDirection == 3 then --Boss只能竖直移动
+					if Bossinf:getBossAbsolutePosY() <= ActorPosY then
+						TargetBlockY = ActorPosY-BlockSize;						
+					else 
+						TargetBlockY = ActorPosY+BlockSize;
+					end	
+					return TargetYMove(TargetBlockY);	--Boss朝缩小Y像素方向移动
+			elseif BossCouldMoveDirection == 0 or BossCouldMoveDirection == 1 then	--Boss可以水平移动
+					TargetBlockX = ActorPosX;
+					return TargetXMove(TargetBlockX);
+				end
+			elseif	ActorHOneBoxNoIronCaculate(ActorRow1,ActorColumn1) == 2 then --人物只能水平移动	
+				if Bossinf:getBossAbsolutePosY() == ActorPosY then	--Boss与人物Y像素相同
+					TargetBlockX = ActorPosX;
+					return TargetXMove(TargetBlockX);	--Boss朝缩小X像素方向移动
+				elseif	BossCouldMoveDirection == 1 then --Boss只能水平移动
+					if Bossinf:getBossAbsolutePosX() <= ActorPosX then
+						TargetBlockX = ActorPosX - BlockSize;
+					else	
+						TargetBlockX = ActorPosX + BlockSize;
+					end
+					return TargetXMove(TargetBlockX);	--Boss朝缩小X像素方向移动
+				elseif BossCouldMoveDirection == 0 or BossCouldMoveDirection == 2 or BossCouldMoveDirection == 3 then	--Boss可以竖直移动
+					TargetBlockY = ActorPosY;
+					return TargetYMove(TargetBlockY);
+				end
+			elseif	ActorHOneBoxNoIronCaculate(ActorRow1,ActorColumn1) == 3 then --人物可任意移动
+				if BossCouldMoveDirection == 1 then	--Boss只能水平移动
+					TargetBlockX = ActorPosX;
+					return TargetXMove(TargetBlockX);
+				elseif	BossCouldMoveDirection == 2 or BossCouldMoveDirection == 3 then --Boss只能竖直移动
+					TargetBlockY = ActorPosY ;
+					return TargetYMove(TargetBlockY);
+				else --Boss朝水平方向竖直方向移动皆可
+					if Bossinf:getBossAbsolutePosX() == ActorPosX then
+						TargetBlockY = ActorPosY;
+						return TargetYMove(TargetBlockY);
+					elseif	Bossinf:getBossAbsolutePosY() == ActorPosY then
+						TargetBlockX = ActorPosX;
+						return TargetXMove(TargetBlockX);
+					else	
+						BossRandDirectionNum = 1;	--1朝水平方向移动 --2朝竖直方向移动
+						if BossRandDirectionNum == 1 then
+							TargetBlockX = ActorPosX;
+							return TargetXMove(TargetBlockX);
+						else	
+							TargetBlockY = ActorPosY;
+							return TargetYMove(TargetBlockY);
+						end			
+					end
+						
+				end
+		
+			end
+			
+		
+		end
+		
+	else  return 0;	 
+	end
 	
 end	--]]
+
+--[[function ActorHOneBoxNoIronCaculate(ActorRow,ActorColumn)
+	if ActorRow % 2 == 0 and ActorColumn % 2 ~= 0 then  --行为偶数，列为奇数，人物只能竖直移动		
+		return 1;
+	elseif	ActorRow % 2 ~= 0 and ActorColumn % 2 == 0 then  --行为奇数，列为偶数，人物只能水平移动	
+		return 2;
+	else return 3; --人物可任意移动
+	end
+end--]]
+
+
+--[[function GetBossDerterminationMove(BossCouldMoveDirection,TargetBlockX,TargetBlockY)
+	if BossCouldMoveDirection == 1 then --Boss只能水平移动
+		BossDerterminationMove = TargetXMove(TargetBlockX);
+	elseif	BossCouldMoveDirection == 2 then --Boss只能竖直移动
+		BossDerterminationMove = TargetYMove(TargetBlockY);
+	elseif	BossCouldMoveDirection == 3 then --Boss只能竖直向下移动	
+		BossDerterminationMove = 4;
+	else	--Boss可以朝目标距离减少的两个方向移动
+		if Bossinf:getBossAbsolutePosX() ~= TargetBlockX then
+			BossDerterminationMove = TargetXMove(TargetBlockX);
+		else
+			BossDerterminationMove = TargetYMove(TargetBlockY);
+		end
+	end
+	return BossDerterminationMove;		
+	
+end--]]
+
+
+--[[function TargetXMove(TargetBlockX)
+	if Bossinf:getBossAbsolutePosX() > TargetBlockX  then
+		return 3;  --Boss该往左移
+	else
+		return 1; -- Boss该往右移
+	end				
+end--]]
+
+--[[function TargetYMove(TargetBlockY)
+	if Bossinf:getBossAbsolutePosY() > TargetBlockY  then
+		return 4; --Boss该往下移
+	else	
+		return 2; --Boss该往上移
+	end			
+end--]]
+
+
+
+--[[function ActorHaveNoIronCaculate1(ActorColumn)	--角色列的分量
+	if ActorColumn % 2 == 0 then  --人物占水平方向前一列为偶数，即上下有铁墙，则无铁墙的为向右一格（后一列）
+			--mapTable[ActorRow1][ActorColumn2]
+		return ActorColumn+1
+	else	--人物占水平方向前一列为奇数，即上下无铁墙
+		return ActorColumn;
+	end
+end--]]
+
+--[[function ActorHaveNoIronCaculate2(ActorRow)	--角色行的分量
+	if ActorRow % 2 == 0 then  --人物占竖直方向上面一行为偶数，即左右有铁墙，则无铁墙的为下面一行
+			--mapTable[ActorRow1][ActorColumn2]
+		return ActorRow-1;
+	else	--人物占竖直方向上面一行为奇数，即左右无铁墙
+		return ActorRow;
+	end
+end--]]
+
+
+--[[function BossImpactChecking()
+	BossPosX = Bossinf:getBossAbsolutePosX();
+	BossPosY = Bossinf:getBossAbsolutePosY();
+	BossLastX = BossPosX % BlockSize;
+	BossLastY = BossPosY % BlockSize;
+	local BossCheckingLine;
+	local BossCheckingRow;
+	--0代表可以向水平或竖直方向移动 1代表只能水平移动 2代表只能竖直移动 3代表只能竖直向下移动 
+	if BossLastX ~= 0 then
+		return 1;
+	elseif BossLastY ~= 0 then
+		return 2;
+	else 								--Boss只占一个格子
+		BossCheckingLine = BossPosX/BlockSize;
+		BossCheckingRow = BossPosY/BlockSize;
+		if 	BossCheckingLine == 0 then	--Boss位于最左边	
+			return 2;
+		elseif 	BossCheckingRow == TotalRows then --Boss位于最上边
+			return 3;
+		elseif 	mapTable[BossCheckingRow][BossCheckingLine][3] == 1 then  --检查Boss左边是否有铁墙 
+			return 2;
+		elseif	 mapTable[BossCheckingRow+1][BossCheckingLine+1][3] == 1 then  --检查Boss上边是否有铁墙	
+			return 1;
+		else 
+			return 0;
+		end
+
+	end
+
+end	--]]
+	
 	
 	
 	
@@ -653,7 +879,7 @@ end
 
 
 function IintMapData()
-	initParams(24,40,1,math.random(0,0),0,550,200); --初始化地图参数
+	initParams(24,40,1,math.random(30,70),0,550,200); --初始化地图参数	
 	ISGameNotPause = true;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
@@ -663,13 +889,26 @@ end
 
 function LoadMapViewImageFile()
 	local ImageLoad = ImageClass:new();
-	ImageLoad:LoadImage(PlotV,"Image/Map/ground2.png","DrawGround()", "Image_0");
-	ImageLoad:LoadImage(PlotV,"Image/Map/material.png","DrawMap()", "Image_1");
-	ImageLoad:LoadImage(PlotV,"Image/Map/actor.png","DrawActor()", "Image_2");
-	ImageLoad:LoadImage(PlotV,"Image/Map/BackgroundColor4.png","DrawDialog()", "Image_3");
-	ImageLoad:LoadImage(PlotV,"Image/Map/ExitButtons.png","DrawButtons()", "Image_4");
-	ImageLoad:LoadImage(PlotV,"Image/Bomb/Bomb.png","DrawBomb()", "Image_5");
-	ImageLoad:LoadImage(PlotV,"Image/Bomb/Blaze.png","DrawBlaze()", "Image_6");
+	if NowLoadPos == 21 then
+		ImageLoad:LoadImage(PlotV,"Image/Map/ground2.png","DrawGround()", "Image_0");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 22 then
+		ImageLoad:LoadImage(PlotV,"Image/Map/material.png","DrawMap()", "Image_1");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 23 then
+		ImageLoad:LoadImage(PlotV,"Image/Map/actor.png","DrawActor()", "Image_2");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 24 then
+		ImageLoad:LoadImage(PlotV,"Image/Map/BackgroundColor4.png","DrawDialog()", "Image_3");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 25 then
+		ImageLoad:LoadImage(PlotV,"Image/Map/ExitButtons.png","DrawButtons()", "Image_4");
+	NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 26 then
+
+		ImageLoad:LoadImage(PlotV,"Image/Map/actor1.png","DrawBoss()", "Image_5");
+		NowLoadPos = NowLoadPos + 1;
+	end
 	
 end
 

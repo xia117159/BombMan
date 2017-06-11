@@ -28,19 +28,37 @@ require "Bomb"
 require "Recode"
 
 
+<<<<<<< HEAD
+--LoadBombImageFile();
+=======
 LoadThisBackGroundImage();
 
 
+--[[
+>>>>>>> 00b2d22c51d15c552c2f90c7b0c8bb4d9dec2612
+LoadStartViewImageFile();
+LoadMapViewImageFile();
+LoadShopImageFile();
+LoadBakcpackImageFile();
+--]]
 
 
 
 Read()
-
+--Preserve();
+<<<<<<< HEAD
+--goShopView();;
+goStartView(); -- 转到开始界面
 UserBomb = AllBombClass:new();
 BombBlaze = AllBlazeClass:new();
 
 Init()
 
 
+=======
+--goShopView();
+--goStartView(); -- 转到开始界面
+--GoBackpackVeiw();
+>>>>>>> 00b2d22c51d15c552c2f90c7b0c8bb4d9dec2612
 
 GoLoadView();
