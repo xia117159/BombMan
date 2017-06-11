@@ -1,5 +1,5 @@
---s行n列矩阵 maptype：地图类型 Randrate：箱子随机概率 角色初始位置X,Y 相对与角色的视野位置
-function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,RelativeWindowPos)
+--s行n列矩阵 maptype：地图类型 Randrate：箱子随机概率 角色初始位置X,Y Boss开启/关闭
+function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitch)
 	
 	local i ;
 	local j;
@@ -14,7 +14,7 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,RelativeWindowPos)
 	TotalHeightPixels = s*BlockSize;
 	
 	BoxRandRate = Randrate;
-	
+	BossSwitchSetting = BossSwitch;
 	--可丢掷炸弹数量
 	local BombNumAva = 1;
 	--炸弹火力
@@ -26,7 +26,7 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,RelativeWindowPos)
 
 	--mapTable[i][j][k]	i,j代表行数，列数，
 	--mapTable[i][j][1]代表位置X，mapTable[i][j][2]代表位置Y，
-	--mapTable[i][j][3]代表砖，mapTable[i][j][4]代表墙，0为无，1为存在 mapTable[i][j][5]代表墙的类型X轴标号 mapTable[i][j][6]代表墙的类型Y轴标号
+	--mapTable[i][j][3]代表砖，mapTable[i][j][4]代表墙，0为无，1为存在 mapTable[i][j][5]代表墙的类型X轴标号 mapTable[i][j][6]代表墙的类型Y轴标号 mapTable[i][j][7]代表炸弹
 
 	if maptype == 1 then   --1型地图
 		for i=1,s do 
@@ -39,6 +39,7 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,RelativeWindowPos)
 				mapTable[i][j] = {};
 				mapTable[i][j][1] = i;
 				mapTable[i][j][2] = j;
+				mapTable[i][j][7] = 0;
 				if j % 2 == 0 and temp then
 					mapTable[i][j][3] = 1;
 					mapTable[i][j][4] = 0;				
@@ -95,7 +96,8 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,RelativeWindowPos)
 	actorimg:setImage(0, 550, BlockSize, BlockSize, 0, ActorWidth, 0, ActorHeight, 9.0);
 	Bossinf = BossClass:new();
 	Bossinf:setBossAbsolutePos(500,1100);
-	Bossimg:setImage(500,450,BlockSize,BlockSize,0,32,0,32,9.1);
+	
+	Bossimg:setImage(500,450,BlockSize,BlockSize,0,32,0,32,8.9);
 	Bossimg:setAbsoluteStartPos(500,450);
 	
 	originX=0;
@@ -206,10 +208,10 @@ function ReleaseMoving()
 		
 	elseif releasestatus == 1 then  --右键释放
 		local RemainNum = (NowActorPosX+50) % BlockSize;
-		if  37 < RemainNum and RemainNum < 50 then
+		if  35 < RemainNum and RemainNum < 50 then
 			NeedISRevise = true;
 			ReviseNum = BlockSize-RemainNum;
-		elseif 0 < RemainNum and RemainNum < 13 then
+		elseif 0 < RemainNum and RemainNum < 15 then
 			NeedISRevise = true;
 			ReviseNum = -RemainNum;
 		else NeedISRevise = false;			
@@ -228,10 +230,10 @@ function ReleaseMoving()
 	elseif releasestatus == 2  then
 		local RemainNum = NowActorPosY % BlockSize;
 		--MessageBox(tostring(actorinf:getAbsolutePosX()),tostring(actorinf:getAbsolutePosY()) , MB_OK);
-		if  37 < RemainNum and RemainNum < 50 then
+		if  35 < RemainNum and RemainNum < 50 then
 			NeedISRevise = true;
 			ReviseNum = BlockSize-RemainNum;
-		elseif 0 < RemainNum and RemainNum < 13 then
+		elseif 0 < RemainNum and RemainNum < 15 then
 			NeedISRevise = true;
 			ReviseNum = -RemainNum;
 		else NeedISRevise = false;			
@@ -252,10 +254,10 @@ function ReleaseMoving()
 	
 	elseif releasestatus == 3 then
 		local RemainNum = NowActorPosX % BlockSize;
-		if  0 < RemainNum and RemainNum < 13 then
+		if  0 < RemainNum and RemainNum < 15 then
 			NeedISRevise = true;
 			ReviseNum = RemainNum;
-		elseif 37 < RemainNum and RemainNum < 50 then
+		elseif 35 < RemainNum and RemainNum < 50 then
 			NeedISRevise = true;
 			ReviseNum = RemainNum-BlockSize;
 		else NeedISRevise = false;			
@@ -273,10 +275,10 @@ function ReleaseMoving()
 	
 	elseif releasestatus == 4 then
 		local RemainNum = (NowActorPosY-50) % BlockSize;
-		if  0 < RemainNum and RemainNum < 13 then
+		if  0 < RemainNum and RemainNum < 15 then
 			NeedISRevise = true;
 			ReviseNum = RemainNum;
-		elseif 37 < RemainNum and RemainNum < 50 then
+		elseif 35 < RemainNum and RemainNum < 50 then
 			NeedISRevise = true;
 			ReviseNum = RemainNum-BlockSize;
 		else NeedISRevise = false;			
@@ -511,16 +513,16 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 		CheckingY1 = math.ceil(CheckingPosX/BlockSize);
 		CheckingYRemainder = CheckingPosY % BlockSize;
 		if  CheckingYRemainder == 0 then  --判断人物是否在一个方格内
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1 then
 				return false;
 			else return true;			
 			end	
 			return true;				
 		else 
 			CheckingX2 = CheckingX1-1;
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1 then
 				return false;
-			elseif mapTable[CheckingX2][CheckingY1][3] == 1 or 0 < mapTable[CheckingX2][CheckingY1][4] and mapTable[CheckingX2][CheckingY1][4] <= BoxRandRate then
+			elseif mapTable[CheckingX2][CheckingY1][3] == 1 or 0 < mapTable[CheckingX2][CheckingY1][4] and mapTable[CheckingX2][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX2][CheckingY1][7] == 1 then
 				return false;			
 			else return true;
 			end
@@ -531,16 +533,16 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 		CheckingXRemainder = CheckingPosX % BlockSize;
 		if CheckingXRemainder == 0 then
 			CheckingY1 = math.ceil(CheckingPosX/BlockSize)+1;
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1 then
 				return false;
 			else return true;			
 			end	
 		else
 			CheckingY1 = math.ceil(CheckingPosX/BlockSize);
 			CheckingY2 = CheckingY1+1;
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1 then
 				return false;
-			elseif mapTable[CheckingX1][CheckingY2][3] == 1 or 0 < mapTable[CheckingX1][CheckingY2][4] and mapTable[CheckingX1][CheckingY2][4] <= BoxRandRate then
+			elseif mapTable[CheckingX1][CheckingY2][3] == 1 or 0 < mapTable[CheckingX1][CheckingY2][4] and mapTable[CheckingX1][CheckingY2][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY2][7] == 1 then
 				return false;			
 			else return true;
 			end		
@@ -555,16 +557,16 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 		CheckingYRemainder = CheckingPosY % BlockSize;
 		if CheckingYRemainder == 0 then
 			CheckingX1 = math.ceil(CheckingPosY/BlockSize);	
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1 then
 				return false;
 			else return true;			
 			end	
 		else 
 			CheckingX1 = math.ceil(CheckingPosY/BlockSize);
 			CheckingX2 = CheckingX1-1;
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1 then
 				return false;
-			elseif mapTable[CheckingX2][CheckingY1][3] == 1 or 0 < mapTable[CheckingX2][CheckingY1][4] and mapTable[CheckingX2][CheckingY1][4] <= BoxRandRate then
+			elseif mapTable[CheckingX2][CheckingY1][3] == 1 or 0 < mapTable[CheckingX2][CheckingY1][4] and mapTable[CheckingX2][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX2][CheckingY1][7] == 1 then
 				return false;			
 			else return true;
 			end
@@ -580,16 +582,16 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 		CheckingXRemainder = CheckingPosX % BlockSize;
 		if CheckingXRemainder == 0 then
 			CheckingY1 = math.ceil(CheckingPosX/BlockSize)+1;
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1 then
 				return false;
 			else return true;			
 			end
 		else
 			CheckingY1 = math.ceil(CheckingPosX/BlockSize);
 			CheckingY2 = CheckingY1+1;
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1 then
 				return false;
-			elseif mapTable[CheckingX1][CheckingY2][3] == 1 or 0 < mapTable[CheckingX1][CheckingY2][4] and mapTable[CheckingX1][CheckingY2][4] <= BoxRandRate then
+			elseif mapTable[CheckingX1][CheckingY2][3] == 1 or 0 < mapTable[CheckingX1][CheckingY2][4] and mapTable[CheckingX1][CheckingY2][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY2][7] == 1 then
 				return false;			
 			else return true;
 			end		
@@ -615,43 +617,47 @@ end
 
 
 function DrawBoss()
-	if ISGameNotPause == true  then
-		Bossimg:setAbsoluteStartPos(Bossinf:getBossAbsolutePosX()+originX,Bossinf:getBossAbsolutePosY()+originY-BlockSize);
-		if BossMoveDirection() == 1 then
-			if WindowMoveChecking(1) then					
-				DrawActorGesture(0, 0, Actor1:TimerGo(), 1, Bossimg);	
-			else 	
-				DrawActorGesture(BossUnitXOffset, 0, Actor1:TimerGo(), 1, Bossimg);			
+	if BossSwitchSetting then
+		if ISGameNotPause  then
+			Bossimg:setAbsoluteStartPos(Bossinf:getBossAbsolutePosX()+originX,Bossinf:getBossAbsolutePosY()+originY-BlockSize);
+			if BossMoveDirection() == 1 then
+				if WindowMoveChecking(1) then					
+					DrawActorGesture(0, 0, Actor1:TimerGo(), 1, Bossimg);	
+				else 	
+					DrawActorGesture(BossUnitXOffset, 0, Actor1:TimerGo(), 1, Bossimg);			
+				end	
+			Bossinf:setBossRelativePos(BossUnitXOffset,0);		
+			elseif BossMoveDirection() == 2 then
+				if WindowMoveChecking(2) then					
+					DrawActorGesture(0, 0, Actor1:TimerGo(), 2, Bossimg);		
+				else 	
+					DrawActorGesture(0, BossUnitYOffset, Actor1:TimerGo(), 2, Bossimg);		
+				end	
+			Bossinf:setBossRelativePos(0,BossUnitYOffset);		
+			elseif BossMoveDirection() == 3 then
+				if WindowMoveChecking(3) then					
+					DrawActorGesture(0, 0, Actor1:TimerGo(), 3, Bossimg);			
+				else 	
+					DrawActorGesture(-BossUnitXOffset, 0, Actor1:TimerGo(), 3, Bossimg);		
+				end			
+			Bossinf:setBossRelativePos(-BossUnitXOffset,0);		
+			elseif BossMoveDirection() == 4 then
+				if WindowMoveChecking(4) then					
+					DrawActorGesture(0, 0, Actor1:TimerGo(), 4, Bossimg);			
+				else 	
+					DrawActorGesture(0, -BossUnitYOffset, Actor1:TimerGo(), 4, Bossimg);		
+				end		
+			Bossinf:setBossRelativePos(0,-BossUnitYOffset);	
+			else 
+				DrawActorGesture(0, 0, Actor1:TimerGo(), 6, actorimg);
+				DrawActorGesture(0, 0, Actor1:TimerGo(), 5, Bossimg);		
 			end	
-		Bossinf:setBossRelativePos(BossUnitXOffset,0);		
-		elseif BossMoveDirection() == 2 then
-			if WindowMoveChecking(2) then					
-				DrawActorGesture(0, 0, Actor1:TimerGo(), 2, Bossimg);		
-			else 	
-				DrawActorGesture(0, BossUnitYOffset, Actor1:TimerGo(), 2, Bossimg);		
-			end	
-		Bossinf:setBossRelativePos(0,BossUnitYOffset);		
-		elseif BossMoveDirection() == 3 then
-			if WindowMoveChecking(3) then					
-				DrawActorGesture(0, 0, Actor1:TimerGo(), 3, Bossimg);			
-			else 	
-				DrawActorGesture(-BossUnitXOffset, 0, Actor1:TimerGo(), 3, Bossimg);		
-			end			
-		Bossinf:setBossRelativePos(-BossUnitXOffset,0);		
-		elseif BossMoveDirection() == 4 then
-			if WindowMoveChecking(4) then					
-				DrawActorGesture(0, 0, Actor1:TimerGo(), 4, Bossimg);			
-			else 	
-				DrawActorGesture(0, -BossUnitYOffset, Actor1:TimerGo(), 4, Bossimg);		
-			end		
-		Bossinf:setBossRelativePos(0,-BossUnitYOffset);	
-		else 
-			DrawActorGesture(0, 0, Actor1:TimerGo(), 6, actorimg);
-			DrawActorGesture(0, 0, Actor1:TimerGo(), 5, Bossimg);		
-		end	
-	end
-	Bossimg:DrawImage();	
+		end
+		Bossimg:DrawImage();	
 	--DrawActorGesture(0, 0, Actor1:TimerGo(), 5, actorimg);
+			
+	end
+	
 end
 
 	
@@ -946,7 +952,7 @@ end
 
 
 function IintMapData()
-initParams(24,40,1,math.random(15,30),0,550,200); --初始化地图参数	
+initParams(24,40,1,math.random(15,30),0,550,false); --初始化地图参数	
 	ISGameNotPause = true;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
@@ -966,14 +972,14 @@ function LoadMapViewImageFile()
 		ImageLoad:LoadImage(PlotV,"Image/Map/actor.png","DrawActor()", "Image_2");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 24 then
-		ImageLoad:LoadImage(PlotV,"Image/Map/BackgroundColor4.png","DrawDialog()", "Image_3");
+		ImageLoad:LoadImage(PlotV,"Image/Map/actor1.png","DrawBoss()", "Image_3");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 25 then
-		ImageLoad:LoadImage(PlotV,"Image/Map/ExitButtons.png","DrawButtons()", "Image_4");
+		ImageLoad:LoadImage(PlotV,"Image/Map/BackgroundColor4.png","DrawDialog()", "Image_4");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 26 then
-		ImageLoad:LoadImage(PlotV,"Image/Map/actor1.png","DrawBoss()", "Image_5");
-		NowLoadPos = NowLoadPos + 1;
+		ImageLoad:LoadImage(PlotV,"Image/Map/ExitButtons.png","DrawButtons()", "Image_5");
+		NowLoadPos = NowLoadPos + 1;	
 	elseif NowLoadPos == 27 then
 		ImageLoad:LoadImage(PlotV,"Image/Bomb/Bomb.png","DrawBomb()", "Image_6");
 		NowLoadPos = NowLoadPos + 1;
@@ -1051,10 +1057,12 @@ function ActorKey()
 			if(UserBomb[i]["IsWrite"] == 0) then
 				UserBomb[i]:Init(BombX,BombY)
 				UserBomb[i]["IsWrite"] = 1
+				mapTable[BombY/BlockSize+1][BombX/BlockSize+1][7] = 1;
 				break
 			end
 			i = i + 1
 		end	
+		
 		--UserBomb[1]:Init(actorinf["AcStPosX"],actorinf["AcStPosY"]-50)
 		--UserBomb[1]["IsWrite"] = 1
 	end 
