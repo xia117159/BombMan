@@ -6,11 +6,12 @@ bpPriorityGold = 18
 bpPriorityNumber = 17
 bpPriorityFont   = 16
 bpPrioritySCB = 15
-bpPriorityLottery = 14
-bpPriorityBBP = 13
-bpPriorityLR   = 12
+bpPriorityLbtn   = 14
+bpPriorityLottery = 13
+bpPriorityBBP = 12
+bpPriorityLR   = 11
 ------------------------
-bpPriorityOne   = 11
+bpPriorityOne   = 10
 
 bpReturnButton = ImageClass:new();
 bpReturnButton:setImageFileSize(521, 172);
@@ -300,13 +301,13 @@ function bpDrawShortCutBar()
 end
 
 bpLottery = ImageClass:new();
-bpLottery :setImageFileSize(600, 592);
-bpLottery :setscaling_ratio(0.84);
-bpLottery :setImage(0, 100 ,600, 592,  0, 600,0, 592, bpPriorityLottery+0.9);
-
+bpLottery:setImageFileSize(1000, 1000);
+bpLottery:setImage(10, 100 ,480, 480,  0, 1000,0, 1000, bpPriorityLottery+0.9);
+bpLottery:SetCenterRotate();
 
 
 function DrawbpLottery()
+	bpLottery:SetRelativelyRA(4.0);
 	bpLottery:DrawImage();
 end
 
@@ -315,7 +316,7 @@ end
 bpLotteryButton = ImageClass:new();
 bpLotteryButton :setImageFileSize(556, 506);
 bpLotteryButton :setscaling_ratio(0.3);
-bpLotteryButton :setImage(220, 40 ,556, 143,  0, 556,0, 143, bpPriorityLottery+0.9);
+bpLotteryButton :setImage(220, 40 ,556, 143,  0, 556,0, 143, bpPriorityLbtn+0.9);
 
 
 function DrawbpLotteryButton()
@@ -643,10 +644,10 @@ function LoadBakcpackImageFile()
 		ImageLoad:LoadImage(BackpackV,"Image/ShortcutBar2.png","bpDrawShortCutBar()", "Image_5");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 17 then
-		ImageLoad:LoadImage(BackpackV,"Image/Shop/LotteryBackGround.png","DrawbpLottery()", "Image_6");
+		ImageLoad:LoadImage(BackpackV,"Image/Shop/LotteryButton.png","DrawbpLotteryButton()", "Image_6");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 18 then
-		ImageLoad:LoadImage(BackpackV,"Image/Shop/LotteryButton.png","DrawbpLotteryButton()", "Image_7");
+		ImageLoad:LoadImage(BackpackV,"Image/Shop/1.png","DrawbpLottery()", "Image_7");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 19 then
 		ImageLoad:LoadImage(BackpackV,"Image/Shop/ShopProps.png","DrawbpProps()", "Image_8");
