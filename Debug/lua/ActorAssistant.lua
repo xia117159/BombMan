@@ -1,6 +1,5 @@
 ActorClass = 
 {
-		--	actorBlock ={AcStPosX,AcStPosY,BombNumAva,FireLevel};
 	AcStPosX = 0;
 	AcStPosY = 1200;
 	actorWindowPosX = 0;

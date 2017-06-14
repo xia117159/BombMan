@@ -21,8 +21,7 @@ function Preserve()
 	io.write("Power = "..UserData["Power"].."\n")
 	
 	io.write("HaveBombNumber = "..UserData["HaveBombNumber"].."\n")
-	
-	io.write("ActorX = "..UserData["HaveBombNumber"].."\n")
+
 	io.close(file) --╧ь╠унд╪Ч
 end
 

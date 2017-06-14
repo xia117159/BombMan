@@ -326,9 +326,20 @@ function TestBlazeImpact(i)
 		end
 		
 		if(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize == 0) then
-			if(mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][3] == 1
-				or (mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][4] <= BoxRandRate 
-				and 0 < mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][4])) then
+			if(mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][3] == 1) then
+				BombBlaze[i]["LeftImpact"] = BombBlaze[i]["LeftImpact"] - 1
+				break
+			end
+			if(mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][4] <= BoxRandRate 
+				and 0 < mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][4]) then
+				mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][4] = 1000
+				for j = 1,24 do
+					if(DynamiteWall[j]["IsWrite"] == 0) then
+						DynamiteWall[j]["IsWrite"] = 1
+						DynamiteWall[j]:Init(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize,BombBlaze[i]["Blaze"]["StartY"])
+						break
+					end
+				end
 				BombBlaze[i]["LeftImpact"] = BombBlaze[i]["LeftImpact"] - 1
 				break
 			end
@@ -408,9 +419,20 @@ function TestBlazeImpact(i)
 		end
 		
 		if(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize == 0) then
-			if(mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][3] == 1
-				or (mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][4] <= BoxRandRate
-				and 0 < mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][4])) then
+			if(mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][3] == 1) then
+				BombBlaze[i]["DownImpact"] = BombBlaze[i]["DownImpact"] - 1
+				break
+			end
+			if(mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][4] <= BoxRandRate
+				and 0 < mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][4]) then			
+				mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][4] = 1000
+				for j = 1,24 do
+					if(DynamiteWall[j]["IsWrite"] == 0) then
+						DynamiteWall[j]["IsWrite"] = 1
+						DynamiteWall[j]:Init(BombBlaze[i]["Blaze"]["StartX"],BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)
+						break
+					end
+				end
 				BombBlaze[i]["DownImpact"] = BombBlaze[i]["DownImpact"] - 1
 				break
 			end
