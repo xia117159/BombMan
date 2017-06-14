@@ -1,5 +1,3 @@
-
-
 LoadViewBGI = ImageClass:new();
 LoadViewBGI:setImageFileSize(1000, 600);
 LoadViewBGI:setImage(0, 0, 1000, 600, 0, 1000, 0, 600, 19.9);
@@ -23,7 +21,6 @@ ProgressBar:setImage(ProgressBarPosX+8, ProgressBarPosY+7, 0, 19, 0, 484, 41, 60
 
 
 function DrawLVProgressBar()
-	
 	ProgressBar:DrawImage();
 	ProgressBarBGI:DrawImage();
 end

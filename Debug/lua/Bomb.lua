@@ -24,11 +24,15 @@ end
 BlazeClass = {
 	IsWrite = 0,
 	IsEnd = 0,
-	depth = 0,
+	Depth = 0,
 	Blaze = {},
-	leftBlazeAnimation = {},
-	rightBlazeAnimation = {},
-	centreBlazeAnimation = {},
+	UpImpact = 1,
+	LeftImpact = 1,
+	RightImpact = 1,
+	DownImpact = 1,
+	LeftBlazeAnimation = {},
+	RightBlazeAnimation = {},
+	CentreBlazeAnimation = {},
 	UpBlazeAnimation = {},
 	DownBlazeAnimation = {}
 }
@@ -40,17 +44,22 @@ function BlazeClass:new()
 end
 
 function BlazeClass:Init(NowX,NowY)
+	self.UpImpact = 1
+	self.LeftImpact = 1
+	self.RightImpact = 1
+	self.DownImpact = 1
+	
 	self.Blaze = AnimationRecord:new();
-	self.Blaze:SetValue(NowX, NowY, 25, 4);
+	self.Blaze:SetValue(NowX, NowY, 20, 4);
 	
-	self.leftBlazeAnimation = ImageClass:new();
-	self.leftBlazeAnimation :setImageFileSize(352, 512);
+	self.LeftBlazeAnimation = ImageClass:new();
+	self.LeftBlazeAnimation :setImageFileSize(352, 512);
 	
-	self.rightBlazeAnimation = ImageClass:new();
-	self.rightBlazeAnimation :setImageFileSize(352, 512);
+	self.RightBlazeAnimation = ImageClass:new();
+	self.RightBlazeAnimation :setImageFileSize(352, 512);
 	
-	self.centreBlazeAnimation = ImageClass:new();
-	self.centreBlazeAnimation :setImageFileSize(352, 512);
+	self.CentreBlazeAnimation = ImageClass:new();
+	self.CentreBlazeAnimation :setImageFileSize(352, 512);
 	
 	self.UpBlazeAnimation = ImageClass:new();
 	self.UpBlazeAnimation :setImageFileSize(352, 512);
@@ -59,15 +68,29 @@ function BlazeClass:Init(NowX,NowY)
 	self.DownBlazeAnimation :setImageFileSize(352, 512);
 end
 
-AllBombClass=
-{
-	BombClass1 = {},
-	BombClass2 = {},
-	BombClass3 = {},
-	BombClass4 = {},
-	BombClass5 = {},
-	BombClass6 = {}
+--Ç½
+WallClass = {
+	IsWrite = 0,
+	IsEnd = 0,
+	Wall = {},
+	WallAnimation = {}
 }
+
+function WallClass:new()
+	o = {}
+	setmetatable(o, {__index = self});
+	return o;
+end
+
+function WallClass:Init(NowX,NowY)
+	self.Wall = AnimationRecord:new();
+	self.Wall:SetValue(NowX, NowY, 20, 3);
+	
+	self.WallAnimation = ImageClass:new();
+	self.WallAnimation :setImageFileSize(150, 50);
+end
+
+AllBombClass={n = 6}
 
 function AllBombClass:new()
 	o = {}
@@ -75,17 +98,17 @@ function AllBombClass:new()
 	return o;
 end
 
-AllBlazeClass=
-{
-	BlazeClass1 = {},
-	BlazeClass2 = {},
-	BlazeClass3 = {},
-	BlazeClass4 = {},
-	BlazeClass5 = {},
-	BlazeClass6 = {}
-}
+AllBlazeClass={n = 6}
 
 function AllBlazeClass:new()
+	o = {}
+	setmetatable(o, {__index = self});
+	return o;
+end
+
+AllWallClass={n = 24}
+
+function AllWallClass:new()
 	o = {}
 	setmetatable(o, {__index = self});
 	return o;
@@ -101,17 +124,21 @@ function Init()
 	UserBomb[6] = BombClass:new()
 	
 	BombBlaze[1] = BlazeClass:new()
-	BombBlaze[1]["depth"] = 1.5
+	BombBlaze[1]["Depth"] = 1.5
 	BombBlaze[2] = BlazeClass:new()
-	BombBlaze[2]["depth"] = 1.4
+	BombBlaze[2]["Depth"] = 1.4
 	BombBlaze[3] = BlazeClass:new()
-	BombBlaze[3]["depth"] = 1.3
+	BombBlaze[3]["Depth"] = 1.3
 	BombBlaze[4] = BlazeClass:new()
-	BombBlaze[4]["depth"] = 1.2
+	BombBlaze[4]["Depth"] = 1.2
 	BombBlaze[5] = BlazeClass:new()
-	BombBlaze[5]["depth"] = 1.1
+	BombBlaze[5]["Depth"] = 1.1
 	BombBlaze[6] = BlazeClass:new()
-	BombBlaze[6]["depth"] = 1.0
+	BombBlaze[6]["Depth"] = 1.0
+	
+	for i = 1, 24 do
+		DynamiteWall[i] = WallClass:new()
+	end
 end
 
 --ÅÐ¶ÏÌõ¼þµ÷ÓÃ»­Õ¨µ¯º¯Êý
@@ -136,6 +163,15 @@ function DrawBlaze()
 	end
 end
 
+--ÅÐ¶ÏÌõ¼þµ÷ÓÃ»­Ç½±»Õ¨»Ù¶¯»­º¯Êý
+function DrawDynamite()
+	for i = 1,24 do
+		if(DynamiteWall[i]["IsWrite"] == 1) then
+			DrawDynamiteFunc(i)
+		end
+	end
+end
+
 --»­Õ¨µ¯
 function DrawBombFunc(i)
 	local startX = UserBomb[i]["Bomb"]["StartX"] + originX
@@ -146,7 +182,9 @@ function DrawBombFunc(i)
 		while(b <= UserData["HaveBombNumber"]) do
 			if BombBlaze[b]["IsWrite"] == 0 then
 				BombBlaze[b]:Init(UserBomb[i]["Bomb"]["StartX"],UserBomb[i]["Bomb"]["StartY"])
+				TestBlazeImpact(b)
 				BombBlaze[b]["IsWrite"] = 1
+				mapTable[UserBomb[i]["Bomb"]["StartY"]/BlockSize + 1][UserBomb[i]["Bomb"]["StartX"]/BlockSize + 1][7] = 0
 				break
 			end
 			b = b + 1
@@ -178,40 +216,233 @@ function DrawBlazeFunc(i)
 	local startY = BombBlaze[i]["Blaze"]["StartY"] + originY
 	local fr = BombBlaze[i]["Blaze"]:TimerGo()
 	local power = UserData["Power"]
+	local UpLength = BombBlaze[i]["UpImpact"]
+	local LeftLength  = BombBlaze[i]["LeftImpact"]
+	local RightLength  = BombBlaze[i]["RightImpact"]
+	local DownLength  = BombBlaze[i]["DownImpact"]
 	if BombBlaze[i]["IsEnd"] == 1 and fr == 1 then
 		BombBlaze[i]["IsWrite"] = 0
 		BombBlaze[i]["IsEnd"] = 0
 		return
 	end
 	if fr == 1 then
-		BombBlaze[i]["leftBlazeAnimation"]:setImage(  startX - 50*power , startY            , 50*power , 50       , 0            , 32*power , 0            , 32             ,  BombBlaze[i]["depth"]);
-		BombBlaze[i]["rightBlazeAnimation"]:setImage( startX +50        , startY            , 50*power , 50       , 352-32*power , 352      , 0            , 32             ,  BombBlaze[i]["depth"]);
-		BombBlaze[i]["centreBlazeAnimation"]:setImage(startX            , startY            , 50       , 50       , 0            , 32       , 480          , 512            ,  BombBlaze[i]["depth"]);
-		BombBlaze[i]["UpBlazeAnimation"]:setImage(    startX            , startY + 50       , 50       , 50*power , 0            , 32       , 128          , 128 + 32*power ,  BombBlaze[i]["depth"]);
-		BombBlaze[i]["DownBlazeAnimation"]:setImage(  startX            , startY - 50*power , 50       , 50*power , 0            , 32       , 480-32*power , 480            ,  BombBlaze[i]["depth"]);
+		BombBlaze[i]["LeftBlazeAnimation"]:setImage(  startX - 50*LeftLength , startY            , 50*LeftLength , 50       , 0 + 32*(power - LeftLength)          , 32*power , 0            , 32             ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["RightBlazeAnimation"]:setImage( startX +50        , startY            , 50*RightLength , 50       , 352-32*power , 352-32*(power - RightLength)      , 0            , 32             ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["CentreBlazeAnimation"]:setImage(startX            , startY            , 50       , 50       , 0            , 32       , 480          , 512            ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["UpBlazeAnimation"]:setImage(    startX            , startY + 50       , 50       , 50*UpLength , 0            , 32       , 128 + 32*(power - UpLength)          , 128 + 32*power ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["DownBlazeAnimation"]:setImage(  startX            , startY - 50*DownLength , 50       , 50*DownLength , 0            , 32       , 480-32*power , 480-32*(power - DownLength)            ,  BombBlaze[i]["Depth"]);
 	elseif fr == 2 then
-		BombBlaze[i]["leftBlazeAnimation"]:setImage(  startX - 50*power , startY            , 50*power , 50       , 0            , 32*power , 32           , 64             ,  BombBlaze[i]["depth"]);
-		BombBlaze[i]["rightBlazeAnimation"]:setImage( startX + 50       , startY            , 50*power , 50       , 352-32*power , 352      , 32           , 64             ,  BombBlaze[i]["depth"]);
-		BombBlaze[i]["centreBlazeAnimation"]:setImage(startX            , startY            , 50       , 50       , 32           , 64       , 480          , 512            ,  BombBlaze[i]["depth"]);
-		BombBlaze[i]["UpBlazeAnimation"]:setImage(    startX            , startY + 50       , 50       , 50*power , 32           , 64       , 128          , 128 + 32*power ,  BombBlaze[i]["depth"]);
-		BombBlaze[i]["DownBlazeAnimation"]:setImage(  startX            , startY - 50*power , 50       , 50*power , 32           , 64       , 480-32*power , 480            ,  BombBlaze[i]["depth"]);
+		BombBlaze[i]["LeftBlazeAnimation"]:setImage(  startX - 50*LeftLength , startY            , 50*LeftLength , 50       , 0 + 32*(power - LeftLength)            , 32*power , 32           , 64             ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["RightBlazeAnimation"]:setImage( startX + 50       , startY            , 50*RightLength , 50       , 352-32*power , 352-32*(power - RightLength)      , 32           , 64             ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["CentreBlazeAnimation"]:setImage(startX            , startY            , 50       , 50       , 32           , 64       , 480          , 512            ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["UpBlazeAnimation"]:setImage(    startX            , startY + 50       , 50       , 50*UpLength , 32           , 64       , 128 + 32*(power - UpLength)          , 128 + 32*power ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["DownBlazeAnimation"]:setImage(  startX            , startY - 50*DownLength , 50       , 50*DownLength , 32           , 64       , 480-32*power , 480-32*(power - DownLength)            ,  BombBlaze[i]["Depth"]);
 	elseif fr == 3 then
-		BombBlaze[i]["leftBlazeAnimation"]:setImage(  startX - 50*power , startY            , 50*power , 50       , 0            , 32*power , 64           , 96             ,  BombBlaze[i]["depth"]);
-		BombBlaze[i]["rightBlazeAnimation"]:setImage( startX + 50       , startY            , 50*power , 50       , 352-32*power , 352      , 64           , 96             ,  BombBlaze[i]["depth"]);
-		BombBlaze[i]["centreBlazeAnimation"]:setImage(startX            , startY            , 50       , 50       , 64           , 96       , 480          , 512            ,  BombBlaze[i]["depth"]);
-		BombBlaze[i]["UpBlazeAnimation"]:setImage(    startX            , startY + 50       , 50       , 50*power , 64           , 96       , 128          , 128 + 32*power ,  BombBlaze[i]["depth"]);
-		BombBlaze[i]["DownBlazeAnimation"]:setImage(  startX            , startY - 50*power , 50       , 50*power , 64           , 96       , 480-32*power , 480            ,  BombBlaze[i]["depth"]);
+		BombBlaze[i]["LeftBlazeAnimation"]:setImage(  startX - 50*LeftLength , startY            , 50*LeftLength , 50       , 0 + 32*(power - LeftLength)            , 32*power , 64           , 96             ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["RightBlazeAnimation"]:setImage( startX + 50       , startY            , 50*RightLength , 50       , 352-32*power , 352-32*(power - RightLength)      , 64           , 96             ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["CentreBlazeAnimation"]:setImage(startX            , startY            , 50       , 50       , 64           , 96       , 480          , 512            ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["UpBlazeAnimation"]:setImage(    startX            , startY + 50       , 50       , 50*UpLength , 64           , 96       , 128 + 32*(power - UpLength)          , 128 + 32*power ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["DownBlazeAnimation"]:setImage(  startX            , startY - 50*DownLength , 50       , 50*DownLength , 64           , 96       , 480-32*power , 480-32*(power - DownLength)            ,  BombBlaze[i]["Depth"]);
 	elseif fr == 4 then
-		BombBlaze[i]["leftBlazeAnimation"]:setImage(  startX - 50*power , startY            , 50*power , 50       , 0            , 32*power , 96           , 128            ,  BombBlaze[i]["depth"]);
-		BombBlaze[i]["rightBlazeAnimation"]:setImage( startX + 50       , startY            , 50*power , 50       , 352-32*power , 352      , 96           , 128            ,  BombBlaze[i]["depth"]);
-		BombBlaze[i]["centreBlazeAnimation"]:setImage(startX            , startY            , 50       , 50       , 96           , 128      , 480          , 512            ,  BombBlaze[i]["depth"]);
-		BombBlaze[i]["UpBlazeAnimation"]:setImage(    startX            , startY + 50       , 50       , 50*power , 96           , 128      , 128          , 128 + 32*power ,  BombBlaze[i]["depth"]);
-		BombBlaze[i]["DownBlazeAnimation"]:setImage(  startX            , startY - 50*power , 50       , 50*power , 96           , 128      , 480-32*power , 480            ,  BombBlaze[i]["depth"]);
+		BombBlaze[i]["LeftBlazeAnimation"]:setImage(  startX - 50*LeftLength , startY            , 50*LeftLength , 50       , 0 + 32*(power - LeftLength)            , 32*power , 96           , 128            ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["RightBlazeAnimation"]:setImage( startX + 50       , startY            , 50*RightLength , 50       , 352-32*power , 352-32*(power - RightLength)      , 96           , 128            ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["CentreBlazeAnimation"]:setImage(startX            , startY            , 50       , 50       , 96           , 128      , 480          , 512            ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["UpBlazeAnimation"]:setImage(    startX            , startY + 50       , 50       , 50*UpLength , 96           , 128      , 128 + 32*(power - UpLength)          , 128 + 32*power ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["DownBlazeAnimation"]:setImage(  startX            , startY - 50*DownLength , 50       , 50*DownLength , 96           , 128      , 480-32*power , 480-32*(power - DownLength)            ,  BombBlaze[i]["Depth"]);
 		BombBlaze[i]["IsEnd"] = 1
 	end
-	BombBlaze[i]["leftBlazeAnimation"]:DrawImage();
-	BombBlaze[i]["rightBlazeAnimation"]:DrawImage();
-	BombBlaze[i]["centreBlazeAnimation"]:DrawImage();
+	BombBlaze[i]["LeftBlazeAnimation"]:DrawImage();
+	BombBlaze[i]["RightBlazeAnimation"]:DrawImage();
+	BombBlaze[i]["CentreBlazeAnimation"]:DrawImage();
 	BombBlaze[i]["UpBlazeAnimation"]:DrawImage();
 	BombBlaze[i]["DownBlazeAnimation"]:DrawImage();
+end
+
+--»­Ç½Ìå±»Õ¨»Ù¶¯»­
+function DrawDynamiteFunc(i)
+	local startX = DynamiteWall[i]["Wall"]["StartX"] + originX
+	local startY = DynamiteWall[i]["Wall"]["StartY"] + originY
+	local fr = DynamiteWall[i]["Wall"]:TimerGo()
+	if DynamiteWall[i]["IsEnd"] == 1 and fr == 1 then
+		DynamiteWall[i]["IsWrite"] = 0
+		DynamiteWall[i]["IsEnd"] = 0
+		mapTable[DynamiteWall[i]["Wall"]["StartY"]/BlockSize + 1][DynamiteWall[i]["Wall"]["StartX"]/BlockSize + 1][4] = 0
+		return
+	end
+	if fr == 1 then
+		DynamiteWall[i]["WallAnimation"]:setImage(startX, startY, 50 , 50 , 0   , 50 , 0 , 50 ,  2);
+	elseif fr == 2 then
+		DynamiteWall[i]["WallAnimation"]:setImage(startX, startY, 50 , 50 , 50  , 100, 0 , 50 ,  2);
+	elseif fr == 3 then
+		DynamiteWall[i]["WallAnimation"]:setImage(startX, startY, 50 , 50 , 100 , 150, 0 , 50 ,  2);
+		DynamiteWall[i]["IsEnd"] = 1
+	end
+	DynamiteWall[i]["WallAnimation"]:DrawImage();
+end
+
+--¼ì²â»ðÑæÅö×²
+function TestBlazeImpact(i)
+	--ÉÏ·½»ðÑæÅö×²¼ì²â
+	while(BombBlaze[i]["UpImpact"] <= UserData["Power"]) do
+		if(BombBlaze[i]["Blaze"]["StartY"] + BombBlaze[i]["UpImpact"] * BlockSize == TotalHeightPixels) then
+			BombBlaze[i]["UpImpact"] = BombBlaze[i]["UpImpact"] - 1
+			break
+		end
+		
+		if(mapTable[(BombBlaze[i]["Blaze"]["StartY"] + BombBlaze[i]["UpImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][3] == 1 ) then
+			BombBlaze[i]["UpImpact"] = BombBlaze[i]["UpImpact"] - 1
+			break
+		end
+		
+		if (mapTable[(BombBlaze[i]["Blaze"]["StartY"] + BombBlaze[i]["UpImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][4] <= BoxRandRate 
+			and 0 < mapTable[(BombBlaze[i]["Blaze"]["StartY"] + BombBlaze[i]["UpImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][4]) then
+			mapTable[(BombBlaze[i]["Blaze"]["StartY"] + BombBlaze[i]["UpImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][4] = 1000
+			for j = 1,24 do
+				if(DynamiteWall[j]["IsWrite"] == 0) then
+					DynamiteWall[j]["IsWrite"] = 1
+					DynamiteWall[j]:Init(BombBlaze[i]["Blaze"]["StartX"],BombBlaze[i]["Blaze"]["StartY"] + BombBlaze[i]["UpImpact"] * BlockSize)
+					break
+				end
+			end
+			BombBlaze[i]["UpImpact"] = BombBlaze[i]["UpImpact"] - 1
+			break
+		end
+		
+		if(mapTable[(BombBlaze[i]["Blaze"]["StartY"] + BombBlaze[i]["UpImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][7] == 1) then
+			BombBlaze[i]["UpImpact"] = BombBlaze[i]["UpImpact"] - 1
+			break
+		end
+		BombBlaze[i]["UpImpact"] = BombBlaze[i]["UpImpact"] + 1
+	end
+	if (BombBlaze[i]["UpImpact"] > UserData["Power"]) then
+		BombBlaze[i]["UpImpact"] = UserData["Power"]
+	end
+	
+	--×ó·½»ðÑæÅö×²¼ì²â
+	while(BombBlaze[i]["LeftImpact"] <= UserData["Power"]) do
+		if(BombBlaze[i]["Blaze"]["StartX"] == 0) then
+			BombBlaze[i]["LeftImpact"] = 0
+			break
+		end
+		
+		if(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize == 0) then
+			if(mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][3] == 1
+				or (mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][4] <= BoxRandRate 
+				and 0 < mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][4])) then
+				BombBlaze[i]["LeftImpact"] = BombBlaze[i]["LeftImpact"] - 1
+				break
+			end
+			break
+		end
+		
+		if(mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][3] == 1) then
+			BombBlaze[i]["LeftImpact"] = BombBlaze[i]["LeftImpact"] - 1
+			break
+		end
+		
+		if(mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][4] <= BoxRandRate 
+			and 0 < mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][4]) then
+			mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][4] = 1000
+			for j = 1,24 do
+				if(DynamiteWall[j]["IsWrite"] == 0) then
+					DynamiteWall[j]["IsWrite"] = 1
+					DynamiteWall[j]:Init(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize,BombBlaze[i]["Blaze"]["StartY"])
+					break
+				end
+			end
+			BombBlaze[i]["LeftImpact"] = BombBlaze[i]["LeftImpact"] - 1
+			break
+		end
+		
+		if(mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][7] == 1) then
+			BombBlaze[i]["LeftImpact"] = BombBlaze[i]["LeftImpact"] - 1
+			break
+		end
+		BombBlaze[i]["LeftImpact"] = BombBlaze[i]["LeftImpact"] + 1
+	end
+	if (BombBlaze[i]["LeftImpact"] > UserData["Power"]) then
+		BombBlaze[i]["LeftImpact"] = UserData["Power"]
+	end
+	
+	--ÓÒ·½»ðÑæÅö×²¼ì²â
+	while(BombBlaze[i]["RightImpact"] <= UserData["Power"]) do
+		if(BombBlaze[i]["Blaze"]["StartX"] + BombBlaze[i]["RightImpact"] * BlockSize == TotalWidthPixels) then
+			BombBlaze[i]["RightImpact"] = BombBlaze[i]["RightImpact"] - 1
+			break
+		end
+		
+		if(mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] + BombBlaze[i]["RightImpact"] * BlockSize)/BlockSize + 1][3] == 1) then
+			BombBlaze[i]["RightImpact"] = BombBlaze[i]["RightImpact"] - 1
+			break
+		end
+		
+		if(mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] + BombBlaze[i]["RightImpact"] * BlockSize)/BlockSize + 1][4] <= BoxRandRate
+			and 0 < mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] + BombBlaze[i]["RightImpact"] * BlockSize)/BlockSize + 1][4]) then
+			mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] + BombBlaze[i]["RightImpact"] * BlockSize)/BlockSize + 1][4] = 1000
+			for j = 1,24 do
+				if(DynamiteWall[j]["IsWrite"] == 0) then
+					DynamiteWall[j]["IsWrite"] = 1
+					DynamiteWall[j]:Init(BombBlaze[i]["Blaze"]["StartX"] + BombBlaze[i]["RightImpact"] * BlockSize,BombBlaze[i]["Blaze"]["StartY"])
+					break
+				end
+			end
+			BombBlaze[i]["RightImpact"] = BombBlaze[i]["RightImpact"] - 1
+			break
+		end
+		
+		if(mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] + BombBlaze[i]["RightImpact"] * BlockSize)/BlockSize + 1][7] == 1) then
+			BombBlaze[i]["RightImpact"] = BombBlaze[i]["RightImpact"] - 1
+			break
+		end
+		BombBlaze[i]["RightImpact"] = BombBlaze[i]["RightImpact"] + 1
+	end
+	if (BombBlaze[i]["RightImpact"] > UserData["Power"]) then
+		BombBlaze[i]["RightImpact"] = UserData["Power"]
+	end
+	
+	--ÏÂ·½»ðÑæÅö×²¼ì²â
+	while(BombBlaze[i]["DownImpact"] <= UserData["Power"]) do
+		if(BombBlaze[i]["Blaze"]["StartY"]== 0) then
+			BombBlaze[i]["DownImpact"] = 0
+			break
+		end
+		
+		if(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize == 0) then
+			if(mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][3] == 1
+				or (mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][4] <= BoxRandRate
+				and 0 < mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][4])) then
+				BombBlaze[i]["DownImpact"] = BombBlaze[i]["DownImpact"] - 1
+				break
+			end
+			break
+		end
+		
+		if(mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][3] == 1) then
+			BombBlaze[i]["DownImpact"] = BombBlaze[i]["DownImpact"] - 1
+			break
+		end
+		
+		if(mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][4] <= BoxRandRate
+			and 0 < mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][4]) then			
+			mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][4] = 1000
+			for j = 1,24 do
+				if(DynamiteWall[j]["IsWrite"] == 0) then
+					DynamiteWall[j]["IsWrite"] = 1
+					DynamiteWall[j]:Init(BombBlaze[i]["Blaze"]["StartX"],BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)
+					break
+				end
+			end
+			BombBlaze[i]["DownImpact"] = BombBlaze[i]["DownImpact"] - 1
+			break
+		end	
+		
+		if(mapTable[(BombBlaze[i]["Blaze"]["StartY"] -  BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][7] == 1) then
+			BombBlaze[i]["DownImpact"] = BombBlaze[i]["DownImpact"] - 1
+			break
+		end
+		BombBlaze[i]["DownImpact"] = BombBlaze[i]["DownImpact"] + 1
+	end
+	if (BombBlaze[i]["DownImpact"] > UserData["Power"]) then
+		BombBlaze[i]["DownImpact"] = UserData["Power"]
+	end
 end

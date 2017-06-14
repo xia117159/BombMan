@@ -26,7 +26,7 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,RelativeWindowPos)
 
 	--mapTable[i][j][k]	i,j代表行数，列数，
 	--mapTable[i][j][1]代表位置X，mapTable[i][j][2]代表位置Y，
-	--mapTable[i][j][3]代表砖，mapTable[i][j][4]代表墙，0为无，1为存在 mapTable[i][j][5]代表墙的类型X轴标号 mapTable[i][j][6]代表墙的类型Y轴标号
+	--mapTable[i][j][3]代表砖，mapTable[i][j][4]代表墙，0为无，1为存在 mapTable[i][j][5]代表墙的类型X轴标号 mapTable[i][j][6]代表墙的类型Y轴标号 mapTable[i][j][7]代表炸弹
 
 	if maptype == 1 then   --1型地图
 		for i=1,s do 
@@ -979,6 +979,9 @@ function LoadMapViewImageFile()
 	elseif NowLoadPos == 28 then
 		ImageLoad:LoadImage(PlotV,"Image/Bomb/Blaze.png","DrawBlaze()", "Image_7");
 		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 29 then
+		ImageLoad:LoadImage(PlotV,"Image/Bomb/Dynamite.png","DrawDynamite()", "Image_8");
+		NowLoadPos = NowLoadPos + 1;
 	end
 	
 end
@@ -1034,14 +1037,13 @@ function ActorKey()
 		local BombY = 0
 		local i = 1
 		while(BombX <= TotalWidthPixels) do
-			--MessageBox("1","1",MB_OK)
-			if(BombX <= actorinf["AcStPosX"] and actorinf["AcStPosX"] < BombX + 50) then
+			if(BombX <= actorinf["AcStPosX"] + 25 and actorinf["AcStPosX"] + 25 < BombX + 50) then
 				break
 			end
 			BombX = BombX + 50
 		end
 		while(BombY <= TotalHeightPixels) do
-			if(BombY <= actorinf["AcStPosY"] - 50 and actorinf["AcStPosY"] - 50 < BombY + 50) then
+			if(BombY <= actorinf["AcStPosY"] - 25 and actorinf["AcStPosY"] - 25 < BombY + 50) then
 				break
 			end
 			BombY = BombY + 50
@@ -1050,12 +1052,11 @@ function ActorKey()
 			if(UserBomb[i]["IsWrite"] == 0) then
 				UserBomb[i]:Init(BombX,BombY)
 				UserBomb[i]["IsWrite"] = 1
+				mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
 				break
 			end
 			i = i + 1
-		end	
-		--UserBomb[1]:Init(actorinf["AcStPosX"],actorinf["AcStPosY"]-50)
-		--UserBomb[1]["IsWrite"] = 1
+		end
 	end 
 	
 	if ISGameNotPause == false then
