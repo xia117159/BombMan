@@ -20,6 +20,7 @@ static int PlayToPauseMusic(lua_State *L);
 static int PauseToPlayMusic(lua_State *L);
 static int SetMusicVol(lua_State *L);
 static int SetNowWindowView(lua_State *L);
+static int LuaSetRotationData(lua_State *L);
 //全局对象声明
 extern GameStateInterface demo;
 
@@ -35,6 +36,7 @@ void LuaInterfaceInit()
 {
 	LuaConnect.SetLuaFile("lua/MainLua.lua");
 	LuaConnect.CFuncRegister("SetViewIamgePath", SetViewIamgePath);
+	LuaConnect.CFuncRegister("LuaSetRotationData", LuaSetRotationData);
 	LuaConnect.CFuncRegister("LuaDrawImage", LuaDrawImage);
 	LuaConnect.CFuncRegister("KeyDetect", KeyControl);
 	LuaConnect.CFuncRegister("MessageBox", LuaMessageBox);
@@ -52,7 +54,17 @@ void LuaInterfaceInit()
 	LuaConnect.LuaDoFile();
 }
 
-
+//提供给Lua调用的函数的接口
+//定义第一方法：返回值必须为int,参数必须为lua_State *L，（L）可变
+static int LuaSetRotationData(lua_State *L)
+{
+	 //返回栈中元素的个数  
+    int n = lua_gettop(L);
+	if(n < 3) return 0;
+	
+	demo.SetRotationData((float)lua_tonumber(L, 1),(float)lua_tonumber(L, 2),(float)lua_tonumber(L, 3));
+	return 0;
+}
 
 
 //提供给Lua调用的函数的接口

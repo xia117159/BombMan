@@ -14,6 +14,12 @@ struct VertexPos
 };
 
 
+float GetAngle(float Angle)
+{
+	return Angle*1.57f/90.0f;
+}
+
+
 GameStateInterface::GameStateInterface() : effect_(0),inputLayout_(0),ImageMap_(0),colorMapSampler_(0),
 										   vertexBuffer_(0),alphaBlendState_(0),/*,BackGroundImage_(0),*/mvpCB_(0)
 {
@@ -164,6 +170,8 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 	return true;
 }
 
+bool temp = true;
+
 bool GameStateInterface::DrawImage(float StartX,float StartY, float Width, float Height,float tuStartX, float tuEndX, float tuStartY, float tuEndY, float Priority)
 {
 	HRESULT result;
@@ -176,6 +184,8 @@ bool GameStateInterface::DrawImage(float StartX,float StartY, float Width, float
         return false;
     }
 
+
+	
 	XMFLOAT2 sprite1Pos( StartX, StartY);
     image[0].SetPosition( sprite1Pos );
 
@@ -196,7 +206,9 @@ bool GameStateInterface::DrawImage(float StartX,float StartY, float Width, float
 	spritePtr[4].tex0 = XMFLOAT2( tuStartX, tuStartY );
 	spritePtr[5].tex0 = XMFLOAT2( tuEndX,   tuStartY );
 
-	XMMATRIX world = image[0].GetWorldMatrix( );
+	
+
+	XMMATRIX world = image[0].GetWorldMatrix();
     XMMATRIX mvp = XMMatrixMultiply( world, vpMatrix_ );
     mvp = XMMatrixTranspose( mvp );
 
@@ -262,6 +274,7 @@ void GameStateInterface::Render()
 			colorMap = effect_->GetVariableByName( ImageData_[NowView][p].effectMap )->AsShaderResource( );
 			colorMap->SetResource( ImageData_[NowView][p].ImageMap_);
 			LuaConnect.LuaFuncUse(ImageData_[NowView][p].DrawImageFunc);
+			SetRotationData(0.0f,0.0f,0.0f);
 		}
     }
     swapChain_->Present( 0, 0 );
@@ -297,6 +310,25 @@ void GameStateInterface::SetBackGroundPath(LPCWSTR Path)
 {
 	BackGroundImage = Path;
 }
+
+void GameStateInterface::SetRotationData(float Angle, float x,float y)
+{
+	image[0].SetRotation(GetAngle(-Angle));
+	image[0].SetRotationPos(XMFLOAT2(x,y));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

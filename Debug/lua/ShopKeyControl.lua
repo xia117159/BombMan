@@ -8,6 +8,11 @@ ShoptViewPropsse:SetMusicData("music/ButtonSE3.wav");
 
 ShopViewBuy = seMusicClass:new();
 ShopViewBuy:SetMusicData("music/ButtonSE4.wav");
+
+
+
+tempStatus = true;
+
 function ShopViewKC()
 	--[[if KeyDetect(Right) == KeepPressing then
 		ksButton:setRelativelyStartPos(CharacterRate, 0.0);
@@ -143,13 +148,26 @@ function ShopViewKC()
 		Result = GetMouseStatus();
 		if Result == MouseHover then --Êó±ê×ó¼üÐüÍ£
 			
+			if tempStatus then
+				backpack :SetRelativelyRA(1.0);
+				if backpack["Angle"] >= 30.0 then
+					tempStatus = false;
+				end
+			else
+				backpack :SetRelativelyRA(-1.0);
+				if backpack["Angle"] <= -30.0 then
+					tempStatus = true;
+				end
+			end
 			if backpack["Hover"] == 0 then
 				backpack["Hover"] = 1;
 				backpack :setscaling_ratio(0.50);
 				backpack:setImage(900, 50 ,178, 184, 178, 356, 0, 184, ShopPriorityBackPack+0.9);
+				backpack :SetCenterRotate();
 				ShoptViewPropsse:Play();
 			end
 		elseif Result == MouseLeftDown then --Êó±ê×ó¼ü°´ÏÂ
+			backpack["RotateStatus"] = false;
 			backpack["Event"] = 1;
 			backpack :setscaling_ratio(0.5);
 			backpack:setImage(900, 50 ,178, 184, 356, 535, 0, 184, ShopPriorityBackPack+0.9);
@@ -200,7 +218,14 @@ function NotReSetShopButton(value)
 	if value ~= 6 then
 		backpack["Hover"] = 0;
 		backpack :setscaling_ratio(0.5);
-		backpack:setImage(900, 50 ,178, 184, 0, 178, 0, 184, ShopPriorityBackPack+0.9);
+		backpack :setImage(900, 50 ,178, 184, 0, 178, 0, 184, ShopPriorityBackPack+0.9);
+		if backpack["Angle"] == 0.0 then
+			backpack:CloseRotate();
+		elseif backpack["Angle"] < 0.0 then
+			backpack :SetRelativelyRA(1.0);
+		elseif backpack["Angle"] > 0.0 then
+			backpack :SetRelativelyRA(-1.0);
+		end
 	end
 end
 

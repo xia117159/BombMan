@@ -1106,12 +1106,22 @@ function ActorKey()
 			if(UserBomb[i]["IsWrite"] == 0) then
 				UserBomb[i]:Init(BombX,BombY)
 				UserBomb[i]["IsWrite"] = 1
+<<<<<<< HEAD
 				mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
 				break
 			end
 			i = i + 1
 		end
+=======
+				mapTable[BombY/BlockSize+1][BombX/BlockSize+1][7] = 1;
+				break
+			end
+			i = i + 1
+		end	
 		
+		--UserBomb[1]:Init(actorinf["AcStPosX"],actorinf["AcStPosY"]-50)
+		--UserBomb[1]["IsWrite"] = 1
+>>>>>>> 8ca347563bbde226c5264b85ef5e94a8ab538eaf
 	end 
 	
 	if ISGameNotPause == false then

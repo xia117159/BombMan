@@ -5,8 +5,6 @@ ActorClass =
 	AcStPosY = 1200;
 	actorWindowPosX = 0;
 	actorWindowPosY = 600;
-	BombNumAva = 1;
-	FireLevel = 1;
 	
 }
 
@@ -59,10 +57,8 @@ function ActorClass:setRelativePos(rx,ry)
 	self.AcStPosY = self.AcStPosY+ry;
 end
 
-function ActorClass:new(BombNumAva,FireLevel)
+function ActorClass:new()
 	lk = {};
-	self.BombNumAva = BombNumAva;
-	self.FireLevel = FireLevel;
 	setmetatable(lk, {__index = self});
 	return lk;
 end

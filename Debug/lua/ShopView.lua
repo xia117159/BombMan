@@ -309,6 +309,7 @@ backpack :setImageFileSize(535, 184);
 backpack :setscaling_ratio(0.5);
 backpack :setImage(900, 50 ,178, 184, 0, 178, 0, 184, ShopPriorityBackPack+0.9);
 
+
 function Drawbackpack()
 	backpack:DrawImage();
 end
