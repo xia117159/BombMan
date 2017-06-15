@@ -6,8 +6,8 @@
 CPlayMusic::CPlayMusic(void)  
 {  
     m_DeviceID  = 0;  
-    m_ElementID = 0;  
-    InitDevice();  
+    m_ElementID = 0; 
+	MusicVol = 100;
 }  
   
 CPlayMusic::~CPlayMusic(void)  

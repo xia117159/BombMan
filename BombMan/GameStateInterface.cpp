@@ -217,7 +217,7 @@ bool GameStateInterface::DrawImage(float StartX,float StartY, float Width, float
 
 	d3dContext_->Unmap( vertexBuffer_, 0 );
 	d3dContext_->Draw( 6, 0 );
-
+	SetRotationData(0.0f,0.0f,0.0f);
 	return  true;
 }
 
@@ -274,7 +274,7 @@ void GameStateInterface::Render()
 			colorMap = effect_->GetVariableByName( ImageData_[NowView][p].effectMap )->AsShaderResource( );
 			colorMap->SetResource( ImageData_[NowView][p].ImageMap_);
 			LuaConnect.LuaFuncUse(ImageData_[NowView][p].DrawImageFunc);
-			SetRotationData(0.0f,0.0f,0.0f);
+			
 		}
     }
     swapChain_->Present( 0, 0 );
