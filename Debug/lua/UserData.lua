@@ -9,9 +9,13 @@ UserData =
 	ShortCutBarAP = 0, --所放置快捷栏
 	Power = 9, --炸弹威力
 	HaveBombNumber = 3, --拥有炸弹个数
-	SpeedX = 2,
-	SpeedY = 2
-
+	SpeedX = 2, --X轴速度
+	SpeedY = 2, --Y轴速度
+	CanPassBomb = 0, --能否通过炸弹
+	CanPassWall = 0, --能否通过墙
+	TimeBomb = 1,    --有没有定时炸弹
+	HaveProtect = 0, --有没有保护
+	CanMoveBomb = 0  --能否移动炸弹
 }
 
 

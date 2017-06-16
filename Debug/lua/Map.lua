@@ -15,10 +15,6 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitch)
 	
 	BoxRandRate = Randrate;
 	BossSwitchSetting = BossSwitch;
-	--可丢掷炸弹数量
-	local BombNumAva = 1;
-	--炸弹火力
-	local FireLevel = 1;
 	--block = {posX,posY,brick=nil,wall=nil}; --0为无，1为存在
 	--brick = 砖；wall = 墙 
 	mapTable = {};
@@ -40,6 +36,7 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitch)
 				mapTable[i][j][1] = i;
 				mapTable[i][j][2] = j;
 				mapTable[i][j][7] = 0;
+				mapTable[i][j][8] = 0;
 				if j % 2 == 0 and temp then
 					mapTable[i][j][3] = 1;
 					mapTable[i][j][4] = 0;				
@@ -89,9 +86,6 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitch)
 	mapTable[s-1][2][4] = 0;
 	mapTable[s-2][1][4] = 0;	
 	
-	--保存角色状态
-	--actorBlock ={AcStPosX,AcStPosY,BombNumAva,FireLevel};
-	
 	actorinf = ActorClass:new();
 	actorimg:setImage(0, 550, BlockSize, BlockSize, 0, ActorWidth, 0, ActorHeight, 9.0);
 	Bossinf = BossClass:new();
@@ -127,7 +121,7 @@ end
 	movestatus = 0;
 	releasestatus = 0;
 	BrickWall = ImageClass:new();
-	BrickWall:setImageFileSize(384, 256);
+	BrickWall:setImageFileSize(384, 348);
 	BrickWall:setImage(0, 0, BlockSize, BlockSize, 0, 32, 0, 32, 10.0);
 	
 	ground = ImageClass:new();
@@ -196,7 +190,17 @@ function DrawMap()
 				BrickWall:setImagePos(32*mapTable[i][j][5], 32*(mapTable[i][j][5]+1), 32*mapTable[i][j][6], 32*(mapTable[i][j][6]+1));	
 				BrickWall:setAbsoluteStartPos(x,y);							
 				BrickWall:DrawImage();								
-			end		
+			end
+			if 0 < mapTable[i][j][8] and mapTable[i][j][8] <= 4 then				
+				BrickWall:setImagePos(46*(mapTable[i][j][8] - 1),46*mapTable[i][j][8],256,302);	
+				BrickWall:setAbsoluteStartPos(x,y);							
+				BrickWall:DrawImage();								
+			end
+			if 4 < mapTable[i][j][8] and mapTable[i][j][8] <= 8 then					
+				BrickWall:setImagePos(46*(mapTable[i][j][8] - 5),46*(mapTable[i][j][8] - 4),302,348);	
+				BrickWall:setAbsoluteStartPos(x,y);							
+				BrickWall:DrawImage();								
+			end
 			x=x+BlockSize;			
 		end	
 		x=originX;
@@ -1050,6 +1054,7 @@ function ActorKey()
 	local KeyResult_Down = KeyDetect(Down);
 	local KeyResult_Esc = KeyDetect(0x01);
 	local KeyResult_J = KeyDetect(0x24);
+	local KeyResult_K = KeyDetect(0x25);
 	if KeyResult_Esc == Release then
 		if ISGameNotPause == true then
 			ISGameNotPause = false;
@@ -1102,6 +1107,62 @@ function ActorKey()
 			end
 			BombY = BombY + 50
 		end
+		if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] ~= 1) then
+			while(i <= UserData["HaveBombNumber"]) do
+				if(UserBomb[i]["IsWrite"] == 0) then
+					UserBomb[i]:Init(BombX,BombY)
+					UserBomb[i]["IsWrite"] = 1
+					if UserData["TimeBomb"] == 1 then
+						for j = 1,6 do
+							if(BombOrder[j] == 0) then
+								BombOrder[j] = i
+								break
+							end
+						end
+					end
+					mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
+					break
+				end
+				i = i + 1
+			end
+		end
+	end
+	
+	if KeyResult_K == Press then
+		if(UserData["TimeBomb"] == 1) then
+			for i = 6,1,-1 do
+				if(BombOrder[i] ~=0) then
+					UserBomb[BombOrder[i]]["IsWrite"] = 0
+					UserBomb[BombOrder[i]]["IsBlast"] = 0
+					mapTable[UserBomb[BombOrder[i]]["Bomb"]["StartY"]/BlockSize + 1][UserBomb[BombOrder[i]]["Bomb"]["StartX"]/BlockSize + 1][7] = 0
+					for k = 1,6 do 
+						if BombBlaze[k]["IsWrite"] == 0 then
+							BombBlaze[k]:Init(UserBomb[BombOrder[i]]["Bomb"]["StartX"],UserBomb[BombOrder[i]]["Bomb"]["StartY"])
+							BombBlaze[k]["IsWrite"] = 1
+							TestBlazeImpact(k)
+							break
+						end
+					end
+					BombOrder[i] = 0
+					break
+				end
+			end
+		end
+		--[[local BombX = 0
+		local BombY = 0
+		local i = 1
+		while(BombX <= TotalWidthPixels) do
+			if(BombX <= actorinf["AcStPosX"] + 25 and actorinf["AcStPosX"] + 25 < BombX + 50) then
+				break
+			end
+			BombX = BombX + 50
+		end
+		while(BombY <= TotalHeightPixels) do
+			if(BombY <= actorinf["AcStPosY"] - 25 and actorinf["AcStPosY"] - 25 < BombY + 50) then
+				break
+			end
+			BombY = BombY + 50
+		end
 		while(i <= UserData["HaveBombNumber"]) do
 			if(UserBomb[i]["IsWrite"] == 0) then
 				UserBomb[i]:Init(BombX,BombY)
@@ -1111,8 +1172,8 @@ function ActorKey()
 			end
 			i = i + 1
 		end
-		
-	end 
+		--]]
+	end
 	
 	if ISGameNotPause == false then
 		ExitResult = 0;
