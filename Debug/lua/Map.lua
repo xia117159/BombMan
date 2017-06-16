@@ -121,7 +121,7 @@ end
 	movestatus = 0;
 	releasestatus = 0;
 	BrickWall = ImageClass:new();
-	BrickWall:setImageFileSize(384, 348);
+	BrickWall:setImageFileSize(384, 302);
 	BrickWall:setImage(0, 0, BlockSize, BlockSize, 0, 32, 0, 32, 10.0);
 	
 	ground = ImageClass:new();
@@ -191,13 +191,8 @@ function DrawMap()
 				BrickWall:setAbsoluteStartPos(x,y);							
 				BrickWall:DrawImage();								
 			end
-			if 0 < mapTable[i][j][8] and mapTable[i][j][8] <= 4 then				
+			if 0 < mapTable[i][j][8] and mapTable[i][j][8] <= 7 then				
 				BrickWall:setImagePos(46*(mapTable[i][j][8] - 1),46*mapTable[i][j][8],256,302);	
-				BrickWall:setAbsoluteStartPos(x,y);							
-				BrickWall:DrawImage();								
-			end
-			if 4 < mapTable[i][j][8] and mapTable[i][j][8] <= 8 then					
-				BrickWall:setImagePos(46*(mapTable[i][j][8] - 5),46*(mapTable[i][j][8] - 4),302,348);	
 				BrickWall:setAbsoluteStartPos(x,y);							
 				BrickWall:DrawImage();								
 			end
@@ -547,7 +542,6 @@ function BorderChecking(CheckingPosOne,Direction)
 	end		
 end
 	
-	
 function ImpactChecking(CheckingPosX,CheckingPosY,Direction)	
 	
 	local CheckingX1;
@@ -563,8 +557,12 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 		CheckingY1 = math.ceil(CheckingPosX/BlockSize);
 		CheckingYRemainder = CheckingPosY % BlockSize;
 		if  CheckingYRemainder == 0 then  --判断人物是否在一个方格内
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1 then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1  then
 				return false;
+			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] then
+				GetBuff(mapTable[CheckingX1][CheckingY1][8]);
+				mapTable[CheckingX1][CheckingY1][8] = 0;
+				return true;
 			else return true;			
 			end	
 			return true;				
@@ -585,6 +583,10 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 			CheckingY1 = math.ceil(CheckingPosX/BlockSize)+1;
 			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1 then
 				return false;
+			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] then
+				GetBuff(mapTable[CheckingX1][CheckingY1][8]);
+				mapTable[CheckingX1][CheckingY1][8] = 0;
+				return true;
 			else return true;			
 			end	
 		else
@@ -609,6 +611,10 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 			CheckingX1 = math.ceil(CheckingPosY/BlockSize);	
 			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1 then
 				return false;
+			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] then
+				GetBuff(mapTable[CheckingX1][CheckingY1][8]);
+				mapTable[CheckingX1][CheckingY1][8] = 0;
+				return true;
 			else return true;			
 			end	
 		else 
@@ -634,6 +640,10 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 			CheckingY1 = math.ceil(CheckingPosX/BlockSize)+1;
 			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1 then
 				return false;
+			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] then
+				GetBuff(mapTable[CheckingX1][CheckingY1][8]);
+				mapTable[CheckingX1][CheckingY1][8] = 0;
+				return true;
 			else return true;			
 			end
 		else
@@ -1186,10 +1196,23 @@ function ActorKey()
 			ExitNotReSetButton(0);
 		end
 	end
-	
-	
-	
-	
-	
 end	
 
+function GetBuff(i)
+	if i == 1 and UserData["Power"] < 9 then
+		UserData["Power"] = UserData["Power"] + 1
+	elseif i == 2 and UserData["HaveBombNumber"] <6 then
+		UserData["HaveBombNumber"] = UserData["HaveBombNumber"] + 1
+	elseif i == 3 and UserData["SpeedX"] <4 and UserData["SpeedY"] < 4 then
+		UserData["SpeedX"] = UserData["SpeedX"] + 1
+		UserData["SpeedY"] = UserData["SpeedY"] + 1
+	elseif i == 4 then
+		UserData["TimeBomb"] = 1
+	elseif i == 5 then
+		UserData["CanPassBomb"] = 1
+	elseif i == 6 then
+		UserData["CanPassWall"] = 1
+	elseif i == 7 then
+		UserData["HaveProject"] = 1
+	end
+end	

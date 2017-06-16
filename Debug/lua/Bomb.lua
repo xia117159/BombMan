@@ -277,8 +277,8 @@ function DrawDynamiteFunc(i)
 		DynamiteWall[i]["IsWrite"] = 0
 		DynamiteWall[i]["IsEnd"] = 0
 		mapTable[DynamiteWall[i]["Wall"]["StartY"]/BlockSize + 1][DynamiteWall[i]["Wall"]["StartX"]/BlockSize + 1][4] = 0
-		buffId = math.random(1,8);		
-		if(buffId > 0 and buffId <= 8) then
+		buffId = math.random(1,7);		
+		if(buffId > 0 and buffId <= 7) then
 			mapTable[DynamiteWall[i]["Wall"]["StartY"]/BlockSize + 1][DynamiteWall[i]["Wall"]["StartX"]/BlockSize + 1][8] = buffId
 		end		
 		return
@@ -327,7 +327,7 @@ function TestBlazeImpact(i)
 			break
 		end
 		
-		if (mapTable[(BombBlaze[i]["Blaze"]["StartY"] + BombBlaze[i]["UpImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][8] <= 8 
+		if (mapTable[(BombBlaze[i]["Blaze"]["StartY"] + BombBlaze[i]["UpImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][8] <= 7 
 			and 0 < mapTable[(BombBlaze[i]["Blaze"]["StartY"] + BombBlaze[i]["UpImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][8]) then
 			mapTable[(BombBlaze[i]["Blaze"]["StartY"] + BombBlaze[i]["UpImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][8] = 0
 			BombBlaze[i]["UpImpact"] = BombBlaze[i]["UpImpact"] - 1
@@ -391,7 +391,7 @@ function TestBlazeImpact(i)
 				BombBlaze[i]["LeftImpact"] = BombBlaze[i]["LeftImpact"] - 1
 				break
 			end
-			if(mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][8] <= 8 
+			if(mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][8] <= 7 
 				and 0 < mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][8]) then
 				mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][8] = 0
 				BombBlaze[i]["LeftImpact"] = BombBlaze[i]["LeftImpact"] - 1
@@ -450,7 +450,7 @@ function TestBlazeImpact(i)
 			break
 		end
 		--MessageBox(mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][8],"1",MB_OK)
-		if(mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][8] <= 8 
+		if(mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][8] <= 7 
 			and 0 < mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][8]) then
 			mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][8] = 0
 			BombBlaze[i]["LeftImpact"] = BombBlaze[i]["LeftImpact"] - 1
@@ -521,7 +521,7 @@ function TestBlazeImpact(i)
 			break
 		end
 		
-		if(mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] + BombBlaze[i]["RightImpact"] * BlockSize)/BlockSize + 1][8] <= 8
+		if(mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] + BombBlaze[i]["RightImpact"] * BlockSize)/BlockSize + 1][8] <= 7
 			and 0 < mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] + BombBlaze[i]["RightImpact"] * BlockSize)/BlockSize + 1][8]) then
 			mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] + BombBlaze[i]["RightImpact"] * BlockSize)/BlockSize + 1][8] = 0
 			BombBlaze[i]["RightImpact"] = BombBlaze[i]["RightImpact"] - 1
@@ -586,7 +586,7 @@ function TestBlazeImpact(i)
 				BombBlaze[i]["DownImpact"] = BombBlaze[i]["DownImpact"] - 1
 				break
 			end
-			if(mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][8] <= 8
+			if(mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][8] <= 7
 				and 0 < mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][8]) then
 				mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][8] = 0
 				BombBlaze[i]["DownImpact"] = BombBlaze[i]["DownImpact"] - 1
@@ -631,7 +631,7 @@ function TestBlazeImpact(i)
 			break
 		end		
 		
-		if(mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][8] <= 8
+		if(mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][8] <= 7
 			and 0 < mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][8]) then
 			mapTable[(BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][8] = 0
 			BombBlaze[i]["DownImpact"] = BombBlaze[i]["DownImpact"] - 1
