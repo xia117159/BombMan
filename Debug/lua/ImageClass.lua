@@ -99,6 +99,9 @@ end
 
 
 function ImageClass:SetRelativelyRA(angle)
+	if self.Angle >= 360 then
+		self.Angle = self.Angle % 360;
+	end
 	self.Angle = self.Angle + angle;
 end
 

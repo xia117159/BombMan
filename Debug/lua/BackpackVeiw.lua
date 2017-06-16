@@ -6,8 +6,8 @@ bpPriorityGold = 18
 bpPriorityNumber = 17
 bpPriorityFont   = 16
 bpPrioritySCB = 15
-bpPriorityLbtn   = 14
-bpPriorityLottery = 13
+bpPriorityLottery = 14
+bpPriorityLbtn   = 13
 bpPriorityBBP = 12
 bpPriorityLR   = 11
 ------------------------
@@ -172,7 +172,7 @@ function DrawbpNumber()
 	DrawNumberFunc(ShortcutPosX+40, ShortcutPosY - 30, 0.3, ShortcutKey1, 2);
 	DrawNumberFunc(ShortcutPosX+140, ShortcutPosY - 30, 0.3, ShortcutKey2, 2);
 	
-	DrawTwoNumber(120,50,GetBitNum(LotteryGoldSpend,1), GetBitNum(LotteryGoldSpend,2), 1);
+	DrawTwoNumber(70,10,GetBitNum(LotteryGoldSpend,1), GetBitNum(LotteryGoldSpend,2), 1);
 end
 
 
@@ -197,7 +197,7 @@ bpFontGE :setImage(800, 420 ,93, FontImageH, 400, 493,0, FontImageH, ShopPriorit
 SpendFont = ImageClass:new();
 SpendFont :setImageFileSize(FontImageW, FontImageH);
 SpendFont :setscaling_ratio(0.3);
-SpendFont :setImage(60, 50 ,190, FontImageH, 493, 683,0, FontImageH, ShopPriorityFont+0.9);
+SpendFont :setImage(10, 10 ,190, FontImageH, 493, 683,0, FontImageH, ShopPriorityFont+0.9);
 
 
 
@@ -233,7 +233,7 @@ bpGoldA1 = AnimationRecord:new();
 bpGoldA1:SetValue(550, 130, 20, 8);
 
 bpGoldA2 = AnimationRecord:new();
-bpGoldA2:SetValue(170, 40, 20, 8);
+bpGoldA2:SetValue(120, 0, 20, 8);
 
 function DrawbpGold()
 	DrawGoldFunc(bpGoldA1["StartX"], bpGoldA1["StartY"], bpGoldA1:TimerGo() );
@@ -300,27 +300,99 @@ function bpDrawShortCutBar()
 	bpShortCutBar2:DrawImage();
 end
 
-bpLottery = ImageClass:new();
-bpLottery:setImageFileSize(1000, 1000);
-bpLottery:setImage(10, 100 ,480, 480,  0, 1000,0, 1000, bpPriorityLottery+0.9);
-bpLottery:SetCenterRotate();
+-------------------------------------------------------³é½±×ªÅÌºÍ±³¾°
 
+bpTurntableY = 30
+
+
+bpLotteryFont = ImageClass:new();
+bpLotteryFont:setImageFileSize(1320, 1090);
+bpLotteryFont:setImage(20, 410 ,460, 190,  0, 460,440, 630, bpPriorityLottery+0.4);
+bpLotteryFont:SetCenterRotate();
+
+
+bpLotteryBGIDelay = 50
+bpLotteryBGI = ImageClass:new();
+bpLotteryBGI:setImageFileSize(1320, 1090);
+bpLotteryBGI:setImage(10, bpTurntableY ,460, 460,  0, 460,630, 1090, bpPriorityLottery+0.3);
+bpLotteryBGI:SetCenterRotate();
+
+
+bpLotteryTB = ImageClass:new();
+bpLotteryTB:setImageFileSize(1320, 1090);
+bpLotteryTB:setImage(40, bpTurntableY+30 ,400, 400,  0, 440,0, 440, bpPriorityLottery+0.2);
+bpLotteryTB:SetCenterRotate();
+
+BPLRotateRate = 1.0
+BPLRotateRateMAX = 5.0
+BPLRotateRateStatus = 0
+
+
+function InitbpLotteryTB()
+	if UserData["AssistantLock"] == 1 then
+		bpLotteryTB:setImage(40, bpTurntableY+30 ,400, 400,  0, 440,0, 440, bpPriorityLottery+0.2);
+	else
+		if UserData["AssistantProps"] == GirlsAssistant then
+			bpLotteryTB:setImage(40, bpTurntableY+30 ,400, 400,  440, 880,0, 440, bpPriorityLottery+0.2);
+		elseif UserData["AssistantProps"] == BoysAssistant then
+			bpLotteryTB:setImage(40, bpTurntableY+30 ,400, 400,  880, 1320,0, 440, bpPriorityLottery+0.2);
+		end
+	end
+end
+InitbpLotteryTB();
 
 function DrawbpLottery()
-	bpLottery:SetRelativelyRA(4.0);
-	bpLottery:DrawImage();
+	
+	bpLotteryFont:DrawImage();
+	bpLotteryBGIDelay = bpLotteryBGIDelay - 1;
+	if bpLotteryBGIDelay <= 0 then
+		bpLotteryBGI:SetRelativelyRA(22.5);
+		bpLotteryBGIDelay = 50;
+	end
+	bpLotteryBGI:DrawImage();
+	
+	if BPLRotateRateStatus == 1 then
+		local RandRate = math.random(1,10);
+		BPLRotateRate = BPLRotateRate + RandRate/100;
+		if BPLRotateRate >= BPLRotateRateMAX then
+			BPLRotateRateStatus = 2;
+		end
+	elseif BPLRotateRateStatus == 2 then
+		if BPLRotateRate <= 1.0 then
+			if UserData["AssistantLock"] == 1 then
+				NAPStopPos();
+			else
+				if UserData["AssistantProps"] == GirlsAssistant then
+					GAPStopPos();
+				elseif UserData["AssistantProps"] == BoysAssistant then
+					BAPStopPos();
+				end
+			end
+		else
+			local RandRate = math.random(1,10);
+			BPLRotateRate = BPLRotateRate - RandRate/200;
+		end
+	end
+	
+
+	bpLotteryTB:SetRelativelyRA(BPLRotateRate);
+	bpLotteryTB:DrawImage();
 end
 
 
 ----------------------------------------------------------»­³é½±°´Å¥
-bpLotteryButton = ImageClass:new();
-bpLotteryButton :setImageFileSize(556, 506);
-bpLotteryButton :setscaling_ratio(0.3);
-bpLotteryButton :setImage(220, 40 ,556, 143,  0, 556,0, 143, bpPriorityLbtn+0.9);
 
+bpLotteryButton = ImageClass:new();
+bpLotteryButton :setImageFileSize(700, 200);
+bpLotteryButton :setImage(190, bpTurntableY+180 ,100, 100,  0, 200,0, 200, bpPriorityLbtn+0.9);
+bpLotteryPointer = ImageClass:new();
+bpLotteryPointer :setImageFileSize(700, 200);
+bpLotteryPointer :setImage(220, bpTurntableY+380 ,40, 100,  620, 699,0, 200, bpPriorityLbtn+0.8);
 
 function DrawbpLotteryButton()
+	
 	bpLotteryButton:DrawImage();
+	bpLotteryPointer:DrawImage();
 end
 
 
@@ -644,10 +716,10 @@ function LoadBakcpackImageFile()
 		ImageLoad:LoadImage(BackpackV,"Image/ShortcutBar2.png","bpDrawShortCutBar()", "Image_5");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 17 then
-		ImageLoad:LoadImage(BackpackV,"Image/Shop/LotteryButton.png","DrawbpLotteryButton()", "Image_6");
+		ImageLoad:LoadImage(BackpackV,"Image/Shop/Turntable1.png","DrawbpLottery()", "Image_6");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 18 then
-		ImageLoad:LoadImage(BackpackV,"Image/Shop/1.png","DrawbpLottery()", "Image_7");
+		ImageLoad:LoadImage(BackpackV,"Image/Shop/LotteryButton.png","DrawbpLotteryButton()", "Image_7");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 19 then
 		ImageLoad:LoadImage(BackpackV,"Image/Shop/ShopProps.png","DrawbpProps()", "Image_8");
