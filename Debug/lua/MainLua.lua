@@ -24,6 +24,7 @@ require "LoadView"
 
 require "MainKeyFunc"
 require "Bomb"
+require "Enemy"
 
 require "Recode"
 
@@ -36,11 +37,9 @@ LoadThisBackGroundImage();
 
 --Read()
 
-UserBomb = AllBombClass:new();
-BombBlaze = AllBlazeClass:new();
-DynamiteWall = AllWallClass:new();
-Init()
 
+BombInit()
+EnemyInit()
 
 
 GoLoadView();

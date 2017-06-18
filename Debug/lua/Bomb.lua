@@ -1,3 +1,11 @@
+UserBomb={n = 6}
+
+BombBlaze={n = 6}
+
+DynamiteWall={n = 24}
+
+BombOrder = {n = 6}
+
 --’®µØ
 BombClass = {
 	IsWrite = 0,
@@ -90,34 +98,8 @@ function WallClass:Init(NowX,NowY)
 	self.WallAnimation :setImageFileSize(150, 50);
 end
 
-AllBombClass={n = 6}
-
-function AllBombClass:new()
-	o = {}
-	setmetatable(o, {__index = self});
-	return o;
-end
-
-AllBlazeClass={n = 6}
-
-function AllBlazeClass:new()
-	o = {}
-	setmetatable(o, {__index = self});
-	return o;
-end
-
-AllWallClass={n = 24}
-
-function AllWallClass:new()
-	o = {}
-	setmetatable(o, {__index = self});
-	return o;
-end
-
-BombOrder = {n = 6}
-
 --≥ı ºªØ
-function Init()
+function BombInit()
 	UserBomb[1] = BombClass:new()
 	UserBomb[2] = BombClass:new()
 	UserBomb[3] = BombClass:new()
@@ -235,29 +217,29 @@ function DrawBlazeFunc(i)
 		return
 	end
 	if fr == 1 then
-		BombBlaze[i]["LeftBlazeAnimation"]:setImage(  startX - 50*LeftLength , startY            , 50*LeftLength , 50       , 0 + 32*(power - LeftLength)          , 32*power , 0            , 32             ,  BombBlaze[i]["Depth"]);
-		BombBlaze[i]["RightBlazeAnimation"]:setImage( startX +50        , startY            , 50*RightLength , 50       , 352-32*power , 352-32*(power - RightLength)      , 0            , 32             ,  BombBlaze[i]["Depth"]);
-		BombBlaze[i]["CentreBlazeAnimation"]:setImage(startX            , startY            , 50       , 50       , 0            , 32       , 480          , 512            ,  BombBlaze[i]["Depth"]);
-		BombBlaze[i]["UpBlazeAnimation"]:setImage(    startX            , startY + 50       , 50       , 50*UpLength , 0            , 32       , 128 + 32*(power - UpLength)          , 128 + 32*power ,  BombBlaze[i]["Depth"]);
-		BombBlaze[i]["DownBlazeAnimation"]:setImage(  startX            , startY - 50*DownLength , 50       , 50*DownLength , 0            , 32       , 480-32*power , 480-32*(power - DownLength)            ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["LeftBlazeAnimation"]:setImage(  startX - 50*LeftLength , startY                 , 50*LeftLength  , 50            , 32*(power - LeftLength) , 32*power                     , 0                           , 32                          ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["RightBlazeAnimation"]:setImage( startX +50             , startY                 , 50*RightLength , 50            , 352-32*power            , 352-32*(power - RightLength) , 0                           , 32                          ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["CentreBlazeAnimation"]:setImage(startX                 , startY                 , 50             , 50            , 0                       , 32                           , 480                         , 512                         ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["UpBlazeAnimation"]:setImage(    startX                 , startY + 50            , 50             , 50*UpLength   , 0                       , 32                           , 128 + 32*(power - UpLength) , 128 + 32*power              ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["DownBlazeAnimation"]:setImage(  startX                 , startY - 50*DownLength , 50             , 50*DownLength , 0                       , 32                           , 480-32*power                , 480-32*(power - DownLength) ,  BombBlaze[i]["Depth"]);
 	elseif fr == 2 then
-		BombBlaze[i]["LeftBlazeAnimation"]:setImage(  startX - 50*LeftLength , startY            , 50*LeftLength , 50       , 0 + 32*(power - LeftLength)            , 32*power , 32           , 64             ,  BombBlaze[i]["Depth"]);
-		BombBlaze[i]["RightBlazeAnimation"]:setImage( startX + 50       , startY            , 50*RightLength , 50       , 352-32*power , 352-32*(power - RightLength)      , 32           , 64             ,  BombBlaze[i]["Depth"]);
-		BombBlaze[i]["CentreBlazeAnimation"]:setImage(startX            , startY            , 50       , 50       , 32           , 64       , 480          , 512            ,  BombBlaze[i]["Depth"]);
-		BombBlaze[i]["UpBlazeAnimation"]:setImage(    startX            , startY + 50       , 50       , 50*UpLength , 32           , 64       , 128 + 32*(power - UpLength)          , 128 + 32*power ,  BombBlaze[i]["Depth"]);
-		BombBlaze[i]["DownBlazeAnimation"]:setImage(  startX            , startY - 50*DownLength , 50       , 50*DownLength , 32           , 64       , 480-32*power , 480-32*(power - DownLength)            ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["LeftBlazeAnimation"]:setImage(  startX - 50*LeftLength , startY                 , 50*LeftLength  , 50            , 32*(power - LeftLength) , 32*power 					, 32          				  , 64            				,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["RightBlazeAnimation"]:setImage( startX + 50            , startY                 , 50*RightLength , 50            , 352-32*power            , 352-32*(power - RightLength) , 32           				  , 64            				,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["CentreBlazeAnimation"]:setImage(startX                 , startY                 , 50             , 50            , 32                      , 64       					, 480          				  , 512            			    ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["UpBlazeAnimation"]:setImage(    startX                 , startY + 50            , 50             , 50*UpLength   , 32                      , 64       					, 128 + 32*(power - UpLength) , 128 + 32*power 				,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["DownBlazeAnimation"]:setImage(  startX                 , startY - 50*DownLength , 50             , 50*DownLength , 32                      , 64       					, 480-32*power                , 480-32*(power - DownLength) ,  BombBlaze[i]["Depth"]);
 	elseif fr == 3 then
-		BombBlaze[i]["LeftBlazeAnimation"]:setImage(  startX - 50*LeftLength , startY            , 50*LeftLength , 50       , 0 + 32*(power - LeftLength)            , 32*power , 64           , 96             ,  BombBlaze[i]["Depth"]);
-		BombBlaze[i]["RightBlazeAnimation"]:setImage( startX + 50       , startY            , 50*RightLength , 50       , 352-32*power , 352-32*(power - RightLength)      , 64           , 96             ,  BombBlaze[i]["Depth"]);
-		BombBlaze[i]["CentreBlazeAnimation"]:setImage(startX            , startY            , 50       , 50       , 64           , 96       , 480          , 512            ,  BombBlaze[i]["Depth"]);
-		BombBlaze[i]["UpBlazeAnimation"]:setImage(    startX            , startY + 50       , 50       , 50*UpLength , 64           , 96       , 128 + 32*(power - UpLength)          , 128 + 32*power ,  BombBlaze[i]["Depth"]);
-		BombBlaze[i]["DownBlazeAnimation"]:setImage(  startX            , startY - 50*DownLength , 50       , 50*DownLength , 64           , 96       , 480-32*power , 480-32*(power - DownLength)            ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["LeftBlazeAnimation"]:setImage(  startX - 50*LeftLength , startY                 , 50*LeftLength  , 50            , 32*(power - LeftLength) , 32*power 					, 64           				  , 96             				,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["RightBlazeAnimation"]:setImage( startX + 50            , startY                 , 50*RightLength , 50            , 352-32*power 			 , 352-32*(power - RightLength) , 64           				  , 96             				,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["CentreBlazeAnimation"]:setImage(startX                 , startY                 , 50             , 50            , 64           			 , 96      					    , 480          				  , 512           				,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["UpBlazeAnimation"]:setImage(    startX                 , startY + 50            , 50             , 50*UpLength   , 64           			 , 96       					, 128 + 32*(power - UpLength) , 128 + 32*power				,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["DownBlazeAnimation"]:setImage(  startX                 , startY - 50*DownLength , 50             , 50*DownLength , 64             		 , 96       					, 480-32*power 				  , 480-32*(power - DownLength) ,  BombBlaze[i]["Depth"]);
 	elseif fr == 4 then
-		BombBlaze[i]["LeftBlazeAnimation"]:setImage(  startX - 50*LeftLength , startY            , 50*LeftLength , 50       , 0 + 32*(power - LeftLength)            , 32*power , 96           , 128            ,  BombBlaze[i]["Depth"]);
-		BombBlaze[i]["RightBlazeAnimation"]:setImage( startX + 50       , startY            , 50*RightLength , 50       , 352-32*power , 352-32*(power - RightLength)      , 96           , 128            ,  BombBlaze[i]["Depth"]);
-		BombBlaze[i]["CentreBlazeAnimation"]:setImage(startX            , startY            , 50       , 50       , 96           , 128      , 480          , 512            ,  BombBlaze[i]["Depth"]);
-		BombBlaze[i]["UpBlazeAnimation"]:setImage(    startX            , startY + 50       , 50       , 50*UpLength , 96           , 128      , 128 + 32*(power - UpLength)          , 128 + 32*power ,  BombBlaze[i]["Depth"]);
-		BombBlaze[i]["DownBlazeAnimation"]:setImage(  startX            , startY - 50*DownLength , 50       , 50*DownLength , 96           , 128      , 480-32*power , 480-32*(power - DownLength)            ,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["LeftBlazeAnimation"]:setImage(  startX - 50*LeftLength , startY           	  , 50*LeftLength  , 50            , 32*(power - LeftLength) , 32*power 					, 96           				  , 128            				,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["RightBlazeAnimation"]:setImage( startX + 50       	 , startY            	  , 50*RightLength , 50            , 352-32*power 			 , 352-32*(power - RightLength) , 96           				  , 128            				,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["CentreBlazeAnimation"]:setImage(startX            	 , startY          	  	  , 50       	   , 50            , 96           			 , 128      					, 480          				  , 512            				,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["UpBlazeAnimation"]:setImage(    startX            	 , startY + 50      	  , 50       	   , 50*UpLength   , 96           			 , 128      					, 128 + 32*(power - UpLength) , 128 + 32*power 				,  BombBlaze[i]["Depth"]);
+		BombBlaze[i]["DownBlazeAnimation"]:setImage(  startX            	 , startY - 50*DownLength , 50             , 50*DownLength , 96           			 , 128     						, 480-32*power 				  , 480-32*(power - DownLength) ,  BombBlaze[i]["Depth"]);
 		BombBlaze[i]["IsEnd"] = 1
 	end
 	BombBlaze[i]["LeftBlazeAnimation"]:DrawImage();
@@ -344,6 +326,12 @@ function TestBlazeImpact(i)
 					for n = 1,6 do
 						if(BombOrder[n] == j) then
 							BombOrder[n] = 0
+							if n~=6 then
+								while(n <= 5) do
+									BombOrder[n] = BombOrder[n + 1]
+									n = n + 1
+								end
+							end
 							break
 						end
 					end
@@ -407,6 +395,12 @@ function TestBlazeImpact(i)
 						for n = 1,6 do
 							if(BombOrder[n] == j) then
 								BombOrder[n] = 0
+								if n~=6 then
+									while(n <= 5) do
+										BombOrder[n] = BombOrder[n + 1]
+										n = n + 1
+									end
+								end
 								break
 							end
 						end
@@ -467,6 +461,12 @@ function TestBlazeImpact(i)
 					for n = 1,6 do
 						if(BombOrder[n] == j) then
 							BombOrder[n] = 0
+							if n~=6 then
+								while(n <= 5) do
+									BombOrder[n] = BombOrder[n + 1]
+									n = n + 1
+								end
+							end
 							break
 						end
 					end
@@ -538,6 +538,12 @@ function TestBlazeImpact(i)
 					for n = 1,6 do
 						if(BombOrder[n] == j) then
 							BombOrder[n] = 0
+							if n~=6 then
+								while(n <= 5) do
+									BombOrder[n] = BombOrder[n + 1]
+									n = n + 1
+								end
+							end
 							break
 						end
 					end
@@ -602,6 +608,12 @@ function TestBlazeImpact(i)
 						for n = 1,6 do
 							if(BombOrder[n] == j) then
 								BombOrder[n] = 0
+								if n~=6 then
+									while(n <= 5) do
+										BombOrder[n] = BombOrder[n + 1]
+										n = n + 1
+									end
+								end
 								break
 							end
 						end
@@ -662,6 +674,12 @@ function TestBlazeImpact(i)
 					for n = 1,6 do
 						if(BombOrder[n] == j) then
 							BombOrder[n] = 0
+							if n~=6 then
+								while(n <= 5) do
+									BombOrder[n] = BombOrder[n + 1]
+									n = n + 1
+								end
+							end
 							break
 						end
 					end

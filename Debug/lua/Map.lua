@@ -1013,7 +1013,7 @@ end
 
 
 function IintMapData()
-initParams(24,40,1,math.random(1,2),0,550,true); --初始化地图参数	
+	initParams(24,40,1,math.random(1,2),0,550,true); --初始化地图参数	
 	ISGameNotPause = true;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
@@ -1049,6 +1049,9 @@ function LoadMapViewImageFile()
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 29 then
 		ImageLoad:LoadImage(PlotV,"Image/Bomb/Dynamite.png","DrawDynamite()", "Image_8");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 30 then
+		ImageLoad:LoadImage(PlotV,"Image/Enemy.png","DrawEnemy()", "Image_9");
 		NowLoadPos = NowLoadPos + 1;
 	end
 	
@@ -1144,16 +1147,17 @@ function ActorKey()
 				if(BombOrder[i] ~=0) then
 					UserBomb[BombOrder[i]]["IsWrite"] = 0
 					UserBomb[BombOrder[i]]["IsBlast"] = 0
-					mapTable[UserBomb[BombOrder[i]]["Bomb"]["StartY"]/BlockSize + 1][UserBomb[BombOrder[i]]["Bomb"]["StartX"]/BlockSize + 1][7] = 0
+					local j = BombOrder[i]
+					BombOrder[i] = 0
+					mapTable[UserBomb[j]["Bomb"]["StartY"]/BlockSize + 1][UserBomb[j]["Bomb"]["StartX"]/BlockSize + 1][7] = 0
 					for k = 1,6 do 
 						if BombBlaze[k]["IsWrite"] == 0 then
-							BombBlaze[k]:Init(UserBomb[BombOrder[i]]["Bomb"]["StartX"],UserBomb[BombOrder[i]]["Bomb"]["StartY"])
+							BombBlaze[k]:Init(UserBomb[j]["Bomb"]["StartX"],UserBomb[j]["Bomb"]["StartY"])
 							BombBlaze[k]["IsWrite"] = 1
 							TestBlazeImpact(k)
 							break
 						end
 					end
-					BombOrder[i] = 0
 					break
 				end
 			end
