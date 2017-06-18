@@ -1,6 +1,6 @@
 UserData =
 {
-	GoldCoins = 0,--金币数量
+	GoldCoins = 9999,--金币数量
 	AssistantLock = 0, --助手是否被锁住
 	AssistantProps = GirlsAssistant,--解锁的助手类型
 	BigBombPropsAmount = 0, -- 超级炸弹拥有的个数

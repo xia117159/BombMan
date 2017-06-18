@@ -1033,6 +1033,9 @@ function LoadMapViewImageFile()
 	elseif NowLoadPos == 28 then
 		ImageLoad:LoadImage(PlotV,"Image/Bomb/Blaze.png","DrawBlaze()", "Image_7");
 		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 29 then
+		ImageLoad:LoadImage(PlotV,"Image/Bomb/Dynamite.png","DrawDynamite()", "Image_8");
+		NowLoadPos = NowLoadPos + 1;
 	end
 	
 end
@@ -1088,14 +1091,13 @@ function ActorKey()
 		local BombY = 0
 		local i = 1
 		while(BombX <= TotalWidthPixels) do
-			--MessageBox("1","1",MB_OK)
-			if(BombX <= actorinf["AcStPosX"] and actorinf["AcStPosX"] < BombX + 50) then
+			if(BombX <= actorinf["AcStPosX"] + 25 and actorinf["AcStPosX"] + 25 < BombX + 50) then
 				break
 			end
 			BombX = BombX + 50
 		end
 		while(BombY <= TotalHeightPixels) do
-			if(BombY <= actorinf["AcStPosY"] - 50 and actorinf["AcStPosY"] - 50 < BombY + 50) then
+			if(BombY <= actorinf["AcStPosY"] - 25 and actorinf["AcStPosY"] - 25 < BombY + 50) then
 				break
 			end
 			BombY = BombY + 50
@@ -1104,14 +1106,12 @@ function ActorKey()
 			if(UserBomb[i]["IsWrite"] == 0) then
 				UserBomb[i]:Init(BombX,BombY)
 				UserBomb[i]["IsWrite"] = 1
-				mapTable[BombY/BlockSize+1][BombX/BlockSize+1][7] = 1;
+				mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
 				break
 			end
 			i = i + 1
-		end	
+		end
 		
-		--UserBomb[1]:Init(actorinf["AcStPosX"],actorinf["AcStPosY"]-50)
-		--UserBomb[1]["IsWrite"] = 1
 	end 
 	
 	if ISGameNotPause == false then

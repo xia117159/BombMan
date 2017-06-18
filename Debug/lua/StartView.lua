@@ -12,7 +12,6 @@ ButtonSR         = 0.95
 BackGround = ImageClass:new();
 BackGround:setImageFileSize(1800, 1080);
 BackGround:setImage(0, 0, 1000, 600, 0, 1800, 0, 1080, 10.0);
-
 function DrawBackGroundFunc()
 	BackGround:DrawImage();
 end

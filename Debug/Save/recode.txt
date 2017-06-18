@@ -5,5 +5,5 @@ BigBombPropsAmount = 0
 ShortCutBarBBP = 0
 AssistantPropsAmount = 0
 ShortCutBarAP = 0
-Power = 3
+Power = 9
 HaveBombNumber = 3

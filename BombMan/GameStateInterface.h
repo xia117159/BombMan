@@ -35,6 +35,7 @@ public:
 	void SetWindowView(int View);
 	void ReleaseViewImagePath(int View);
 	int GetNode(){return Node[NowView];};
+	void SetRotationData(float Angle, float x,float y);
 private:
 
 

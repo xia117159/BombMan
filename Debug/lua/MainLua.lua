@@ -34,11 +34,11 @@ LoadThisBackGroundImage();
 
 
 
-Read()
+--Read()
 
 UserBomb = AllBombClass:new();
 BombBlaze = AllBlazeClass:new();
-
+DynamiteWall = AllWallClass:new();
 Init()
 
 
