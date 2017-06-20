@@ -88,6 +88,11 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitch)
 	
 	actorinf = ActorClass:new();
 	actorimg:setImage(0, 550, BlockSize, BlockSize, 0, ActorWidth, 0, ActorHeight, 9.0);
+	
+	assistantinf = AssistantClass:new();
+	assistantinf:setAbsolutePos(500,1200);
+	Assistantimg:setImage(500, 550, BlockSize, BlockSize, 0, AssistantWidth, 0, AssistantHeight, 9.01);
+	
 	Bossinf = BossClass:new();
 	Bossinf:setBossAbsolutePos(500,1100);
 	
@@ -105,11 +110,14 @@ end
 	BossUnitYOffset = 2;
 	ActorWidth = 64;
 	ActorHeight = 64;
+	AssistantWidth = 64;
+	AssistantHeight = 64;
 	BossWidth = 32;
 	BossHeight = 48;
 	actorimg = ImageClass:new();
 	actorimg:setImageFileSize(192, 384);
-	
+	Assistantimg = ImageClass:new();
+	Assistantimg:setImageFileSize(192, 384);
 	Bossimg = ImageClass:new();
 	Bossimg:setImageFileSize(96,192);
 	
@@ -462,7 +470,7 @@ function PressingMoving()
 			end	
 		else	DrawActorGesture(0, 0, Actor1:TimerGo(), 2, actorimg);	
 		end
-		
+		ActorKeyBgm:Play();
 		
 		
 		
@@ -483,7 +491,7 @@ function PressingMoving()
 			end
 		else	DrawActorGesture(0, 0, Actor1:TimerGo(), 3, actorimg);
 		end
-			
+		ActorKeyBgm:Play();	
 				
 	
 	elseif movestatus == 4  then
@@ -501,7 +509,7 @@ function PressingMoving()
 			end	
 		else	DrawActorGesture(0, 0, Actor1:TimerGo(), 4, actorimg);	
 		end
-						
+		ActorKeyBgm:Play();				
 	end
 end
 
@@ -707,7 +715,6 @@ function DrawBoss()
 			if BossMoveDirection() == 1 then
 				if WindowMoveChecking(1) then	
 					DrawBossGesture(0, 0, Boss1:TimerGo(), 1, Bossimg);				
-					--DrawActorGesture(0, 0, Actor1:TimerGo(), 1, Bossimg);	
 				else 	
 					DrawBossGesture(BossUnitXOffset, 0, Boss1:TimerGo(), 1, Bossimg);			
 				end	
@@ -733,9 +740,10 @@ function DrawBoss()
 					DrawBossGesture(0, -BossUnitYOffset, Boss1:TimerGo(), 4, Bossimg);		
 				end		
 			Bossinf:setBossRelativePos(0,-BossUnitYOffset);	
-			else 
-				DrawActorGesture(0, 0, Acto1:TimerGo(), 6, actorimg);
-				DrawBossGesture(0, 0, Boss1:TimerGo(), 3, Bossimg);		
+			elseif  BossMoveDirection() == 0 then 
+				DrawActorGesture(0, 0, Actor1:TimerGo(), 6, actorimg);
+				--DrawBossGesture(0, 0, Boss1:TimerGo(), 4, Bossimg);	
+				
 			end	
 		end
 		Bossimg:DrawImage();	
@@ -744,7 +752,32 @@ function DrawBoss()
 	end
 	
 end
-
+function GetObjectHaveBlock(NowPosX,NowPosY)
+	local ObjectRow1;	--人物或助手所占第一个位置的地图X坐标
+	local ObjectRow2;	--人物或助手所占第二个位置的地图X坐标
+	local ObjectColumn1;	--人物或助手所占第一个位置的地图Y坐标
+	local ObjectColumn2;	--人物或助手所占第二个位置的地图Y坐标
+	local ObjectHaveUnitStatus;
+	--计算角色所占格子
+	local ActorXRemain = NowPosX%BlockSize;
+	local ActorYRemain = NowPosY%BlockSize;
+	if ActorXRemain == 0 and ActorYRemain == 0 then
+		ObjectColumn1 = NowPosX/BlockSize + 1;
+		ObjectRow1 = NowPosY/BlockSize;
+		ObjectHaveUnitStatus = 1; 	--人物所占位置mapTable[ObjectRow1][ObjectColumn1]
+	elseif ActorXRemain ~= 0 then
+		ObjectColumn1 = math.ceil(NowPosX/BlockSize);
+		ObjectColumn2 = ObjectColumn1+1;
+		ObjectRow1 = NowPosY/BlockSize;
+		ObjectHaveUnitStatus = 2;  --人物所占位置mapTable[ObjectRow1][ObjectColumn1]，mapTable[ObjectRow1][ObjectColumn2]
+	elseif ActorYRemain ~= 0 then
+		ObjectRow1 = math.ceil(NowPosY/BlockSize);
+		ObjectRow2 = ObjectRow1-1;
+		ObjectColumn1 = NowPosX/BlockSize + 1;	--人物所占位置mapTable[ObjectRow1][ObjectColumn1]，mapTable[ObjectRow2][ObjectColumn1]
+		ObjectHaveUnitStatus = 3;
+	end
+	return ObjectHaveUnitStatus,ObjectRow1,ObjectColumn1,ObjectRow2,ObjectColumn2;
+end
 	
 function BossMoveDirection()
 	local ActorRow1;	--人物所占第一个位置的地图X坐标
@@ -765,8 +798,8 @@ function BossMoveDirection()
 	BossDerterminationMove = 0;
 	
 	
-	--计算角色所占格子
-	ActorXRemain = ActorPosX%BlockSize;
+	ActorHaveUnitStatus,ActorRow1,ActorColumn1,ActorRow2,ActorColumn2 = GetObjectHaveBlock(ActorPosX,ActorPosY);
+--[[	ActorXRemain = ActorPosX%BlockSize;
 	ActorYRemain = ActorPosY%BlockSize;
 	if ActorXRemain == 0 and ActorYRemain == 0 then
 		ActorColumn1 = ActorPosX/BlockSize + 1;
@@ -782,9 +815,9 @@ function BossMoveDirection()
 		ActorRow2 = ActorRow1-1;
 		ActorColumn1 = ActorPosX/BlockSize + 1;	--人物所占位置mapTable[ActorRow1][ActorColumn1]，mapTable[ActorRow2][ActorColumn1]
 		ActorHaveUnitStatus = 3;
-	end
+	end--]]
 	
-	if	math.abs(DistanceX) > 50 or math.abs(DistanceY) > 50 then		
+	if	math.abs(DistanceX) >= 50 or math.abs(DistanceY) >= 50 then		--未发生碰撞
 		BossCouldMoveDirection = BossImpactChecking();
 		local TargetBlockX;
 		local TargetBlockY;
@@ -850,16 +883,12 @@ function BossMoveDirection()
 							TargetBlockY = ActorPosY;
 							return TargetYMove(TargetBlockY);
 						end			
-					end
-						
-				end
-		
-			end
-			
-		
-		end
-		
-	else  return 0;	 
+					end						
+				end		
+			end					
+		end		
+	else  
+	return 0;	 
 	end
 	
 end	
@@ -1037,14 +1066,17 @@ end
 
 
 function IintMapData()
-initParams(24,40,1,math.random(30,40),0,550,true); --初始化地图参数	
+	initParams(24,40,1,math.random(1,2),0,550,true); --初始化地图参数	
 	ISGameNotPause = true;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
 end
 
-
-
+--[[function DrawAssistant()
+	Assistantimg:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*5, ActorHeight*6);
+	Assistantimg:DrawImage();
+end
+--]]
 function LoadMapViewImageFile()
 	local ImageLoad = ImageClass:new();
 	if NowLoadPos == 21 then
@@ -1076,6 +1108,9 @@ function LoadMapViewImageFile()
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 30 then
 		ImageLoad:LoadImage(PlotV,"Image/Enemy.png","DrawEnemy()", "Image_9");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 31 then
+		ImageLoad:LoadImage(PlotV,"Image/Map/assistant.png","DrawAssistant()", "Image_10");
 		NowLoadPos = NowLoadPos + 1;
 	end
 	
