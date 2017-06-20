@@ -130,17 +130,17 @@ end
 	
 	ExitDialog = ImageClass:new();
 	ExitDialog:setImageFileSize(1081, 410);
-	ExitDialog:setImage(230, 95, 540, 410, 0, 540, 0, 410, 8.0);
+	ExitDialog:setImage(230, 95, 540, 410, 0, 540, 0, 410, 2.0);
 	BackGroundColor = ImageClass:new();
 	BackGroundColor:setImageFileSize(1081, 410);
-	BackGroundColor:setImage(0,0,1000,600,540,1081,0,410,8.1);
+	BackGroundColor:setImage(0,0,1000,600,540,1081,0,410,2.1);
 	
 	ExitButton = ImageClass:new();
 	ExitButton:setImageFileSize(ExitButtonWidth*3, ExitButtonHeight*2);
-	ExitButton:setImage(325 ,185, ExitButtonWidth, ExitButtonHeight, 0, ExitButtonWidth, ExitButtonHeight*0, ExitButtonHeight*1, 6.0);
+	ExitButton:setImage(325 ,185, ExitButtonWidth, ExitButtonHeight, 0, ExitButtonWidth, ExitButtonHeight*0, ExitButtonHeight*1, 1.01);
 	CancelButton = ImageClass:new();
 	CancelButton:setImageFileSize(ExitButtonWidth*3, ExitButtonHeight*2);
-	CancelButton:setImage(300+1.5*ExitButtonWidth, 185, ExitButtonWidth, ExitButtonHeight, 0, ExitButtonWidth, ExitButtonHeight*1, ExitButtonHeight*2, 5.99);
+	CancelButton:setImage(300+1.5*ExitButtonWidth, 185, ExitButtonWidth, ExitButtonHeight, 0, ExitButtonWidth, ExitButtonHeight*1, ExitButtonHeight*2, 1.0);
 	
 	
 
@@ -568,8 +568,8 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 				return false;
 			elseif 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
 				return CanPassBombOrWallChecking(1);
-			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingXRemainder <= UnitXOffset then	--检测人物未嵌入在炸弹内 即人物未放炸弹
-			    return CanPassBombOrWallChecking(2);
+			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingY1*BlockSize-CheckingPosX >= BlockSize-UnitXOffset then	--检测人物未嵌入在炸弹内 即人物未放炸弹
+			    return CanPassBombOrWallChecking(2);				
 			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] then
 				GetBuff(mapTable[CheckingX1][CheckingY1][8]);
 				mapTable[CheckingX1][CheckingY1][8] = 0;
@@ -597,7 +597,7 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 				return false;
 			elseif 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
 				return CanPassBombOrWallChecking(1);
-			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingYRemainder <= UnitYOffset then	--检测人物未嵌入在炸弹内 即人物未放炸弹
+			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingX1*BlockSize-CheckingPosY >= BlockSize-UnitYOffset then	--检测人物未嵌入在炸弹内 即人物未放炸弹
 				return CanPassBombOrWallChecking(2);
 			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] then
 				GetBuff(mapTable[CheckingX1][CheckingY1][8]);
@@ -629,7 +629,7 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 				return false;
 			elseif 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
 				return CanPassBombOrWallChecking(1);
-			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingXRemainder >= BlockSize - UnitXOffset then	--检测人物未嵌入在炸弹内 即人物未放炸弹
+			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingPosX-CheckingY1*BlockSize >= -UnitXOffset then	--检测人物未嵌入在炸弹内 即人物未放炸弹
 				return CanPassBombOrWallChecking(2);
 			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] then
 				GetBuff(mapTable[CheckingX1][CheckingY1][8]);
@@ -662,7 +662,7 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 				return false;
 			elseif 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
 				return CanPassBombOrWallChecking(1);
-			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingYRemainder >= BlockSize-UnitYOffset then		--检测人物未嵌入在炸弹内 即人物未放炸弹
+			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingPosY-CheckingX1*BlockSize >= (-UnitYOffset) then		--检测人物未嵌入在炸弹内 即人物未放炸弹
 				return CanPassBombOrWallChecking(2);
 			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] then
 				GetBuff(mapTable[CheckingX1][CheckingY1][8]);
