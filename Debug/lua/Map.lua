@@ -559,7 +559,9 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 		CheckingY1 = math.ceil(CheckingPosX/BlockSize);
 		CheckingYRemainder = CheckingPosY % BlockSize;
 		if  CheckingYRemainder == 0 then  --判断人物是否在一个方格内
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1 then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate  then
+				return false;
+			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingXRemainder <= UnitXOffset then	--检测人物未嵌入在炸弹内 即人物未放炸弹
 				return false;
 			else return true;			
 			end	
@@ -577,9 +579,12 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 	elseif Direction == 2 then	
 		CheckingX1 = math.ceil(CheckingPosY/BlockSize);	
 		CheckingXRemainder = CheckingPosX % BlockSize;
+		CheckingYRemainder = CheckingPosY % BlockSize;
 		if CheckingXRemainder == 0 then
 			CheckingY1 = math.ceil(CheckingPosX/BlockSize)+1;
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1 then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
+				return false;
+			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingYRemainder <= UnitYOffset then	--检测人物未嵌入在炸弹内 即人物未放炸弹
 				return false;
 			else return true;			
 			end	
@@ -603,7 +608,9 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 		CheckingYRemainder = CheckingPosY % BlockSize;
 		if CheckingYRemainder == 0 then
 			CheckingX1 = math.ceil(CheckingPosY/BlockSize);	
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1 then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
+				return false;
+			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingXRemainder >= BlockSize - UnitXOffset then	--检测人物未嵌入在炸弹内 即人物未放炸弹
 				return false;
 			else return true;			
 			end	
@@ -628,7 +635,9 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 		CheckingXRemainder = CheckingPosX % BlockSize;
 		if CheckingXRemainder == 0 then
 			CheckingY1 = math.ceil(CheckingPosX/BlockSize)+1;
-			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1 then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
+				return false;
+			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingYRemainder >= BlockSize-UnitYOffset then		--检测人物未嵌入在炸弹内 即人物未放炸弹
 				return false;
 			else return true;			
 			end
