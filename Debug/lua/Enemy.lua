@@ -9,7 +9,7 @@ EnemyClass = {
 	CanPassWall = 0,
 	ImageStartX = 0,
 	ImageStartY = 16,
-	MoveDirection = 0,
+	MoveDirection = 0, --1为右，2为上，3为左，4为下
 	Enemy = {},
 	EnemyAnimation = {}
 }
@@ -23,11 +23,11 @@ end
 function EnemyClass:Init(x,y,enemytype)
 	self.EnemyType = enemytype
 	if enemytype == 1 then
-		self.Speed = 2
+		self.Speed = 1
 		self.IsSurvival = 1
 		self.CanPassWall = 0
 	elseif enemytype == 2 then
-		self.Speed = 3
+		self.Speed = 2
 		self.IsSurvival = 1
 		self.CanPassWall = 0
 	elseif enemytype == 3 then
@@ -43,10 +43,10 @@ function EnemyClass:Init(x,y,enemytype)
 		self.IsSurvival = 1
 		self.CanPassWall = 1
 	end
-	
+
 	self.Enemy = AnimationRecord:new();
 	self.Enemy:SetValue(x, y, 10, 4);
-	
+
 	self.EnemyAnimation = ImageClass:new();
 	self.EnemyAnimation :setImageFileSize(128, 144);
 end
@@ -60,10 +60,12 @@ function EnemyInit()
 		j = math.random(1,5)
 		x = math.random(1,48)
 		y = math.random(1,24)
-		while(x < 7 and y < 7) do
+		while(x < 7 and y < 7 and mapTable[x][y][3] == 0 and (mapTable[x][y][4] == 0 or mapTable[x][y][4] > BoxRandRate) and
+		mapTable[x][y][4] ~= 1000 and mapTable[x][y][7] == 0 and mapTable[x][y][8] == 0) do
 			x = math.random(1,48)
 			y = math.random(1,24)
 		end
+		MessageBox(i,"1",MB_OK)
 		AllEnemy[i]:Init((x - 1) * 50 ,(y - 1) * 50,j)
 	end
 end
@@ -92,4 +94,52 @@ function DrawEnemyFunc(i)
 		AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 48 , imageStartX + 64, imageStartY , imageStartY + 16 ,  2);
 	end
 	AllEnemy[i]["EnemyAnimation"]:DrawImage();
+end
+
+function EnemyMove()
+	local x = 0
+	local y = 0
+	for i =1,10 do
+		x = AllEnemy[i]["Enemy"]["StartX"] + AllEnemy[i]["MoveX"]
+		y = AllEnemy[i]["Enemy"]["StartY"] + AllEnemy[i]["MoveY"]
+		if(AllEnemy[i]["Enemy"]["StartX"] % 50 == 0 and AllEnemy[i]["Enemy"]["StartY"] % 50 == 0) then
+			AllEnemy[i]["MoveDirection"] = math.random(1,4)
+			while(TestEnemyImpact(i,x,y) == 1) do
+				AllEnemy[i]["MoveDirection"] = math.random(1,4)
+			end
+		end
+		if(AllEnemy[i]["MoveDirection"] == 1) then
+			AllEnemy[i]["MoveX"] = AllEnemy[i]["MoveX"] + AllEnemy[i]["Speed"]
+		elseif(AllEnemy[i]["MoveDirection"] == 2) then
+			AllEnemy[i]["MoveY"] = AllEnemy[i]["MoveY"] + AllEnemy[i]["Speed"]
+		elseif(AllEnemy[i]["MoveDirection"] == 3) then
+			AllEnemy[i]["MoveX"] = AllEnemy[i]["MoveX"] - AllEnemy[i]["Speed"]
+		elseif(AllEnemy[i]["MoveDirection"] == 4) then
+			AllEnemy[i]["MoveY"] = AllEnemy[i]["MoveY"] - AllEnemy[i]["Speed"]
+		end
+	end
+end
+
+function TestEnemyImpact(i,x,y)
+	if(AllEnemy[i]["MoveDirection"] == 1) then
+		if(x + 50 == 4800 or mapTable[x + 50][y][3] == 1 or mapTable[x + 50][y][7] == 1 or
+		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[x + 50][y][4] > 0 and  mapTable[x + 50][y][4] < BoxRandRate)) then
+			return 1
+		end
+	elseif(AllEnemy[i]["MoveDirection"] == 2) then
+		if(y + 50 == 1200 or mapTable[x][y + 50][3] == 1 or mapTable[x][y + 50][7] == 1 or
+		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[x][y + 50][4] > 0 and  mapTable[x][y + 50][4] < BoxRandRate)) then
+			return 1
+		end
+	elseif(AllEnemy[i]["MoveDirection"] == 3) then
+		if(x == 0 or mapTable[x - 50][y][3] == 1 or mapTable[x - 50][y][7] == 1 or
+		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[x - 50][y][4] > 0 and  mapTable[x - 50][y][4] < BoxRandRate)) then
+			return 1
+		end
+	elseif(AllEnemy[i]["MoveDirection"] == 4) then
+		if(y == 0 or mapTable[x][y - 50][3] == 1 or mapTable[x][y - 50][7] == 1 or
+		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[x][y - 50][4] > 0 and  mapTable[x][y - 50][4] < BoxRandRate)) then
+			return 1
+		end
+	end
 end
