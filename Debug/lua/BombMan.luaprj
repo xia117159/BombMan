@@ -27,4 +27,5 @@
     <Filter Name="LoadView" Toggle="false" >
         <LuaFile RelativePath=".\LoadView.lua" />
     </Filter>
+    <LuaFile RelativePath=".\Enemy.lua" />
 </Project>
