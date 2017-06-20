@@ -542,13 +542,6 @@ function BorderChecking(CheckingPosOne,Direction)
 	end		
 end
 	
-function CanPassBombOrWallChecking(i)	--检测炸弹或者墙是否可以穿过
-	if i == 1 and UserData["CanPassWall"] == 1 or i == 2 and UserData["CanPassBomb"] == 1 then
-		return true;
-	else return false;
-	end
-end	
-	
 function ImpactChecking(CheckingPosX,CheckingPosY,Direction)	
 	
 	local CheckingX1;
@@ -564,12 +557,14 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 		CheckingY1 = math.ceil(CheckingPosX/BlockSize);
 		CheckingYRemainder = CheckingPosY % BlockSize;
 		if  CheckingYRemainder == 0 then  --判断人物是否在一个方格内
-			if mapTable[CheckingX1][CheckingY1][3] == 1 then
+<<<<<<< HEAD
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate  then
 				return false;
-			elseif 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
-				return CanPassBombOrWallChecking(1);
 			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingXRemainder <= UnitXOffset then	--检测人物未嵌入在炸弹内 即人物未放炸弹
-			    return CanPassBombOrWallChecking(2);
+=======
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate or mapTable[CheckingX1][CheckingY1][7] == 1  then
+>>>>>>> 6b2e5c54e5def6330edf94ef63829efbd133a19d
+				return false;
 			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] then
 				GetBuff(mapTable[CheckingX1][CheckingY1][8]);
 				mapTable[CheckingX1][CheckingY1][8] = 0;
@@ -593,12 +588,10 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 		CheckingYRemainder = CheckingPosY % BlockSize;
 		if CheckingXRemainder == 0 then
 			CheckingY1 = math.ceil(CheckingPosX/BlockSize)+1;
-			if mapTable[CheckingX1][CheckingY1][3] == 1 then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
 				return false;
-			elseif 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
-				return CanPassBombOrWallChecking(1);
 			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingYRemainder <= UnitYOffset then	--检测人物未嵌入在炸弹内 即人物未放炸弹
-				return CanPassBombOrWallChecking(2);
+				return false;
 			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] then
 				GetBuff(mapTable[CheckingX1][CheckingY1][8]);
 				mapTable[CheckingX1][CheckingY1][8] = 0;
@@ -625,12 +618,10 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 		CheckingYRemainder = CheckingPosY % BlockSize;
 		if CheckingYRemainder == 0 then
 			CheckingX1 = math.ceil(CheckingPosY/BlockSize);	
-			if mapTable[CheckingX1][CheckingY1][3] == 1 then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
 				return false;
-			elseif 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
-				return CanPassBombOrWallChecking(1);
 			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingXRemainder >= BlockSize - UnitXOffset then	--检测人物未嵌入在炸弹内 即人物未放炸弹
-				return CanPassBombOrWallChecking(2);
+				return false;
 			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] then
 				GetBuff(mapTable[CheckingX1][CheckingY1][8]);
 				mapTable[CheckingX1][CheckingY1][8] = 0;
@@ -658,12 +649,10 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 		CheckingXRemainder = CheckingPosX % BlockSize;
 		if CheckingXRemainder == 0 then
 			CheckingY1 = math.ceil(CheckingPosX/BlockSize)+1;
-			if mapTable[CheckingX1][CheckingY1][3] == 1 then
+			if mapTable[CheckingX1][CheckingY1][3] == 1 or  0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
 				return false;
-			elseif 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
-				return CanPassBombOrWallChecking(1);
 			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingYRemainder >= BlockSize-UnitYOffset then		--检测人物未嵌入在炸弹内 即人物未放炸弹
-				return CanPassBombOrWallChecking(2);
+				return false;
 			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] then
 				GetBuff(mapTable[CheckingX1][CheckingY1][8]);
 				mapTable[CheckingX1][CheckingY1][8] = 0;
@@ -1037,7 +1026,11 @@ end
 
 
 function IintMapData()
+<<<<<<< HEAD
 initParams(24,40,1,math.random(30,40),0,550,true); --初始化地图参数	
+=======
+	initParams(24,40,1,math.random(1,2),0,550,true); --初始化地图参数	
+>>>>>>> 6b2e5c54e5def6330edf94ef63829efbd133a19d
 	ISGameNotPause = true;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);

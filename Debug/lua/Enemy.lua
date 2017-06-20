@@ -65,7 +65,6 @@ function EnemyInit()
 			x = math.random(1,48)
 			y = math.random(1,24)
 		end
-		MessageBox(i,"1",MB_OK)
 		AllEnemy[i]:Init((x - 1) * 50 ,(y - 1) * 50,j)
 	end
 end
