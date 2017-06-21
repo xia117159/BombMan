@@ -1066,9 +1066,10 @@ end
 
 
 function IintMapData()
-	initParams(24,40,1,math.random(1,2),0,550,true); --初始化地图参数	
+	initParams(24,40,1,math.random(30,40),0,550,true); --初始化地图参数	
 	ISGameNotPause = true;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
+	EnemyInit()
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
 end
 

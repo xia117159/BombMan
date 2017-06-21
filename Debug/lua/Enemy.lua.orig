@@ -64,7 +64,11 @@ function EnemyInit()
 			y = math.random(1,40)
 			x = math.random(1,24)
 		end
+<<<<<<< HEAD
 		AllEnemy[i]:Init((y - 1) * 50 ,(x - 1) * 50,j)
+=======
+		AllEnemy[i]:Init((x - 1) * 50 ,(y - 1) * 50,j)
+>>>>>>> 60aa4785cfd70263d10621c18c3dc8073c00dad6
 	end
 end
 
