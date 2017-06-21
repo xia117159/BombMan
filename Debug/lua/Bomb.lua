@@ -108,17 +108,17 @@ function BombInit()
 	UserBomb[6] = BombClass:new()
 	
 	BombBlaze[1] = BlazeClass:new()
-	BombBlaze[1]["Depth"] = 1.5
+	BombBlaze[1]["Depth"] = 4.5
 	BombBlaze[2] = BlazeClass:new()
-	BombBlaze[2]["Depth"] = 1.4
+	BombBlaze[2]["Depth"] = 4.4
 	BombBlaze[3] = BlazeClass:new()
-	BombBlaze[3]["Depth"] = 1.3
+	BombBlaze[3]["Depth"] = 4.3
 	BombBlaze[4] = BlazeClass:new()
-	BombBlaze[4]["Depth"] = 1.2
+	BombBlaze[4]["Depth"] = 4.2
 	BombBlaze[5] = BlazeClass:new()
-	BombBlaze[5]["Depth"] = 1.1
+	BombBlaze[5]["Depth"] = 4.1
 	BombBlaze[6] = BlazeClass:new()
-	BombBlaze[6]["Depth"] = 1.0
+	BombBlaze[6]["Depth"] = 4.0
 	
 	for i = 1, 24 do
 		DynamiteWall[i] = WallClass:new()

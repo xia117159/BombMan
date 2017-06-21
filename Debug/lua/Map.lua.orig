@@ -1066,7 +1066,11 @@ end
 
 
 function IintMapData()
+<<<<<<< HEAD
 	initParams(24,40,1,math.random(30,40),0,550,true); --初始化地图参数	
+=======
+	initParams(24,40,1,math.random(1,2),0,550,true); --初始化地图参数	
+>>>>>>> 60aa4785cfd70263d10621c18c3dc8073c00dad6
 	ISGameNotPause = true;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	EnemyInit()

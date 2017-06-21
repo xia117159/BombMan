@@ -108,7 +108,7 @@ Gamebgm["Time"] = {31,237,229,156,98,195,287}
 
 
 --@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-SetMusicVol(BGMDevice, 60);--音量设置函数
+SetMusicVol(BGMDevice, 10);--音量设置函数
 --@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
@@ -144,6 +144,9 @@ function MoveseMusicClass:new()
 	return oo;
 end
 
+
+SetMusicVol(SEDevice, 3);
+
 ActorKeyBgm = MoveseMusicClass:new();
-ActorKeyBgm["File"] = "music/FootSoundEffect.wav"
-ActorKeyBgm["Time"] = 100
+ActorKeyBgm["File"] = "music/FootSoundEffect1.mp3"
+ActorKeyBgm["Time"] = 14
