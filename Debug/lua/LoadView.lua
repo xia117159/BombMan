@@ -44,7 +44,7 @@ end
 
 function GoLoadView()
 	SetNowWindowView(LoadV);
-	NowView = LoadV;--设置视图位于商城
+	NowView = LoadV;--设置视图位于加载界面
 end
 
 
