@@ -22,7 +22,8 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitch)
 
 	--mapTable[i][j][k]	i,j代表行数，列数，
 	--mapTable[i][j][1]代表位置X，mapTable[i][j][2]代表位置Y，
-	--mapTable[i][j][3]代表砖，mapTable[i][j][4]代表墙，0为无，1为存在 mapTable[i][j][5]代表墙的类型X轴标号 mapTable[i][j][6]代表墙的类型Y轴标号 mapTable[i][j][7]代表炸弹
+	--mapTable[i][j][3]代表砖，mapTable[i][j][4]代表墙，0为无，1至BoxRandRate为存在 mapTable[i][j][5]代表墙的类型X轴标号 mapTable[i][j][6]代表墙的类型Y轴标号
+	-- mapTable[i][j][7]代表炸弹 mapTable[i][j][8]代表BUFF mapTable[i][j][9]代表该位置是否将会受到火焰波及 0代表未受波及 >0代表受到波及并且代表受到波及的火焰数目
 
 	if maptype == 1 then   --1型地图
 		for i=1,s do 
@@ -37,6 +38,7 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitch)
 				mapTable[i][j][2] = j;
 				mapTable[i][j][7] = 0;
 				mapTable[i][j][8] = 0;
+				mapTable[i][j][9] = 0;
 				if j % 2 == 0 and temp then
 					mapTable[i][j][3] = 1;
 					mapTable[i][j][4] = 0;				
@@ -799,6 +801,7 @@ function BossMoveDirection()
 	
 	
 	ActorHaveUnitStatus,ActorRow1,ActorColumn1,ActorRow2,ActorColumn2 = GetObjectHaveBlock(ActorPosX,ActorPosY);
+	--MessageBox(tostring(ActorRow2),tostring(ActorColumn2), MB_OK);
 --[[	ActorXRemain = ActorPosX%BlockSize;
 	ActorYRemain = ActorPosY%BlockSize;
 	if ActorXRemain == 0 and ActorYRemain == 0 then
