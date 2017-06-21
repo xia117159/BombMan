@@ -52,10 +52,11 @@ function EnemyClass:Init(x,y,enemytype)
 end
 
 function EnemyInit()
+	MessageBox("1","1",MB_OK)
 	local j = 1
 	local x = 1
 	local y = 1
-	for i = 1,10 do
+	for i = 1,10 do 
 		AllEnemy[i] = EnemyClass:new()
 		j = math.random(1,5)
 		y = math.random(1,40)
@@ -71,7 +72,7 @@ end
 function DrawEnemy()
 	for i = 1,10 do
 		if(AllEnemy[i]["IsSurvival"] == 1) then
-			EnemyMove()
+			EnemyMove(i)
 			DrawEnemyFunc(i)
 		end
 	end
@@ -95,51 +96,57 @@ function DrawEnemyFunc(i)
 	AllEnemy[i]["EnemyAnimation"]:DrawImage();
 end
 
-function EnemyMove()
-	
+function EnemyMove(i)
 	local x = 0
 	local y = 0
-	for i = 1 , 10 do
-		x = AllEnemy[i]["Enemy"]["StartX"] + AllEnemy[i]["MoveX"]
-		y = AllEnemy[i]["Enemy"]["StartY"] + AllEnemy[i]["MoveY"]
-		if(x % 50 == 0 and y % 50 == 0) then
-			AllEnemy[i]["MoveDirection"] = math.random(1,4)
-			while(TestEnemyImpact(i,x,y) == 1) do
-				AllEnemy[i]["MoveDirection"] = math.random(1,4)
+	local k = 0
+	x = AllEnemy[i]["Enemy"]["StartX"] + AllEnemy[i]["MoveX"]
+	y = AllEnemy[i]["Enemy"]["StartY"] + AllEnemy[i]["MoveY"]
+	if(x % 50 == 0 and y % 50 == 0) then
+		AllEnemy[i]["MoveDirection"] = math.random(1,4)
+		for j = 1,4 do
+			if(TestEnemyImpact(i,x,y,j) == 0) then
+				k = k + 1
 			end
 		end
-		if(AllEnemy[i]["MoveDirection"] == 1) then
-			AllEnemy[i]["MoveX"] = AllEnemy[i]["MoveX"] + AllEnemy[i]["Speed"]
-		elseif(AllEnemy[i]["MoveDirection"] == 2) then
-			AllEnemy[i]["MoveY"] = AllEnemy[i]["MoveY"] + AllEnemy[i]["Speed"]
-		elseif(AllEnemy[i]["MoveDirection"] == 3) then
-			AllEnemy[i]["MoveX"] = AllEnemy[i]["MoveX"] - AllEnemy[i]["Speed"]
-		elseif(AllEnemy[i]["MoveDirection"] == 4) then
-			AllEnemy[i]["MoveY"] = AllEnemy[i]["MoveY"] - AllEnemy[i]["Speed"]
+		if(k == 0) then
+			return
 		end
+		while(TestEnemyImpact(i,x,y,AllEnemy[i]["MoveDirection"]) == 1) do
+			AllEnemy[i]["MoveDirection"] = math.random(1,4)
+		end
+	end
+	if(AllEnemy[i]["MoveDirection"] == 1) then
+		AllEnemy[i]["MoveX"] = AllEnemy[i]["MoveX"] + AllEnemy[i]["Speed"]
+	elseif(AllEnemy[i]["MoveDirection"] == 2) then
+		AllEnemy[i]["MoveY"] = AllEnemy[i]["MoveY"] + AllEnemy[i]["Speed"]
+	elseif(AllEnemy[i]["MoveDirection"] == 3) then
+		AllEnemy[i]["MoveX"] = AllEnemy[i]["MoveX"] - AllEnemy[i]["Speed"]
+	elseif(AllEnemy[i]["MoveDirection"] == 4) then
+		AllEnemy[i]["MoveY"] = AllEnemy[i]["MoveY"] - AllEnemy[i]["Speed"]
 	end
 end
 
-function TestEnemyImpact(i,x,y)
-	if(AllEnemy[i]["MoveDirection"] == 1) then
+function TestEnemyImpact(i,x,y,j)
+	if(j == 1) then
 		if(x + 50 == TotalWidthPixels or mapTable[y / 50 + 1][(x + 50) / 50 + 1][3] == 1 or mapTable[y / 50 + 1][(x + 50) / 50 + 1][7] == 1 or
 		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[y / 50 + 1][(x + 50) / 50 + 1][4] > 0 and mapTable[y / 50 + 1][(x + 50) / 50 + 1][4] < BoxRandRate)) then
 			return 1
 		end
 		return 0
-	elseif(AllEnemy[i]["MoveDirection"] == 2) then
+	elseif(j == 2) then
 		if(y + 50 == TotalHeightPixels or mapTable[(y + 50) / 50 +1][x / 50 + 1][3] == 1 or mapTable[(y + 50) / 50 +1][x / 50 + 1][7] == 1 or
 		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[(y + 50) / 50 +1][x / 50 + 1][4] > 0 and  mapTable[(y + 50) / 50 +1][x / 50 + 1][4] < BoxRandRate)) then
 			return 1
 		end
 		return 0
-	elseif(AllEnemy[i]["MoveDirection"] == 3) then
+	elseif(j == 3) then
 		if(x == 0 or mapTable[y / 50 + 1][(x - 50) / 50 + 1][3] == 1 or mapTable[y / 50 + 1][(x - 50) / 50 + 1][7] == 1 or
 		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[y / 50 + 1][(x - 50) / 50 + 1][4] > 0 and  mapTable[y / 50 + 1][(x - 50) / 50 + 1][4] < BoxRandRate)) then
 			return 1
 		end
 		return 0
-	elseif(AllEnemy[i]["MoveDirection"] == 4) then
+	elseif(j == 4) then
 		if(y == 0 or mapTable[(y - 50) / 50 + 1][x / 50 + 1][3] == 1 or mapTable[(y - 50) / 50 + 1][x / 50 + 1][7] == 1 or
 		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[(y - 50) / 50 + 1][x / 50 + 1][4] > 0 and  mapTable[(y - 50) / 50 + 1][x / 50 + 1][4] < BoxRandRate)) then
 			return 1
