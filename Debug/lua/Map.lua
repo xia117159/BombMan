@@ -1112,11 +1112,189 @@ function LoadMapViewImageFile()
 	elseif NowLoadPos == 31 then
 		ImageLoad:LoadImage(PlotV,"Image/Map/assistant.png","DrawAssistant()", "Image_10");
 		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 32 then
+		ImageLoad:LoadImage(PlotV,"Image/ShortcutBar.png","DrawShortcutBar()", "Image_11");
+		NowLoadPos = NowLoadPos + 1;
 	end
 	
 end
 
+GShortcutPosH = 544
 
+GShortcutPosX = 40
+GShortcutPosY = 40
+
+GShortCutBarW = 100
+GShortCutBarH = 81
+
+GShortCutBar1 = ImageClass:new();
+GShortCutBar1 :setImageFileSize(400, GShortcutPosH);
+GShortCutBar1 :setImage(GShortcutPosX, GShortcutPosY ,GShortCutBarW, GShortCutBarH,  GShortCutBarW, GShortCutBarW*2,0, GShortCutBarH, 1+0.8);
+
+GShortCutBar2 = ImageClass:new();
+GShortCutBar2 :setImageFileSize(400, GShortcutPosH);
+GShortCutBar2 :setImage(GShortcutPosX+100, GShortcutPosY ,GShortCutBarW, GShortCutBarH, GShortCutBarW*3, GShortCutBarW*4,0, GShortCutBarH, 1+0.8);
+
+GSCBBBP = ImageClass:new();
+GSCBBBP :setImageFileSize(400, GShortcutPosH);
+GSCBBBP :setscaling_ratio(0.6);
+GSCBBBP :setImage(GShortcutPosX+20, GShortcutPosY+7 ,100, 110, 0, 100, 200, 310, 1+0.79);
+
+GSCBAP = ImageClass:new();
+GSCBAP :setImageFileSize(400, GShortcutPosH);
+GSCBAP :setscaling_ratio(0.5);
+GSCBAP :setImage(GShortcutPosX+18, GShortcutPosY+10 ,135, 119, 135*UserData["AssistantProps"], 135*(UserData["AssistantProps"]+1), 81, 200, 1+0.79);
+
+GSCBNumberW = 38.0 
+GSCBNumber = ImageClass:new();
+GSCBNumber :setImageFileSize(400, GShortcutPosH);
+GSCBNumber :setscaling_ratio(0.8);
+GSCBNumber :setImage(GShortcutPosX+35, GShortcutPosY-35 ,GSCBNumberW,44,0,0, 0,0, 1+0.79);
+
+
+
+GKeyStatus = 0;--按键模式，0为正常的游戏模式，1为操作超级大炸弹作用区域。
+
+GBBPUseX = 300.0 --设定位置必须为50的整数倍
+GBBPUseY = 300.0 --设定位置必须为50的整数倍
+
+GBBPUseGX = 300.0 --设定位置必须为50的整数倍
+GBBPUseGY = 300.0 --设定位置必须为50的整数倍
+
+GBBPUseRect = ImageClass:new();
+GBBPUseRect :setImageFileSize(400, GShortcutPosH);
+GBBPUseRect :setImage(GBBPUseX, GBBPUseY ,150,150,0,51, 323, 374, 1+0.69);
+
+GBBPUseRedBG = ImageClass:new();
+GBBPUseRedBG :setImageFileSize(400, GShortcutPosH);
+GBBPUseRedBG :setImage(GBBPUseX, GBBPUseY ,50,50,60,100, 330, 370, 1+0.59);
+MaxGBBPUseRedBG = 6 --红色提示的最大格子数量
+
+GWarnStatus = false;
+GWarnTimer = 50;
+GBBPUseWarn = ImageClass:new();
+GBBPUseWarn :setImageFileSize(400, GShortcutPosH);
+GBBPUseWarn :setImage(GBBPUseX, GBBPUseY ,150,150,0,114, 387, 501, 1+0.59);
+GBBPUseWarn :SetCenterRotate();
+
+GBBPUseBomb = false;--记录超级大炸弹是否已落到指定位置
+
+GBBPUseDecline = ImageClass:new();
+GBBPUseDecline :setImageFileSize(400, GShortcutPosH);
+GBBPUseDecline :setImage(GBBPUseX, 700 ,60,110, 110,170, 200, 310, 1+0.58);
+
+
+--画快捷栏
+function DrawShortcutBar()
+
+	GSCBAP:setImagePos(135*UserData["AssistantProps"], 135*(UserData["AssistantProps"]+1), 81, 200);
+	if UserData["ShortCutBarBBP"] == 1 or UserData["ShortCutBarAP"] == 1 then
+		GShortCutBar1:DrawImage();
+		GShortCutBar1:setImagePos(GShortCutBarW*1,GShortCutBarW*2,0,GShortCutBarH);
+		GSCBNumber:setImagePos(GSCBNumberW*ShortcutKey1, GSCBNumberW*(ShortcutKey1+1), 500, 544);
+		GSCBNumber:setAbsoluteStartPos(GShortcutPosX+35, GShortcutPosY-35);
+		GSCBNumber:DrawImage();
+	end
+	if UserData["ShortCutBarBBP"] == 2 or UserData["ShortCutBarAP"] == 2 then
+		GShortCutBar2:DrawImage();
+		GShortCutBar2:setImagePos(GShortCutBarW*3,GShortCutBarW*4,0,GShortCutBarH);
+		GSCBNumber:setImagePos(GSCBNumberW*ShortcutKey2, GSCBNumberW*(ShortcutKey2+1), 500, 544);
+		GSCBNumber:setAbsoluteStartPos(GShortcutPosX+35+100, GShortcutPosY-35);
+		GSCBNumber:DrawImage();
+	end
+	if UserData["ShortCutBarBBP"] == 1 then
+		GShortCutBar1:setImagePos(GShortCutBarW*0,GShortCutBarW*1,0,GShortCutBarH);
+		GSCBBBP:setAbsoluteStartPos(GShortcutPosX+20,GShortcutPosY+7);
+		GSCBBBP:DrawImage();
+	elseif UserData["ShortCutBarBBP"] == 2 then
+		GShortCutBar2:setImagePos(GShortCutBarW*2,GShortCutBarW*3,0,GShortCutBarH);
+		GSCBBBP:setAbsoluteStartPos(GShortcutPosX+18+100,GShortcutPosY+10);
+		GSCBBBP:DrawImage();
+	end
+	
+	if UserData["ShortCutBarAP"] == 1 then
+		GShortCutBar1:setImagePos(GShortCutBarW*0,GShortCutBarW*1,0,GShortCutBarH);
+		GSCBAP:setAbsoluteStartPos(GShortcutPosX+20,GShortcutPosY+7);
+		GSCBAP:DrawImage();
+	elseif UserData["ShortCutBarAP"] == 2 then
+		GShortCutBar2:setImagePos(GShortCutBarW*2,GShortCutBarW*3,0,GShortCutBarH);
+		GSCBAP:setAbsoluteStartPos(GShortcutPosX+18+100,GShortcutPosY+10);
+		GSCBAP:DrawImage();
+	end
+	if GKeyStatus == 1 then
+	
+		GBBPUseRect:setAbsoluteStartPos(GBBPUseX,GBBPUseY);
+		GBBPUseRect:DrawImage();
+		
+		local GBBPUseTempX = GBBPUseX;
+		local GBBPUseTempY = GBBPUseY;
+		local loopi = 0;
+		local loopj = 0;
+		--画下方
+		for loopi = 0,2 do
+			for loopj = 0,MaxGBBPUseRedBG-1 do
+				GBBPUseTempY = GBBPUseTempY - 50;
+				GBBPUseRedBG:setAbsoluteStartPos(GBBPUseTempX,GBBPUseTempY);
+				GBBPUseRedBG:DrawImage();
+			end
+			GBBPUseTempX = GBBPUseTempX + 50;
+			GBBPUseTempY = GBBPUseY;
+		end
+		--画右方
+		GBBPUseTempX = GBBPUseX + 100;
+		GBBPUseTempY = GBBPUseY;
+		for loopi = 0,2 do
+			for loopj = 0,MaxGBBPUseRedBG-1 do
+				GBBPUseTempX = GBBPUseTempX + 50;
+				GBBPUseRedBG:setAbsoluteStartPos(GBBPUseTempX,GBBPUseTempY);
+				GBBPUseRedBG:DrawImage();
+			end
+			GBBPUseTempX = GBBPUseX + 100;
+			GBBPUseTempY = GBBPUseTempY + 50;
+		end
+		--画上方
+		GBBPUseTempX = GBBPUseX;
+		GBBPUseTempY = GBBPUseY + 100;
+		for loopi = 0,2 do
+			for loopj = 0,MaxGBBPUseRedBG-1 do
+				GBBPUseTempY = GBBPUseTempY + 50;
+				GBBPUseRedBG:setAbsoluteStartPos(GBBPUseTempX,GBBPUseTempY);
+				GBBPUseRedBG:DrawImage();
+			end
+			GBBPUseTempX = GBBPUseTempX + 50;
+			GBBPUseTempY = GBBPUseY + 100;
+		end
+		--画左方
+		GBBPUseTempX = GBBPUseX;
+		GBBPUseTempY = GBBPUseY;
+		for loopi = 0,2 do
+			for loopj = 0,MaxGBBPUseRedBG-1 do
+				GBBPUseTempX = GBBPUseTempX - 50;
+				GBBPUseRedBG:setAbsoluteStartPos(GBBPUseTempX,GBBPUseTempY);
+				GBBPUseRedBG:DrawImage();
+			end
+			GBBPUseTempY = GBBPUseTempY + 50;
+			GBBPUseTempX = GBBPUseX;
+		end
+	end
+	
+	if GWarnStatus then
+		GWarnTimer = GWarnTimer - 1;
+		if GWarnTimer<=0 then
+			GBBPUseWarn:SetRelativelyRA(60.0);
+			GWarnTimer = 50;
+		end
+		GBBPUseWarn:DrawImage();
+		
+		GBBPUseDecline:setRelativelyStartPos(0,-2);
+		if GBBPUseDecline["StartY"] <= GBBPUseY + 75.0 then
+			GWarnStatus = false;
+			GBBPUseBomb = true;
+		end
+		GBBPUseDecline:DrawImage();
+	end
+	
+end
 
 function ActorKey()
 	
@@ -1127,6 +1305,32 @@ function ActorKey()
 	local KeyResult_Esc = KeyDetect(0x01);
 	local KeyResult_J = KeyDetect(0x24);
 	local KeyResult_K = KeyDetect(0x25);
+	local ShortcutKey1_R = KeyDetect(DetectShortcutKey1);
+	local ShortcutKey2_R = KeyDetect(DetectShortcutKey2);
+	
+	
+	--快捷键1启动事件
+	if ShortcutKey1_R == Press then
+		if UserData["ShortCutBarBBP"] == 1 and GWarnStatus == false and GBBPUseBomb == false and GKeyStatus == 0 then
+			GKeyStatus = 1;
+			GBBPUseX = 300.0 --相对于窗口,设定位置必须为50的整数倍
+			GBBPUseY = 300.0 --相对于窗口,设定位置必须为50的整数倍
+		elseif UserData["ShortCutBarAP"] == 1 then
+			--助手道具使用，待朱丹彤添加
+		end
+	end
+	-- 快捷键2启动事件
+	if ShortcutKey2_R == Press then
+		
+		if UserData["ShortCutBarBBP"] == 2 and GWarnStatus == false and GBBPUseBomb == false and GKeyStatus == 0 then
+			GKeyStatus = 1;
+			GBBPUseX = 300.0 --相对于窗口,设定位置必须为50的整数倍
+			GBBPUseY = 300.0 --相对于窗口,设定位置必须为50的整数倍
+		elseif UserData["ShortCutBarAP"] == 2 then
+			--助手道具使用，待朱丹彤添加
+		end
+	end
+	
 	if KeyResult_Esc == Release then
 		if ISGameNotPause == true then
 			ISGameNotPause = false;
@@ -1134,72 +1338,103 @@ function ActorKey()
 		else ISGameNotPause = true;
 		end	
 	end
-	if KeyResult_right == KeepPressing then
-		releasestatus = 0;
-		movestatus = 1;
-	elseif KeyResult_right == Release then
-		releasestatus = 1;			
-		movestatus = 0;		
-	elseif KeyResult_Up == KeepPressing then
-		releasestatus = 0;
-		movestatus = 2;	
-	elseif KeyResult_Up == Release then	
-		releasestatus = 2;	
-		movestatus = 0;	
-	elseif KeyResult_Left == KeepPressing then
-		releasestatus = 0;	
-		movestatus = 3;
-	elseif KeyResult_Left == Release then	
-		movestatus = 0;
-		releasestatus = 3;		
-	elseif KeyResult_Down == KeepPressing then
-		releasestatus = 0;
-		movestatus = 4;			
-	elseif KeyResult_Down == Release then	
-		movestatus = 0;
-		releasestatus = 4;		
-	else
-		releasestatus = 0;
-		movestatus = 0;
-	end
+	
+	
+	if GKeyStatus == 1 then
+		if KeyResult_right == Release then
+			GBBPUseX = GBBPUseX + 50;
 
-	if KeyResult_J == Press then
-		local BombX = 0
-		local BombY = 0
-		local i = 1
-		while(BombX <= TotalWidthPixels) do
-			if(BombX <= actorinf["AcStPosX"] + 25 and actorinf["AcStPosX"] + 25 < BombX + 50) then
-				break
-			end
-			BombX = BombX + 50
+		elseif KeyResult_Up == Release then
+			GBBPUseY = GBBPUseY + 50;
+
+		elseif KeyResult_Left == Release then
+			GBBPUseX = GBBPUseX - 50;
+	
+		elseif KeyResult_Down == Release then
+			GBBPUseY = GBBPUseY - 50;
+	
+		else
+
 		end
-		while(BombY <= TotalHeightPixels) do
-			if(BombY <= actorinf["AcStPosY"] - 25 and actorinf["AcStPosY"] - 25 < BombY + 50) then
-				break
-			end
-			BombY = BombY + 50
+		--
+		if KeyResult_J == Press then
+			GKeyStatus = 0;
+			GBBPUseDecline:setAbsoluteStartPos(GBBPUseX+45,620);
+			GBBPUseWarn:setAbsoluteStartPos(GBBPUseX,GBBPUseY);
+			
+			
+			GBBPUseRedBG:setAbsoluteStartPos(GBBPUseX,GBBPUseY);
+			GWarnStatus = true;
 		end
-		if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] ~= 1) then
-			while(i <= UserData["HaveBombNumber"]) do
-				if(UserBomb[i]["IsWrite"] == 0) then
-					UserBomb[i]:Init(BombX,BombY)
-					UserBomb[i]["IsWrite"] = 1
-					if UserData["TimeBomb"] == 1 then
-						for j = 1,6 do
-							if(BombOrder[j] == 0) then
-								BombOrder[j] = i
-								break
-							end
-						end
-					end
-					mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
+	
+	elseif GKeyStatus == 0 then
+		if KeyResult_right == KeepPressing then
+			releasestatus = 0;
+			movestatus = 1;
+		elseif KeyResult_right == Release then
+			releasestatus = 1;			
+			movestatus = 0;		
+		elseif KeyResult_Up == KeepPressing then
+			releasestatus = 0;
+			movestatus = 2;	
+		elseif KeyResult_Up == Release then	
+			releasestatus = 2;	
+			movestatus = 0;	
+		elseif KeyResult_Left == KeepPressing then
+			releasestatus = 0;	
+			movestatus = 3;
+		elseif KeyResult_Left == Release then	
+			movestatus = 0;
+			releasestatus = 3;		
+		elseif KeyResult_Down == KeepPressing then
+			releasestatus = 0;
+			movestatus = 4;			
+		elseif KeyResult_Down == Release then	
+			movestatus = 0;
+			releasestatus = 4;		
+		else
+			releasestatus = 0;
+			movestatus = 0;
+		end
+	
+
+		if KeyResult_J == Press then
+			local BombX = 0
+			local BombY = 0
+			local i = 1
+			while(BombX <= TotalWidthPixels) do
+				if(BombX <= actorinf["AcStPosX"] + 25 and actorinf["AcStPosX"] + 25 < BombX + 50) then
 					break
 				end
-				i = i + 1
+				BombX = BombX + 50
+			end
+			while(BombY <= TotalHeightPixels) do
+				if(BombY <= actorinf["AcStPosY"] - 25 and actorinf["AcStPosY"] - 25 < BombY + 50) then
+					break
+				end
+				BombY = BombY + 50
+			end
+			if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] ~= 1) then
+				while(i <= UserData["HaveBombNumber"]) do
+					if(UserBomb[i]["IsWrite"] == 0) then
+						UserBomb[i]:Init(BombX,BombY)
+						UserBomb[i]["IsWrite"] = 1
+						if UserData["TimeBomb"] == 1 then
+							for j = 1,6 do
+								if(BombOrder[j] == 0) then
+									BombOrder[j] = i
+									break
+								end
+							end
+						end
+						mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
+						break
+					end
+					i = i + 1
+				end
 			end
 		end
 	end
-	
 	if KeyResult_K == Press then
 		if(UserData["TimeBomb"] == 1) then
 			for i = 6,1,-1 do

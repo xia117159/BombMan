@@ -246,17 +246,15 @@ end
 ShortcutPosX = 650
 ShortcutPosY = 40
 
-ShortCutBarW = 200
-ShortCutBarH = 162
+ShortCutBarW = 100
+ShortCutBarH = 81
 
 bpShortCutBar1 = ImageClass:new();
-bpShortCutBar1 :setImageFileSize(800, 162);
-bpShortCutBar1 :setscaling_ratio(0.5);
+bpShortCutBar1 :setImageFileSize(400, 544);
 bpShortCutBar1 :setImage(ShortcutPosX, ShortcutPosY ,ShortCutBarW, ShortCutBarH,  ShortCutBarW, ShortCutBarW*2,0, ShortCutBarH, bpPrioritySCB+0.9);
 
 bpShortCutBar2 = ImageClass:new();
-bpShortCutBar2 :setImageFileSize(800, 162);
-bpShortCutBar2 :setscaling_ratio(0.5);
+bpShortCutBar2 :setImageFileSize(400, 544);
 bpShortCutBar2 :setImage(ShortcutPosX+100, ShortcutPosY ,ShortCutBarW, ShortCutBarH, ShortCutBarW*3, ShortCutBarW*4,0, ShortCutBarH, bpPrioritySCB+0.9);
 
 
@@ -713,7 +711,7 @@ function LoadBakcpackImageFile()
 		ImageLoad:LoadImage(BackpackV,"Image/Font.png","DrawbpFont()", "Image_4");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 16 then
-		ImageLoad:LoadImage(BackpackV,"Image/ShortcutBar2.png","bpDrawShortCutBar()", "Image_5");
+		ImageLoad:LoadImage(BackpackV,"Image/ShortcutBar.png","bpDrawShortCutBar()", "Image_5");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 17 then
 		ImageLoad:LoadImage(BackpackV,"Image/Shop/Turntable1.png","DrawbpLottery()", "Image_6");

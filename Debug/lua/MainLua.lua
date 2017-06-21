@@ -38,8 +38,8 @@ LoadThisBackGroundImage();
 --Read()
 
 
-BombInit()
-EnemyInit()
+BombInit();
+EnemyInit();
 
 
 GoLoadView();
