@@ -39,7 +39,7 @@ LoadThisBackGroundImage();
 
 
 BombInit()
-EnemyInit()
+
 
 
 GoLoadView();

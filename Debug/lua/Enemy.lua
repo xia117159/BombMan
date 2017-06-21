@@ -52,27 +52,26 @@ function EnemyClass:Init(x,y,enemytype)
 end
 
 function EnemyInit()
-	local j = 0
-	local x = 0
-	local y = 0
+	local j = 1
+	local x = 1
+	local y = 1
 	for i = 1,10 do
 		AllEnemy[i] = EnemyClass:new()
 		j = math.random(1,5)
-		x = math.random(1,48)
-		y = math.random(1,24)
-		while(x < 7 and y < 7 and mapTable[x][y][3] == 0 and (mapTable[x][y][4] == 0 or mapTable[x][y][4] > BoxRandRate) and
-		mapTable[x][y][4] ~= 1000 and mapTable[x][y][7] == 0 and mapTable[x][y][8] == 0) do
-			x = math.random(1,48)
-			y = math.random(1,24)
+		y = math.random(1,40)
+		x = math.random(1,24)
+		while((x < 7 and y < 7) or mapTable[x][y][3] == 1 or (mapTable[x][y][4] > 0 and mapTable[x][y][4] <= BoxRandRate)) do
+			y = math.random(1,40)
+			x = math.random(1,24)
 		end
-		MessageBox(i,"1",MB_OK)
-		AllEnemy[i]:Init((x - 1) * 50 ,(y - 1) * 50,j)
+		AllEnemy[i]:Init((y - 1) * 50 ,(x - 1) * 50,j)
 	end
 end
 
 function DrawEnemy()
 	for i = 1,10 do
 		if(AllEnemy[i]["IsSurvival"] == 1) then
+			EnemyMove()
 			DrawEnemyFunc(i)
 		end
 	end
@@ -97,12 +96,13 @@ function DrawEnemyFunc(i)
 end
 
 function EnemyMove()
+	
 	local x = 0
 	local y = 0
-	for i =1,10 do
+	for i = 1 , 10 do
 		x = AllEnemy[i]["Enemy"]["StartX"] + AllEnemy[i]["MoveX"]
 		y = AllEnemy[i]["Enemy"]["StartY"] + AllEnemy[i]["MoveY"]
-		if(AllEnemy[i]["Enemy"]["StartX"] % 50 == 0 and AllEnemy[i]["Enemy"]["StartY"] % 50 == 0) then
+		if(x % 50 == 0 and y % 50 == 0) then
 			AllEnemy[i]["MoveDirection"] = math.random(1,4)
 			while(TestEnemyImpact(i,x,y) == 1) do
 				AllEnemy[i]["MoveDirection"] = math.random(1,4)
@@ -122,24 +122,28 @@ end
 
 function TestEnemyImpact(i,x,y)
 	if(AllEnemy[i]["MoveDirection"] == 1) then
-		if(x + 50 == 4800 or mapTable[x + 50][y][3] == 1 or mapTable[x + 50][y][7] == 1 or
-		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[x + 50][y][4] > 0 and  mapTable[x + 50][y][4] < BoxRandRate)) then
+		if(x + 50 == TotalWidthPixels or mapTable[y / 50 + 1][(x + 50) / 50 + 1][3] == 1 or mapTable[y / 50 + 1][(x + 50) / 50 + 1][7] == 1 or
+		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[y / 50 + 1][(x + 50) / 50 + 1][4] > 0 and mapTable[y / 50 + 1][(x + 50) / 50 + 1][4] < BoxRandRate)) then
 			return 1
 		end
+		return 0
 	elseif(AllEnemy[i]["MoveDirection"] == 2) then
-		if(y + 50 == 1200 or mapTable[x][y + 50][3] == 1 or mapTable[x][y + 50][7] == 1 or
-		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[x][y + 50][4] > 0 and  mapTable[x][y + 50][4] < BoxRandRate)) then
+		if(y + 50 == TotalHeightPixels or mapTable[(y + 50) / 50 +1][x / 50 + 1][3] == 1 or mapTable[(y + 50) / 50 +1][x / 50 + 1][7] == 1 or
+		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[(y + 50) / 50 +1][x / 50 + 1][4] > 0 and  mapTable[(y + 50) / 50 +1][x / 50 + 1][4] < BoxRandRate)) then
 			return 1
 		end
+		return 0
 	elseif(AllEnemy[i]["MoveDirection"] == 3) then
-		if(x == 0 or mapTable[x - 50][y][3] == 1 or mapTable[x - 50][y][7] == 1 or
-		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[x - 50][y][4] > 0 and  mapTable[x - 50][y][4] < BoxRandRate)) then
+		if(x == 0 or mapTable[y / 50 + 1][(x - 50) / 50 + 1][3] == 1 or mapTable[y / 50 + 1][(x - 50) / 50 + 1][7] == 1 or
+		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[y / 50 + 1][(x - 50) / 50 + 1][4] > 0 and  mapTable[y / 50 + 1][(x - 50) / 50 + 1][4] < BoxRandRate)) then
 			return 1
 		end
+		return 0
 	elseif(AllEnemy[i]["MoveDirection"] == 4) then
-		if(y == 0 or mapTable[x][y - 50][3] == 1 or mapTable[x][y - 50][7] == 1 or
-		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[x][y - 50][4] > 0 and  mapTable[x][y - 50][4] < BoxRandRate)) then
+		if(y == 0 or mapTable[(y - 50) / 50 + 1][x / 50 + 1][3] == 1 or mapTable[(y - 50) / 50 + 1][x / 50 + 1][7] == 1 or
+		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[(y - 50) / 50 + 1][x / 50 + 1][4] > 0 and  mapTable[(y - 50) / 50 + 1][x / 50 + 1][4] < BoxRandRate)) then
 			return 1
 		end
+		return 0
 	end
 end
