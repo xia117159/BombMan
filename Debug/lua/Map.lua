@@ -1069,7 +1069,7 @@ end
 
 
 function IintMapData()
-	initParams(24,40,1,math.random(30,40),0,550,true); --初始化地图参数	
+	initParams(24,40,1,math.random(1,1),0,550,true); --初始化地图参数	
 	ISGameNotPause = true;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	EnemyInit()
@@ -1162,8 +1162,11 @@ GKeyStatus = 0;--按键模式，0为正常的游戏模式，1为操作超级大炸弹作用区域。
 GBBPUseX = 300.0 --设定位置必须为50的整数倍
 GBBPUseY = 300.0 --设定位置必须为50的整数倍
 
-GBBPUseGX = 300.0 --设定位置必须为50的整数倍
-GBBPUseGY = 300.0 --设定位置必须为50的整数倍
+GBBPUseOX = 300.0 --设定位置必须为50的整数倍
+GBBPUseOY = 300.0 --设定位置必须为50的整数倍
+
+GBBPUseGlobalX = 300.0 --相对于世界的位置，设定位置必须为50的整数倍
+GBBPUseGlobalY = 300.0 --相对于世界的位置，设定位置必须为50的整数倍
 
 GBBPUseRect = ImageClass:new();
 GBBPUseRect :setImageFileSize(400, GShortcutPosH);
@@ -1240,6 +1243,7 @@ function DrawShortcutBar()
 				GBBPUseTempY = GBBPUseTempY - 50;
 				GBBPUseRedBG:setAbsoluteStartPos(GBBPUseTempX,GBBPUseTempY);
 				GBBPUseRedBG:DrawImage();
+				
 			end
 			GBBPUseTempX = GBBPUseTempX + 50;
 			GBBPUseTempY = GBBPUseY;
@@ -1283,6 +1287,8 @@ function DrawShortcutBar()
 	end
 	
 	if GWarnStatus then
+		
+		GBBPUseWarn:setRelativelyStartPos(originX - GBBPUseOX, originY - GBBPUseOY);
 		GWarnTimer = GWarnTimer - 1;
 		if GWarnTimer<=0 then
 			GBBPUseWarn:SetRelativelyRA(60.0);
@@ -1290,12 +1296,19 @@ function DrawShortcutBar()
 		end
 		GBBPUseWarn:DrawImage();
 		
-		GBBPUseDecline:setRelativelyStartPos(0,-2);
-		if GBBPUseDecline["StartY"] <= GBBPUseY + 75.0 then
+		GBBPUseDecline:setRelativelyStartPos(originX - GBBPUseOX,-2 + (originY - GBBPUseOY));
+		if GBBPUseDecline["StartY"] <=  GBBPUseY + 75.0 then
 			GWarnStatus = false;
-			GBBPUseBomb = true;
+			GBBPUseBomb = false;
+			
 		end
 		GBBPUseDecline:DrawImage();
+		GBBPUseY = GBBPUseY + originY - GBBPUseOY;
+		GBBPUseOX = originX;
+		GBBPUseOY = originY;
+		--相对于世界的位置
+		GBBPUseGlobalX = GBBPUseX + originX;
+		GBBPUseGlobalY = GBBPUseY + originY;
 	end
 	
 end
@@ -1317,8 +1330,10 @@ function ActorKey()
 	if ShortcutKey1_R == Press then
 		if UserData["ShortCutBarBBP"] == 1 and GWarnStatus == false and GBBPUseBomb == false and GKeyStatus == 0 then
 			GKeyStatus = 1;
-			GBBPUseX = 300.0 --相对于窗口,设定位置必须为50的整数倍
-			GBBPUseY = 300.0 --相对于窗口,设定位置必须为50的整数倍
+			releasestatus = 0;
+			movestatus = 0;
+			GBBPUseX = actorinf:getWindowPosX() + 50 - actorinf:getWindowPosX()%50 - originX%50; --相对于窗口,设定位置必须为50的整数倍
+			GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 - originY%50; --相对于窗口,设定位置必须为50的整数倍
 		elseif UserData["ShortCutBarAP"] == 1 then
 			--助手道具使用，待朱丹彤添加
 		end
@@ -1328,15 +1343,19 @@ function ActorKey()
 		
 		if UserData["ShortCutBarBBP"] == 2 and GWarnStatus == false and GBBPUseBomb == false and GKeyStatus == 0 then
 			GKeyStatus = 1;
-			GBBPUseX = 300.0 --相对于窗口,设定位置必须为50的整数倍
-			GBBPUseY = 300.0 --相对于窗口,设定位置必须为50的整数倍
+			releasestatus = 0;
+			movestatus = 0;
+			GBBPUseX = actorinf:getWindowPosX() + 50 - actorinf:getWindowPosX()%50 - originX%50; --相对于窗口,设定位置必须为50的整数倍
+			GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 - originY%50; --相对于窗口,设定位置必须为50的整数倍
 		elseif UserData["ShortCutBarAP"] == 2 then
 			--助手道具使用，待朱丹彤添加
 		end
 	end
 	
-	if KeyResult_Esc == Release then
-		if ISGameNotPause == true then
+	if KeyResult_Esc == Press then
+		if GKeyStatus == 1 then
+			GKeyStatus = 0;
+		elseif ISGameNotPause == true then
 			ISGameNotPause = false;
 						
 		else ISGameNotPause = true;
@@ -1365,8 +1384,10 @@ function ActorKey()
 			GKeyStatus = 0;
 			GBBPUseDecline:setAbsoluteStartPos(GBBPUseX+45,620);
 			GBBPUseWarn:setAbsoluteStartPos(GBBPUseX,GBBPUseY);
-			
-			
+			GBBPUseOX = originX;
+			GBBPUseOY = originY;
+			GBBPUseGlobalX = GBBPUseX + originX;
+			GBBPUseGlobalY = GBBPUseY + originY;
 			GBBPUseRedBG:setAbsoluteStartPos(GBBPUseX,GBBPUseY);
 			GWarnStatus = true;
 		end
