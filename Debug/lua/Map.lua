@@ -1398,6 +1398,7 @@ function ActorKey()
 		if KeyResult_right == KeepPressing then
 			releasestatus = 0;
 			movestatus = 1;
+			BossSwitchSetting = false;
 		elseif KeyResult_right == Release then
 			releasestatus = 1;			
 			movestatus = 0;		
