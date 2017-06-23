@@ -95,17 +95,18 @@ function DrawEnemyFunc(i)
 	local imageStartX = AllEnemy[i]["ImageStartX"]
 	local imageStartY = AllEnemy[i]["ImageStartY"] + (AllEnemy[i]["MoveDirection"] - 1) * 50
 	local fr = AllEnemy[i]["Enemy"]:TimerGo()
-	if fr == 1 then
-		AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX       , imageStartX + 50  , imageStartY , imageStartY + 50 ,  AllEnemy[i]["Depth"]);
+	if  ISGameNotPause then
+		if fr == 1 then
+			AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX       , imageStartX + 50  , imageStartY , imageStartY + 50 ,  AllEnemy[i]["Depth"]);
 
-	elseif fr == 2 then
-		AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 50  , imageStartX + 100 , imageStartY , imageStartY + 50 ,  AllEnemy[i]["Depth"]);
-	elseif fr == 3 then
-		AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 100 , imageStartX + 150 , imageStartY , imageStartY + 50 ,  AllEnemy[i]["Depth"]);
+		elseif fr == 2 then
+			AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 50  , imageStartX + 100 , imageStartY , imageStartY + 50 ,  AllEnemy[i]["Depth"]);
+		elseif fr == 3 then
+			AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 100 , imageStartX + 150 , imageStartY , imageStartY + 50 ,  AllEnemy[i]["Depth"]);
 
-	elseif fr == 4 then
-		AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 150 , imageStartX + 200 , imageStartY , imageStartY + 50 ,  AllEnemy[i]["Depth"]);
-
+		elseif fr == 4 then
+			AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 150 , imageStartX + 200 , imageStartY , imageStartY + 50 ,  AllEnemy[i]["Depth"]);
+		end
 	end
 	AllEnemy[i]["EnemyAnimation"]:DrawImage();
 end

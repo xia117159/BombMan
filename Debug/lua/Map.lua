@@ -157,7 +157,7 @@ end
 	
 
 function DrawDialog()
-	if ISGameNotPause == false and FrontGroundSS == false then
+	if ISGameNotPause == false and FrontGroundSS == false and FrontGroundES == false then
 		ExitDialog:DrawImage();	
 		BackGroundColor:DrawImage();
 	end
@@ -165,7 +165,7 @@ function DrawDialog()
 end
 
 function DrawButtons()
-	if ISGameNotPause == false and FrontGroundSS == false  then
+	if ISGameNotPause == false and FrontGroundSS == false and FrontGroundES == false  then
 		ExitButton:DrawImage();	
 		CancelButton:DrawImage();	
 			
@@ -1076,6 +1076,7 @@ function IintMapData()
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	EnemyInit();
 	InitStartBG();
+	-- EnableEndBG(0);
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
 end
 
@@ -1147,44 +1148,70 @@ GFGFontPrompt :setImage(250, 410 ,500, 90,  0, 500,601, 691, 1.49);
 
 
 GNumberDelay = 50;--延时1s
-CountDown = 2;
-CountDownStatus = 1; --倒计时状态值
+CountDown = 0;
+CountDownStatus = 0; --倒计时状态值
 FrontGroundStatus = 0;-- 前景动作值
+TempZoomFGN = 0.8;
 FrontGroundSS = true;
+
+FrontGroundES = false;
+RewardCountStatus = 0;--奖励计算状态
+RewardGoldNum = 0;
 -- 画前景
 function DrawFrontGround()
 
 	if FrontGroundStatus == 1 then
-		GFrontBGIL:setRelativelyStartPos(-4,0);
-		GFrontBGIR:setRelativelyStartPos(4,0);
+		GFrontBGIL:setRelativelyStartPos(-10,0);
+		GFrontBGIR:setRelativelyStartPos(10,0);
 		if GFrontBGIL["StartX"] <= -500 then
 			FrontGroundStatus = 0;
 			ISGameNotPause = true;
 			FrontGroundSS = false;
 		end
 	elseif FrontGroundStatus == 2 then
-		GFrontBGIL:setRelativelyStartPos(4,0);
-		GFrontBGIR:setRelativelyStartPos(-4,0);
+		GFrontBGIL:setRelativelyStartPos(10,0);
+		GFrontBGIR:setRelativelyStartPos(-10,0);
 		if GFrontBGIL["StartX"] >= 0 then
 			FrontGroundStatus = 0;
+			RewardCountStatus = 1;
 		end
 	end
 	GFrontBGIL:DrawImage();
 	GFrontBGIR:DrawImage();
 	
-	
+	-- 金币统计
+	if RewardCountStatus == 1 then
+		if RewardGoldNum > 0 then
+			GFGFontPrompt :setImage(300, 410 ,400, 80,  0, 400,691, 771, 1.49);
+			GFGFontPrompt:DrawImage();
+			GFGFontPrompt :setImage(310, 310 ,245, 56,  0, 350,771, 851, 1.49);
+			GFGFontPrompt:DrawImage();
+			GFGFontPrompt :setImage(330, 60 ,340, 40,  0, 680,851, 931, 1.49);
+			GFGFontPrompt:DrawImage();
+			FuncDrawFBNumber(615,330, GetBitNum(RewardGoldNum,2),0.3);
+			FuncDrawFBNumber(580,330, GetBitNum(RewardGoldNum,1),0.3);
+		elseif RewardGoldNum <= 0 then
+			GFGFontPrompt :setImage(240, 410 ,520, 80,  0, 520, 931, 1011, 1.49);
+			GFGFontPrompt:DrawImage();
+			GFGFontPrompt :setImage(330, 60 ,340, 40,  0, 680,851, 931, 1.49);
+			GFGFontPrompt:DrawImage();
+		end
+		
+	end
 	--倒计时显示区
 	if CountDownStatus == 1 then
 		GFGFontPrompt:DrawImage();
-		FuncDrawFBNumber(410,200, CountDown,0.5);
+		TempZoomFGN = TempZoomFGN - 0.005;
+		FuncDrawFBNumber(500,300, CountDown,TempZoomFGN);
 		GNumberDelay = GNumberDelay - 1;
 		if GNumberDelay <= 0 then
 			if CountDown <= 0 then
 				CountDownStatus = 0;
 				FrontGroundStatus = 1;
 			end
+			TempZoomFGN = 0.7;
 			CountDown = CountDown - 1;
-			GNumberDelay = 50;
+			GNumberDelay = 100;
 		end
 	end
 	
@@ -1197,23 +1224,42 @@ function FuncDrawFBNumber(sx,xy,Num,P)
 	local GFrontNumber = ImageClass:new();
 	GFrontNumber :setImageFileSize(FrontGroundW, FrontGroundH);
 	GFrontNumber :setscaling_ratio(P);
-	GFrontNumber :setImage(sx , xy ,282, 273.3,  1000, 1282, 60+260*Num, 60+260*(Num+1), 1.49);
+	GFrontNumber :setImage(sx-117*P/2 , xy-250*P/2 ,117, 250,  1084, 1201, 60+260*Num, 60+260*(Num+1), 1.49);
 	GFrontNumber :DrawImage();
 end
 
 function InitStartBG()
-	GNumberDelay = 50;
+	TempZoomFGN = 0.7;
+	GNumberDelay = 100;
 	CountDownStatus = 1;
 	FrontGroundStatus = 0;-- 前景动作值
 	CountDown = 2;
 	FrontGroundSS = true;
+	GFGFontPrompt :setImage(250, 410 ,500, 90,  0, 500,601, 691, 1.49);
 	GFrontBGIL:setAbsoluteStartPos(0, 0);
 	GFrontBGIR:setAbsoluteStartPos(500, 0);
 end
 
-
-
-
+function EnableEndBG(GCn)
+	if GCn > 0 then
+		UserData["GoldCoins"] = UserData["GoldCoins"] + GCn;
+		if UserData["GoldCoins"] > 9999 then
+			UserData["GoldCoins"] = 9999;
+		end
+	end
+	RewardGoldNum = GCn;
+	ISGameNotPause = false;	--判断游戏是否没有暂停
+	FrontGroundES = true;
+	FrontGroundStatus = 2;-- 前景动作值
+	GFrontBGIL:setAbsoluteStartPos(-500, 0);
+	GFrontBGIR:setAbsoluteStartPos(1000, 0);
+end
+function ResetEndBG()
+	RewardCountStatus = 0;
+	RewardGoldNum = 0;
+	FrontGroundES = false;
+	FrontGroundStatus = 0;
+end
 
 
 
@@ -1419,7 +1465,7 @@ function ActorKey()
 	local ShortcutKey1_R = KeyDetect(DetectShortcutKey1);
 	local ShortcutKey2_R = KeyDetect(DetectShortcutKey2);
 	
-	if FrontGroundSS == false then 
+	if FrontGroundSS == false and FrontGroundES == false then 
 		--快捷键1启动事件
 		if ShortcutKey1_R == Press then
 			if UserData["ShortCutBarBBP"] == 1 and GWarnStatus == false and GBBPUseBomb == false and GKeyStatus == 0 then
@@ -1602,19 +1648,23 @@ function ActorKey()
 			end
 			--]]
 		end
-	end
-	
-	if ISGameNotPause == false then
-		ExitResult = 0;
-		if DetectMousePos(ExitButton) == 1  then
-			ExitButtonEvent(1,ExitButton, GoToMainMenu);
-		elseif DetectMousePos(CancelButton) == 1 then
-			ExitButtonEvent(2,CancelButton, CancelBack);
-		elseif ExitResult == 0 then
-			GetMouseStatus();
-			ExitNotReSetButton(0);
+		if ISGameNotPause == false  then
+			ExitResult = 0;
+			if DetectMousePos(ExitButton) == 1  then
+				ExitButtonEvent(1,ExitButton, GoToMainMenu);
+			elseif DetectMousePos(CancelButton) == 1 then
+				ExitButtonEvent(2,CancelButton, CancelBack);
+			elseif ExitResult == 0 then
+				GetMouseStatus();
+				ExitNotReSetButton(0);
+			end
 		end
 	end
+	if RewardCountStatus == 1 and GetMouseStatus() == MouseLeftDown then
+		goStartView();
+		ResetEndBG();
+	end
+	
 end	
 
 function GetBuff(i)
