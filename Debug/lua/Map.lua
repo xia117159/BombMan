@@ -1503,8 +1503,8 @@ function GetBuff(i)
 	elseif i == 2 and UserData["HaveBombNumber"] <6 then
 		UserData["HaveBombNumber"] = UserData["HaveBombNumber"] + 1
 	elseif i == 3 and UserData["SpeedX"] <4 and UserData["SpeedY"] < 4 then
-		UserData["SpeedX"] = UserData["SpeedX"] + 1
-		UserData["SpeedY"] = UserData["SpeedY"] + 1
+		UnitXOffset = UnitXOffset + 1
+		UnitYOffset = UnitYOffset + 1
 	elseif i == 4 then
 		UserData["TimeBomb"] = 1
 	elseif i == 5 then
