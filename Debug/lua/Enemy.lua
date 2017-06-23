@@ -106,7 +106,7 @@ function DrawEnemyFunc(i)
 	end
 	AllEnemy[i]["EnemyAnimation"]:DrawImage();
 end
-
+   
 function EnemyMove(i)
 	local x = 0
 	local y = 0
