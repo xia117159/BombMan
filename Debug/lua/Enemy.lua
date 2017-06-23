@@ -96,15 +96,15 @@ function DrawEnemyFunc(i)
 	local imageStartY = AllEnemy[i]["ImageStartY"] + (AllEnemy[i]["MoveDirection"] - 1) * 50
 	local fr = AllEnemy[i]["Enemy"]:TimerGo()
 	if fr == 1 then
-AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX 		, imageStartX + 16, imageStartY , imageStartY + 16 ,  3);
+		AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX 		, imageStartX + 16, imageStartY , imageStartY + 16 ,  3);
 
 	elseif fr == 2 then
-AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 16 , imageStartX + 32, imageStartY , imageStartY + 16 ,  3);
+		AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 16 , imageStartX + 32, imageStartY , imageStartY + 16 ,  3);
 	elseif fr == 3 then
-AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 32 , imageStartX + 48, imageStartY , imageStartY + 16 ,  3);
+		AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 32 , imageStartX + 48, imageStartY , imageStartY + 16 ,  3);
 
 	elseif fr == 4 then
-AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 48 , imageStartX + 64, imageStartY , imageStartY + 16 ,  3);
+		AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 48 , imageStartX + 64, imageStartY , imageStartY + 16 ,  3);
 
 	end
 	AllEnemy[i]["EnemyAnimation"]:DrawImage();

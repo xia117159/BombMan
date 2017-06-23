@@ -157,7 +157,7 @@ end
 	
 
 function DrawDialog()
-	if ISGameNotPause == false and FrontGroundAS == false then
+	if ISGameNotPause == false and FrontGroundSS == false then
 		ExitDialog:DrawImage();	
 		BackGroundColor:DrawImage();
 	end
@@ -165,7 +165,7 @@ function DrawDialog()
 end
 
 function DrawButtons()
-	if ISGameNotPause == false and FrontGroundAS == false  then
+	if ISGameNotPause == false and FrontGroundSS == false  then
 		ExitButton:DrawImage();	
 		CancelButton:DrawImage();	
 			
@@ -1146,11 +1146,11 @@ GFGFontPrompt :setImage(250, 410 ,500, 90,  0, 500,601, 691, 1.49);
 
 
 
-GNumberDelay = 80;--延时1s
+GNumberDelay = 50;--延时1s
 CountDown = 2;
 CountDownStatus = 1; --倒计时状态值
 FrontGroundStatus = 0;-- 前景动作值
-FrontGroundAS = true;
+FrontGroundSS = true;
 -- 画前景
 function DrawFrontGround()
 
@@ -1160,7 +1160,7 @@ function DrawFrontGround()
 		if GFrontBGIL["StartX"] <= -500 then
 			FrontGroundStatus = 0;
 			ISGameNotPause = true;
-			FrontGroundAS = false;
+			FrontGroundSS = false;
 		end
 	elseif FrontGroundStatus == 2 then
 		GFrontBGIL:setRelativelyStartPos(4,0);
@@ -1184,7 +1184,7 @@ function DrawFrontGround()
 				FrontGroundStatus = 1;
 			end
 			CountDown = CountDown - 1;
-			GNumberDelay = 80;
+			GNumberDelay = 50;
 		end
 	end
 	
@@ -1202,9 +1202,13 @@ function FuncDrawFBNumber(sx,xy,Num,P)
 end
 
 function InitStartBG()
-	GNumberDelay = 80;
+	GNumberDelay = 50;
 	CountDownStatus = 1;
 	FrontGroundStatus = 0;-- 前景动作值
+	CountDown = 2;
+	FrontGroundSS = true;
+	GFrontBGIL:setAbsoluteStartPos(0, 0);
+	GFrontBGIR:setAbsoluteStartPos(500, 0);
 end
 
 
@@ -1223,11 +1227,11 @@ GShortCutBarH = 81
 
 GShortCutBar1 = ImageClass:new();
 GShortCutBar1 :setImageFileSize(400, GShortcutPosH);
-GShortCutBar1 :setImage(GShortcutPosX, GShortcutPosY ,GShortCutBarW, GShortCutBarH,  GShortCutBarW, GShortCutBarW*2,0, GShortCutBarH, 1+0.8);
+GShortCutBar1 :setImage(GShortcutPosX, GShortcutPosY ,GShortCutBarW, GShortCutBarH,  GShortCutBarW, GShortCutBarW*2,0, GShortCutBarH, 2+0.8);
 
 GShortCutBar2 = ImageClass:new();
 GShortCutBar2 :setImageFileSize(400, GShortcutPosH);
-GShortCutBar2 :setImage(GShortcutPosX+100, GShortcutPosY ,GShortCutBarW, GShortCutBarH, GShortCutBarW*3, GShortCutBarW*4,0, GShortCutBarH, 1+0.8);
+GShortCutBar2 :setImage(GShortcutPosX+100, GShortcutPosY ,GShortCutBarW, GShortCutBarH, GShortCutBarW*3, GShortCutBarW*4,0, GShortCutBarH, 2+0.8);
 
 GSCBBBP = ImageClass:new();
 GSCBBBP :setImageFileSize(400, GShortcutPosH);
@@ -1237,7 +1241,7 @@ GSCBBBP :setImage(GShortcutPosX+20, GShortcutPosY+7 ,100, 110, 0, 100, 200, 310,
 GSCBAP = ImageClass:new();
 GSCBAP :setImageFileSize(400, GShortcutPosH);
 GSCBAP :setscaling_ratio(0.5);
-GSCBAP :setImage(GShortcutPosX+18, GShortcutPosY+10 ,135, 119, 135*UserData["AssistantProps"], 135*(UserData["AssistantProps"]+1), 81, 200, 1+0.79);
+GSCBAP :setImage(GShortcutPosX+18, GShortcutPosY+10 ,135, 119, 135*UserData["AssistantProps"], 135*(UserData["AssistantProps"]+1), 81, 200, 2+0.79);
 
 GSCBNumberW = 38.0 
 GSCBNumber = ImageClass:new();
@@ -1415,107 +1419,164 @@ function ActorKey()
 	local ShortcutKey1_R = KeyDetect(DetectShortcutKey1);
 	local ShortcutKey2_R = KeyDetect(DetectShortcutKey2);
 	
-	
-	--快捷键1启动事件
-	if ShortcutKey1_R == Press then
-		if UserData["ShortCutBarBBP"] == 1 and GWarnStatus == false and GBBPUseBomb == false and GKeyStatus == 0 then
-			GKeyStatus = 1;
-			releasestatus = 0;
-			movestatus = 0;
-			GBBPUseX = actorinf:getWindowPosX() + 50 - actorinf:getWindowPosX()%50 - originX%50; --相对于窗口,设定位置必须为50的整数倍
-			GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 - originY%50; --相对于窗口,设定位置必须为50的整数倍
-		elseif UserData["ShortCutBarAP"] == 1 then
-			--助手道具使用，待朱丹彤添加
+	if FrontGroundSS == false then 
+		--快捷键1启动事件
+		if ShortcutKey1_R == Press then
+			if UserData["ShortCutBarBBP"] == 1 and GWarnStatus == false and GBBPUseBomb == false and GKeyStatus == 0 then
+				GKeyStatus = 1;
+				releasestatus = 0;
+				movestatus = 0;
+				GBBPUseX = actorinf:getWindowPosX() + 50 - actorinf:getWindowPosX()%50 - originX%50; --相对于窗口,设定位置必须为50的整数倍
+				GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 - originY%50; --相对于窗口,设定位置必须为50的整数倍
+			elseif UserData["ShortCutBarAP"] == 1 then
+				--助手道具使用，待朱丹彤添加
+			end
 		end
-	end
-	-- 快捷键2启动事件
-	if ShortcutKey2_R == Press then
+		-- 快捷键2启动事件
+		if ShortcutKey2_R == Press then
+			
+			if UserData["ShortCutBarBBP"] == 2 and GWarnStatus == false and GBBPUseBomb == false and GKeyStatus == 0 then
+				GKeyStatus = 1;
+				releasestatus = 0;
+				movestatus = 0;
+				GBBPUseX = actorinf:getWindowPosX() + 50 - actorinf:getWindowPosX()%50 - originX%50; --相对于窗口,设定位置必须为50的整数倍
+				GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 - originY%50; --相对于窗口,设定位置必须为50的整数倍
+			elseif UserData["ShortCutBarAP"] == 2 then
+				--助手道具使用，待朱丹彤添加
+			end
+		end
 		
-		if UserData["ShortCutBarBBP"] == 2 and GWarnStatus == false and GBBPUseBomb == false and GKeyStatus == 0 then
-			GKeyStatus = 1;
-			releasestatus = 0;
-			movestatus = 0;
-			GBBPUseX = actorinf:getWindowPosX() + 50 - actorinf:getWindowPosX()%50 - originX%50; --相对于窗口,设定位置必须为50的整数倍
-			GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 - originY%50; --相对于窗口,设定位置必须为50的整数倍
-		elseif UserData["ShortCutBarAP"] == 2 then
-			--助手道具使用，待朱丹彤添加
+		if KeyResult_Esc == Press then
+			if GKeyStatus == 1 then
+				GKeyStatus = 0;
+			elseif ISGameNotPause == true then
+				ISGameNotPause = false;
+							
+			else ISGameNotPause = true;
+			end	
 		end
-	end
-	
-	if KeyResult_Esc == Press then
+		
+		
 		if GKeyStatus == 1 then
-			GKeyStatus = 0;
-		elseif ISGameNotPause == true then
-			ISGameNotPause = false;
-						
-		else ISGameNotPause = true;
-		end	
-	end
-	
-	
-	if GKeyStatus == 1 then
-		if KeyResult_right == Release then
-			GBBPUseX = GBBPUseX + 50;
+			if KeyResult_right == Release then
+				GBBPUseX = GBBPUseX + 50;
 
-		elseif KeyResult_Up == Release then
-			GBBPUseY = GBBPUseY + 50;
+			elseif KeyResult_Up == Release then
+				GBBPUseY = GBBPUseY + 50;
 
-		elseif KeyResult_Left == Release then
-			GBBPUseX = GBBPUseX - 50;
-	
-		elseif KeyResult_Down == Release then
-			GBBPUseY = GBBPUseY - 50;
-	
-		else
+			elseif KeyResult_Left == Release then
+				GBBPUseX = GBBPUseX - 50;
+		
+			elseif KeyResult_Down == Release then
+				GBBPUseY = GBBPUseY - 50;
+		
+			else
 
+			end
+			--
+			if KeyResult_J == Press then
+				GKeyStatus = 0;
+				GBBPUseDecline:setAbsoluteStartPos(GBBPUseX+45,620);
+				GBBPUseWarn:setAbsoluteStartPos(GBBPUseX,GBBPUseY);
+				GBBPUseOX = originX;
+				GBBPUseOY = originY;
+				GBBPUseGlobalX = GBBPUseX + originX;
+				GBBPUseGlobalY = GBBPUseY + originY;
+				GBBPUseRedBG:setAbsoluteStartPos(GBBPUseX,GBBPUseY);
+				GWarnStatus = true;
+			end
+		
+		elseif GKeyStatus == 0 then
+			if KeyResult_right == KeepPressing then
+				releasestatus = 0;
+				movestatus = 1;
+				BossSwitchSetting = false;
+			elseif KeyResult_right == Release then
+				releasestatus = 1;			
+				movestatus = 0;		
+			elseif KeyResult_Up == KeepPressing then
+				releasestatus = 0;
+				movestatus = 2;	
+			elseif KeyResult_Up == Release then	
+				releasestatus = 2;	
+				movestatus = 0;	
+			elseif KeyResult_Left == KeepPressing then
+				releasestatus = 0;	
+				movestatus = 3;
+			elseif KeyResult_Left == Release then	
+				movestatus = 0;
+				releasestatus = 3;		
+			elseif KeyResult_Down == KeepPressing then
+				releasestatus = 0;
+				movestatus = 4;			
+			elseif KeyResult_Down == Release then	
+				movestatus = 0;
+				releasestatus = 4;		
+			else
+				releasestatus = 0;
+				movestatus = 0;
+			end
+		
+
+			if KeyResult_J == Press then
+				local BombX = 0
+				local BombY = 0
+				local i = 1
+				while(BombX <= TotalWidthPixels) do
+					if(BombX <= actorinf["AcStPosX"] + 25 and actorinf["AcStPosX"] + 25 < BombX + 50) then
+						break
+					end
+					BombX = BombX + 50
+				end
+				while(BombY <= TotalHeightPixels) do
+					if(BombY <= actorinf["AcStPosY"] - 25 and actorinf["AcStPosY"] - 25 < BombY + 50) then
+						break
+					end
+					BombY = BombY + 50
+				end
+				if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] ~= 1) then
+					while(i <= UserData["HaveBombNumber"]) do
+						if(UserBomb[i]["IsWrite"] == 0) then
+							UserBomb[i]:Init(BombX,BombY)
+							UserBomb[i]["IsWrite"] = 1
+							if UserData["TimeBomb"] == 1 then
+								for j = 1,6 do
+									if(BombOrder[j] == 0) then
+										BombOrder[j] = i
+										break
+									end
+								end
+							end
+							mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
+							break
+						end
+						i = i + 1
+					end
+				end
+			end
 		end
-		--
-		if KeyResult_J == Press then
-			GKeyStatus = 0;
-			GBBPUseDecline:setAbsoluteStartPos(GBBPUseX+45,620);
-			GBBPUseWarn:setAbsoluteStartPos(GBBPUseX,GBBPUseY);
-			GBBPUseOX = originX;
-			GBBPUseOY = originY;
-			GBBPUseGlobalX = GBBPUseX + originX;
-			GBBPUseGlobalY = GBBPUseY + originY;
-			GBBPUseRedBG:setAbsoluteStartPos(GBBPUseX,GBBPUseY);
-			GWarnStatus = true;
-		end
-	
-	elseif GKeyStatus == 0 then
-		if KeyResult_right == KeepPressing then
-			releasestatus = 0;
-			movestatus = 1;
-			BossSwitchSetting = false;
-		elseif KeyResult_right == Release then
-			releasestatus = 1;			
-			movestatus = 0;		
-		elseif KeyResult_Up == KeepPressing then
-			releasestatus = 0;
-			movestatus = 2;	
-		elseif KeyResult_Up == Release then	
-			releasestatus = 2;	
-			movestatus = 0;	
-		elseif KeyResult_Left == KeepPressing then
-			releasestatus = 0;	
-			movestatus = 3;
-		elseif KeyResult_Left == Release then	
-			movestatus = 0;
-			releasestatus = 3;		
-		elseif KeyResult_Down == KeepPressing then
-			releasestatus = 0;
-			movestatus = 4;			
-		elseif KeyResult_Down == Release then	
-			movestatus = 0;
-			releasestatus = 4;		
-		else
-			releasestatus = 0;
-			movestatus = 0;
-		end
-	
-
-		if KeyResult_J == Press then
-			local BombX = 0
+		if KeyResult_K == Press then
+			if(UserData["TimeBomb"] == 1) then
+				for i = 6,1,-1 do
+					if(BombOrder[i] ~=0) then
+						UserBomb[BombOrder[i]]["IsWrite"] = 0
+						UserBomb[BombOrder[i]]["IsBlast"] = 0
+						local j = BombOrder[i]
+						BombOrder[i] = 0
+						mapTable[UserBomb[j]["Bomb"]["StartY"]/BlockSize + 1][UserBomb[j]["Bomb"]["StartX"]/BlockSize + 1][7] = 0
+						for k = 1,6 do 
+							if BombBlaze[k]["IsWrite"] == 0 then
+								BombBlaze[k]:Init(UserBomb[j]["Bomb"]["StartX"],UserBomb[j]["Bomb"]["StartY"])
+								BombBlaze[k]["IsWrite"] = 1
+								TestBlazeImpact(k)
+								break
+							end
+						end
+						break
+					end
+				end
+			end
+			--[[local BombX = 0
 			local BombY = 0
 			local i = 1
 			while(BombX <= TotalWidthPixels) do
@@ -1530,73 +1591,17 @@ function ActorKey()
 				end
 				BombY = BombY + 50
 			end
-			if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] ~= 1) then
-				while(i <= UserData["HaveBombNumber"]) do
-					if(UserBomb[i]["IsWrite"] == 0) then
-						UserBomb[i]:Init(BombX,BombY)
-						UserBomb[i]["IsWrite"] = 1
-						if UserData["TimeBomb"] == 1 then
-							for j = 1,6 do
-								if(BombOrder[j] == 0) then
-									BombOrder[j] = i
-									break
-								end
-							end
-						end
-						mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
-						break
-					end
-					i = i + 1
-				end
-			end
-		end
-	end
-	if KeyResult_K == Press then
-		if(UserData["TimeBomb"] == 1) then
-			for i = 6,1,-1 do
-				if(BombOrder[i] ~=0) then
-					UserBomb[BombOrder[i]]["IsWrite"] = 0
-					UserBomb[BombOrder[i]]["IsBlast"] = 0
-					local j = BombOrder[i]
-					BombOrder[i] = 0
-					mapTable[UserBomb[j]["Bomb"]["StartY"]/BlockSize + 1][UserBomb[j]["Bomb"]["StartX"]/BlockSize + 1][7] = 0
-					for k = 1,6 do 
-						if BombBlaze[k]["IsWrite"] == 0 then
-							BombBlaze[k]:Init(UserBomb[j]["Bomb"]["StartX"],UserBomb[j]["Bomb"]["StartY"])
-							BombBlaze[k]["IsWrite"] = 1
-							TestBlazeImpact(k)
-							break
-						end
-					end
+			while(i <= UserData["HaveBombNumber"]) do
+				if(UserBomb[i]["IsWrite"] == 0) then
+					UserBomb[i]:Init(BombX,BombY)
+					UserBomb[i]["IsWrite"] = 1
+					mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
 					break
 				end
+				i = i + 1
 			end
+			--]]
 		end
-		--[[local BombX = 0
-		local BombY = 0
-		local i = 1
-		while(BombX <= TotalWidthPixels) do
-			if(BombX <= actorinf["AcStPosX"] + 25 and actorinf["AcStPosX"] + 25 < BombX + 50) then
-				break
-			end
-			BombX = BombX + 50
-		end
-		while(BombY <= TotalHeightPixels) do
-			if(BombY <= actorinf["AcStPosY"] - 25 and actorinf["AcStPosY"] - 25 < BombY + 50) then
-				break
-			end
-			BombY = BombY + 50
-		end
-		while(i <= UserData["HaveBombNumber"]) do
-			if(UserBomb[i]["IsWrite"] == 0) then
-				UserBomb[i]:Init(BombX,BombY)
-				UserBomb[i]["IsWrite"] = 1
-				mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
-				break
-			end
-			i = i + 1
-		end
-		--]]
 	end
 	
 	if ISGameNotPause == false then
