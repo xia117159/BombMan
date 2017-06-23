@@ -147,15 +147,15 @@ end
 	
 	ExitButton = ImageClass:new();
 	ExitButton:setImageFileSize(ExitButtonWidth*3, ExitButtonHeight*2);
-	ExitButton:setImage(325 ,185, ExitButtonWidth, ExitButtonHeight, 0, ExitButtonWidth, ExitButtonHeight*0, ExitButtonHeight*1, 1.01);
+	ExitButton:setImage(325 ,185, ExitButtonWidth, ExitButtonHeight, 0, ExitButtonWidth, ExitButtonHeight*0, ExitButtonHeight*1, 1.99);
 	CancelButton = ImageClass:new();
 	CancelButton:setImageFileSize(ExitButtonWidth*3, ExitButtonHeight*2);
-	CancelButton:setImage(300+1.5*ExitButtonWidth, 185, ExitButtonWidth, ExitButtonHeight, 0, ExitButtonWidth, ExitButtonHeight*1, ExitButtonHeight*2, 1.0);
+	CancelButton:setImage(300+1.5*ExitButtonWidth, 185, ExitButtonWidth, ExitButtonHeight, 0, ExitButtonWidth, ExitButtonHeight*1, ExitButtonHeight*2, 1.99);
 	
 	
 
 function DrawDialog()
-	if ISGameNotPause == false  then
+	if ISGameNotPause == false and FrontGroundAS == false then
 		ExitDialog:DrawImage();	
 		BackGroundColor:DrawImage();
 	end
@@ -163,7 +163,7 @@ function DrawDialog()
 end
 
 function DrawButtons()
-	if ISGameNotPause == false  then
+	if ISGameNotPause == false and FrontGroundAS == false  then
 		ExitButton:DrawImage();	
 		CancelButton:DrawImage();	
 			
@@ -1070,9 +1070,10 @@ end
 
 function IintMapData()
 	initParams(24,40,1,math.random(30,40),0,550,true); --初始化地图参数	
-	ISGameNotPause = true;	--判断游戏是否没有暂停
+	ISGameNotPause = false;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
-	EnemyInit()
+	EnemyInit();
+	InitStartBG();
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
 end
 
@@ -1094,34 +1095,121 @@ function LoadMapViewImageFile()
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 24 then
 		ImageLoad:LoadImage(PlotV,"Image/Map/Boss.png","DrawBoss()", "Image_3");
-		NowLoadPos = NowLoadPos + 1;
+		NowLoadPos = NowLoadPos + 1;	
 	elseif NowLoadPos == 25 then
-		ImageLoad:LoadImage(PlotV,"Image/Map/BackgroundColor4.png","DrawDialog()", "Image_4");
+		ImageLoad:LoadImage(PlotV,"Image/Bomb/Bomb.png","DrawBomb()", "Image_4");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 26 then
-		ImageLoad:LoadImage(PlotV,"Image/Map/ExitButtons.png","DrawButtons()", "Image_5");
-		NowLoadPos = NowLoadPos + 1;	
+		ImageLoad:LoadImage(PlotV,"Image/Bomb/Blaze.png","DrawBlaze()", "Image_5");
+		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 27 then
-		ImageLoad:LoadImage(PlotV,"Image/Bomb/Bomb.png","DrawBomb()", "Image_6");
+		ImageLoad:LoadImage(PlotV,"Image/Bomb/Dynamite.png","DrawDynamite()", "Image_6");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 28 then
-		ImageLoad:LoadImage(PlotV,"Image/Bomb/Blaze.png","DrawBlaze()", "Image_7");
+		ImageLoad:LoadImage(PlotV,"Image/Enemy.png","DrawEnemy()", "Image_7");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 29 then
-		ImageLoad:LoadImage(PlotV,"Image/Bomb/Dynamite.png","DrawDynamite()", "Image_8");
+		ImageLoad:LoadImage(PlotV,"Image/Map/assistant.png","DrawAssistant()", "Image_8");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 30 then
-		ImageLoad:LoadImage(PlotV,"Image/Enemy.png","DrawEnemy()", "Image_9");
+		ImageLoad:LoadImage(PlotV,"Image/ShortcutBar.png","DrawShortcutBar()", "Image_9");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 31 then
-		ImageLoad:LoadImage(PlotV,"Image/Map/assistant.png","DrawAssistant()", "Image_10");
+		ImageLoad:LoadImage(PlotV,"Image/Map/BackgroundColor4.png","DrawDialog()", "Image_10");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 32 then
-		ImageLoad:LoadImage(PlotV,"Image/ShortcutBar.png","DrawShortcutBar()", "Image_11");
+		ImageLoad:LoadImage(PlotV,"Image/Map/ExitButtons.png","DrawButtons()", "Image_11");
+		NowLoadPos = NowLoadPos + 1;
+	elseif NowLoadPos == 33 then
+		ImageLoad:LoadImage(PlotV,"Image/FrontGround.png","DrawFrontGround()", "Image_12");
 		NowLoadPos = NowLoadPos + 1;
 	end
 	
 end
+
+FrontGroundW = 1282;
+FrontGroundH = 2733;
+
+GFrontBGIL = ImageClass:new();
+GFrontBGIL :setImageFileSize(FrontGroundW, FrontGroundH);
+GFrontBGIL :setImage(0, 0 ,500, 600,  0, 500,0, 600, 1.5);
+
+GFrontBGIR = ImageClass:new();
+GFrontBGIR :setImageFileSize(FrontGroundW, FrontGroundH);
+GFrontBGIR :setImage(500, 0 ,500, 600,  500, 1000,0, 600, 1.5);
+
+GFGFontPrompt = ImageClass:new();
+GFGFontPrompt :setImageFileSize(FrontGroundW, FrontGroundH);
+GFGFontPrompt :setImage(250, 410 ,500, 90,  0, 500,601, 691, 1.49);
+
+
+
+GNumberDelay = 80;--延时1s
+CountDown = 2;
+CountDownStatus = 1; --倒计时状态值
+FrontGroundStatus = 0;-- 前景动作值
+FrontGroundAS = true;
+-- 画前景
+function DrawFrontGround()
+
+	if FrontGroundStatus == 1 then
+		GFrontBGIL:setRelativelyStartPos(-4,0);
+		GFrontBGIR:setRelativelyStartPos(4,0);
+		if GFrontBGIL["StartX"] <= -500 then
+			FrontGroundStatus = 0;
+			ISGameNotPause = true;
+			FrontGroundAS = false;
+		end
+	elseif FrontGroundStatus == 2 then
+		GFrontBGIL:setRelativelyStartPos(4,0);
+		GFrontBGIR:setRelativelyStartPos(-4,0);
+		if GFrontBGIL["StartX"] >= 0 then
+			FrontGroundStatus = 0;
+		end
+	end
+	GFrontBGIL:DrawImage();
+	GFrontBGIR:DrawImage();
+	
+	
+	--倒计时显示区
+	if CountDownStatus == 1 then
+		GFGFontPrompt:DrawImage();
+		FuncDrawFBNumber(410,200, CountDown,0.5);
+		GNumberDelay = GNumberDelay - 1;
+		if GNumberDelay <= 0 then
+			if CountDown <= 0 then
+				CountDownStatus = 0;
+				FrontGroundStatus = 1;
+			end
+			CountDown = CountDown - 1;
+			GNumberDelay = 80;
+		end
+	end
+	
+end
+
+
+
+-- 画数字
+function FuncDrawFBNumber(sx,xy,Num,P)
+	local GFrontNumber = ImageClass:new();
+	GFrontNumber :setImageFileSize(FrontGroundW, FrontGroundH);
+	GFrontNumber :setscaling_ratio(P);
+	GFrontNumber :setImage(sx , xy ,282, 273.3,  1000, 1282, 60+260*Num, 60+260*(Num+1), 1.49);
+	GFrontNumber :DrawImage();
+end
+
+function InitStartBG()
+	GNumberDelay = 80;
+	CountDownStatus = 1;
+	FrontGroundStatus = 0;-- 前景动作值
+end
+
+
+
+
+
+
 
 GShortcutPosH = 544
 
@@ -1142,7 +1230,7 @@ GShortCutBar2 :setImage(GShortcutPosX+100, GShortcutPosY ,GShortCutBarW, GShortC
 GSCBBBP = ImageClass:new();
 GSCBBBP :setImageFileSize(400, GShortcutPosH);
 GSCBBBP :setscaling_ratio(0.6);
-GSCBBBP :setImage(GShortcutPosX+20, GShortcutPosY+7 ,100, 110, 0, 100, 200, 310, 1+0.79);
+GSCBBBP :setImage(GShortcutPosX+20, GShortcutPosY+7 ,100, 110, 0, 100, 200, 310, 2+0.79);
 
 GSCBAP = ImageClass:new();
 GSCBAP :setImageFileSize(400, GShortcutPosH);
@@ -1153,7 +1241,7 @@ GSCBNumberW = 38.0
 GSCBNumber = ImageClass:new();
 GSCBNumber :setImageFileSize(400, GShortcutPosH);
 GSCBNumber :setscaling_ratio(0.8);
-GSCBNumber :setImage(GShortcutPosX+35, GShortcutPosY-35 ,GSCBNumberW,44,0,0, 0,0, 1+0.79);
+GSCBNumber :setImage(GShortcutPosX+35, GShortcutPosY-35 ,GSCBNumberW,44,0,0, 0,0, 2+0.79);
 
 
 
@@ -1167,25 +1255,25 @@ GBBPUseGY = 300.0 --设定位置必须为50的整数倍
 
 GBBPUseRect = ImageClass:new();
 GBBPUseRect :setImageFileSize(400, GShortcutPosH);
-GBBPUseRect :setImage(GBBPUseX, GBBPUseY ,150,150,0,51, 323, 374, 1+0.69);
+GBBPUseRect :setImage(GBBPUseX, GBBPUseY ,150,150,0,51, 323, 374, 2+0.69);
 
 GBBPUseRedBG = ImageClass:new();
 GBBPUseRedBG :setImageFileSize(400, GShortcutPosH);
-GBBPUseRedBG :setImage(GBBPUseX, GBBPUseY ,50,50,60,100, 330, 370, 1+0.59);
+GBBPUseRedBG :setImage(GBBPUseX, GBBPUseY ,50,50,60,100, 330, 370, 2+0.59);
 MaxGBBPUseRedBG = 6 --红色提示的最大格子数量
 
 GWarnStatus = false;
 GWarnTimer = 50;
 GBBPUseWarn = ImageClass:new();
 GBBPUseWarn :setImageFileSize(400, GShortcutPosH);
-GBBPUseWarn :setImage(GBBPUseX, GBBPUseY ,150,150,0,114, 387, 501, 1+0.59);
+GBBPUseWarn :setImage(GBBPUseX, GBBPUseY ,150,150,0,114, 387, 501, 2+0.59);
 GBBPUseWarn :SetCenterRotate();
 
 GBBPUseBomb = false;--记录超级大炸弹是否已落到指定位置
 
 GBBPUseDecline = ImageClass:new();
 GBBPUseDecline :setImageFileSize(400, GShortcutPosH);
-GBBPUseDecline :setImage(GBBPUseX, 700 ,60,110, 110,170, 200, 310, 1+0.58);
+GBBPUseDecline :setImage(GBBPUseX, 700 ,60,110, 110,170, 200, 310, 2+0.58);
 
 
 --画快捷栏

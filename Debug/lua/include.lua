@@ -40,7 +40,7 @@ BackpackV  =   0x0004
 LoadV      =   0x0019
 
 --总的图片数量
-AllImageNum = 32
+AllImageNum = 33
 NowLoadPos = 1
 NextLoadPos = 1
 --@@@@@@@@@@@@@@@@@@@@@@@结束@@@@@@@@@@@@@@@@@@@@@@@@@

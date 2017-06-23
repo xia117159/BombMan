@@ -52,7 +52,6 @@ function EnemyClass:Init(x,y,enemytype)
 end
 
 function EnemyInit()
-	MessageBox("1","1",MB_OK)
 	local j = 1
 	local x = 1
 	local y = 1
@@ -85,13 +84,13 @@ function DrawEnemyFunc(i)
 	local imageStartY = AllEnemy[i]["ImageStartY"]
 	local fr = AllEnemy[i]["Enemy"]:TimerGo()
 	if fr == 1 then
-		AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX 		, imageStartX + 16, imageStartY , imageStartY + 16 ,  2);
+		AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX 		, imageStartX + 16, imageStartY , imageStartY + 16 ,  3);
 	elseif fr == 2 then
-		AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 16 , imageStartX + 32, imageStartY , imageStartY + 16 ,  2);
+		AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 16 , imageStartX + 32, imageStartY , imageStartY + 16 ,  3);
 	elseif fr == 3 then
-		AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 32 , imageStartX + 48, imageStartY , imageStartY + 16 ,  2);
+		AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 32 , imageStartX + 48, imageStartY , imageStartY + 16 ,  3);
 	elseif fr == 4 then
-		AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 48 , imageStartX + 64, imageStartY , imageStartY + 16 ,  2);
+		AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 48 , imageStartX + 64, imageStartY , imageStartY + 16 ,  3);
 	end
 	AllEnemy[i]["EnemyAnimation"]:DrawImage();
 end
