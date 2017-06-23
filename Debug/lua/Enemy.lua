@@ -98,19 +98,23 @@ function DrawEnemyFunc(i)
 	local imageStartY = AllEnemy[i]["ImageStartY"] + (AllEnemy[i]["MoveDirection"] - 1) * 50
 	if(ISGameNotPause == true) then
 	local fr = AllEnemy[i]["Enemy"]:TimerGo()
+	if  ISGameNotPause then
 		if fr == 1 then
-			AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX 		 , imageStartX + 50  , imageStartY , imageStartY + 50 ,  AllEnemy[i]["Depth"]);
+			AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX       , imageStartX + 50  , imageStartY , imageStartY + 50 ,  AllEnemy[i]["Depth"]);	
+
 		elseif fr == 2 then
 			AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 50  , imageStartX + 100 , imageStartY , imageStartY + 50 ,  AllEnemy[i]["Depth"]);
 		elseif fr == 3 then
 			AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 100 , imageStartX + 150 , imageStartY , imageStartY + 50 ,  AllEnemy[i]["Depth"]);
+
 		elseif fr == 4 then
 			AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 150 , imageStartX + 200 , imageStartY , imageStartY + 50 ,  AllEnemy[i]["Depth"]);
+		end
 		end
 	end
 	AllEnemy[i]["EnemyAnimation"]:DrawImage();
 end
-
+   
 function EnemyMove(i)
 	local x = 0
 	local y = 0

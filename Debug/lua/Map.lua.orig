@@ -1138,10 +1138,13 @@ function LoadMapViewImageFile()
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 32 then
 		ImageLoad:LoadImage(PlotV,"Image/Map/ExitButtons.png","DrawButtons()", "Image_11");
+<<<<<<< HEAD
+		NowLoadPos = NowLoadPos + 1;	
+=======
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 33 then
 		ImageLoad:LoadImage(PlotV,"Image/FrontGround.png","DrawFrontGround()", "Image_12");
-		NowLoadPos = NowLoadPos + 1;	
+		NowLoadPos = NowLoadPos + 1;
 	end
 	
 end
@@ -1229,6 +1232,7 @@ function DrawFrontGround()
 			CountDown = CountDown - 1;
 			GNumberDelay = 100;
 		end
+>>>>>>> 8124648152e0df12774d9d086f3589c185086e0d
 	end
 	
 end
@@ -1513,15 +1517,29 @@ function ActorKey()
 				GKeyStatus = 0;
 			elseif ISGameNotPause == true then
 				ISGameNotPause = false;
-	
+							
 			else ISGameNotPause = true;
 			end	
 		end
 		
 		
 		if GKeyStatus == 1 then
+<<<<<<< HEAD
+			GKeyStatus = 0;
+		elseif ISGameNotPause == true then
+			ISGameNotPause = false;					
+		else ISGameNotPause = true;
+		end	
+	end
+	
+	
+	if GKeyStatus == 1 then
+		if KeyResult_right == Release then
+			GBBPUseX = GBBPUseX + 50;
+=======
 			if KeyResult_right == Release then
 				GBBPUseX = GBBPUseX + 50;
+>>>>>>> 8124648152e0df12774d9d086f3589c185086e0d
 
 			elseif KeyResult_Up == Release then
 				GBBPUseY = GBBPUseY + 50;
@@ -1596,9 +1614,6 @@ function ActorKey()
 					end
 					BombY = BombY + 50
 				end
-			if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][4] > 0 and mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][4] <= BoxRandRate) then
-				return
-			end
 				if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] ~= 1) then
 					while(i <= UserData["HaveBombNumber"]) do
 						if(UserBomb[i]["IsWrite"] == 0) then
@@ -1613,13 +1628,6 @@ function ActorKey()
 								end
 							end
 							mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
-						for j = 1,8 do
-							if(BombBlaze[j]["IsWrite"] == 0) then
-								BombBlaze[j]:Init(BombX,BombY)
-								TestBlazeImpact(j,0)
-							end
-						end
-						--TestBlazeImpact()
 							break
 						end
 						i = i + 1
@@ -1636,23 +1644,97 @@ function ActorKey()
 						local j = BombOrder[i]
 						BombOrder[i] = 0
 						mapTable[UserBomb[j]["Bomb"]["StartY"]/BlockSize + 1][UserBomb[j]["Bomb"]["StartX"]/BlockSize + 1][7] = 0
-						for k = 1,8 do 
+						for k = 1,6 do 
 							if BombBlaze[k]["IsWrite"] == 0 then
 								BombBlaze[k]:Init(UserBomb[j]["Bomb"]["StartX"],UserBomb[j]["Bomb"]["StartY"])
 								BombBlaze[k]["IsWrite"] = 1
-								TestBlazeImpact(k,1)
+								TestBlazeImpact(k)
 								break
 							end
 						end
 						break
 					end
 				end
-			end	
-	
-
+			end
+			--[[local BombX = 0
+			local BombY = 0
+			local i = 1
+			while(BombX <= TotalWidthPixels) do
+				if(BombX <= actorinf["AcStPosX"] + 25 and actorinf["AcStPosX"] + 25 < BombX + 50) then
+					break
+				end
+				BombX = BombX + 50
+			end
+			while(BombY <= TotalHeightPixels) do
+				if(BombY <= actorinf["AcStPosY"] - 25 and actorinf["AcStPosY"] - 25 < BombY + 50) then
+					break
+				end
+				BombY = BombY + 50
+			end
+<<<<<<< HEAD
+			if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][4] > 0 and mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][4] <= BoxRandRate) then
+				return
+			end
+			if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] ~= 1) then
+				while(i <= UserData["HaveBombNumber"]) do
+					if(UserBomb[i]["IsWrite"] == 0) then
+						UserBomb[i]:Init(BombX,BombY)
+						UserBomb[i]["IsWrite"] = 1
+						if UserData["TimeBomb"] == 1 then
+							for j = 1,6 do
+								if(BombOrder[j] == 0) then
+									BombOrder[j] = i
+									break
+								end
+							end
+						end
+						mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
+						for j = 1,8 do
+							if(BombBlaze[j]["IsWrite"] == 0) then
+								BombBlaze[j]:Init(BombX,BombY)
+								TestBlazeImpact(j,0)
+							end
+						end
+						--TestBlazeImpact()
+						break
+					end
+					i = i + 1
+				end
+			end
 		end
-	
-
+	end
+	if KeyResult_K == Press then
+		if(UserData["TimeBomb"] == 1) then
+			for i = 6,1,-1 do
+				if(BombOrder[i] ~=0) then
+					UserBomb[BombOrder[i]]["IsWrite"] = 0
+					UserBomb[BombOrder[i]]["IsBlast"] = 0
+					local j = BombOrder[i]
+					BombOrder[i] = 0
+					mapTable[UserBomb[j]["Bomb"]["StartY"]/BlockSize + 1][UserBomb[j]["Bomb"]["StartX"]/BlockSize + 1][7] = 0
+					for k = 1,8 do 
+						if BombBlaze[k]["IsWrite"] == 0 then
+							BombBlaze[k]:Init(UserBomb[j]["Bomb"]["StartX"],UserBomb[j]["Bomb"]["StartY"])
+							BombBlaze[k]["IsWrite"] = 1
+							TestBlazeImpact(k,1)
+							break
+						end
+					end
+=======
+			while(i <= UserData["HaveBombNumber"]) do
+				if(UserBomb[i]["IsWrite"] == 0) then
+					UserBomb[i]:Init(BombX,BombY)
+					UserBomb[i]["IsWrite"] = 1
+					mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
+>>>>>>> 8124648152e0df12774d9d086f3589c185086e0d
+					break
+				end
+				i = i + 1
+			end
+			--]]
+		end
+<<<<<<< HEAD
+=======
 		if ISGameNotPause == false  then
 			ExitResult = 0;
 			if DetectMousePos(ExitButton) == 1  then
@@ -1664,6 +1746,7 @@ function ActorKey()
 				ExitNotReSetButton(0);
 			end
 		end
+>>>>>>> 8124648152e0df12774d9d086f3589c185086e0d
 	end
 	if RewardCountStatus == 1 and GetMouseStatus() == MouseLeftDown then
 		goStartView();
