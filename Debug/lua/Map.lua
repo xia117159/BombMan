@@ -24,7 +24,7 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitch)
 	--mapTable[i][j][1]代表位置X，mapTable[i][j][2]代表位置Y，
 	--mapTable[i][j][3]代表砖，mapTable[i][j][4]代表墙，0为无，1至BoxRandRate为存在 mapTable[i][j][5]代表墙的类型X轴标号 mapTable[i][j][6]代表墙的类型Y轴标号
 	--mapTable[i][j][7]代表炸弹 mapTable[i][j][8]代表BUFF mapTable[i][j][9]代表该位置是否将会受到火焰波及 0代表未受波及 >0代表受到波及并且代表受到波及的火焰数目
-	--mapTable[i][j][10]火焰已经覆盖地区
+	--mapTable[i][j][10]火焰已经覆盖地区 mapTable[i][j][11]代表离助手的可到达距离，即没有障碍物（砖、铁墙、炸弹）无穷远（未初始化，不在距离数组中）则为100
 
 	if maptype == 1 then   --1型地图
 		for i=1,s do 
@@ -41,6 +41,7 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitch)
 				mapTable[i][j][8] = 0;
 				mapTable[i][j][9] = 0;
 				mapTable[i][j][10] = 0;
+				mapTable[i][j][11] = 100;
 				if j % 2 == 0 and temp then
 					mapTable[i][j][3] = 1;
 					mapTable[i][j][4] = 0;				
@@ -92,7 +93,7 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitch)
 	
 	actorinf = ActorClass:new();
 	actorimg:setImage(0, 550, BlockSize, BlockSize, 0, ActorWidth, 0, ActorHeight, 9.0);
-	
+
 	assistantinf = AssistantClass:new();
 	assistantinf:setAbsolutePos(500,1200);
 	Assistantimg:setImage(500, 550, BlockSize, BlockSize, 0, AssistantWidth, 0, AssistantHeight, 9.01);
@@ -174,7 +175,8 @@ end
 
 	
 function DrawGround()
-	
+	local i;
+	local j;
 	Gx=originX;
 	Gy=originY;
 	for i=1,TotalRows,1 do
@@ -189,6 +191,8 @@ function DrawGround()
 end
 
 function DrawMap()	
+	local i;
+	local j;
 	x = originX;
 	y = originY;
 	for i=1,TotalRows,1 do		
@@ -1060,6 +1064,18 @@ function ExitNotReSetButton(TempB)
 end
 	
 function GoToMainMenu()
+	for i = 1,7 do
+		UserBomb[i]["IsWrite"] = 0
+		UserBomb[i]["IsBlast"] = 0
+	end
+	for i = 1,15 do
+		BombBlaze[i]["IsWrite"] = 0
+		BombBlaze[i]["IsEnd"] = 0
+	end
+	for i = 1,15 do
+		DynamiteWall[i]["IsWrite"] = 0
+		DynamiteWall[i]["IsEnd"] = 0
+	end
 	goStartView();
 end	
 
@@ -1098,29 +1114,29 @@ function LoadMapViewImageFile()
 		ImageLoad:LoadImage(PlotV,"Image/Map/Boss.png","DrawBoss()", "Image_3");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 25 then
-		ImageLoad:LoadImage(PlotV,"Image/Map/BackgroundColor4.png","DrawDialog()", "Image_4");
+		ImageLoad:LoadImage(PlotV,"Image/Bomb/Bomb.png","DrawBomb()", "Image_4");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 26 then
-		ImageLoad:LoadImage(PlotV,"Image/Map/ExitButtons.png","DrawButtons()", "Image_5");
-		NowLoadPos = NowLoadPos + 1;	
+		ImageLoad:LoadImage(PlotV,"Image/Bomb/Blaze.png","DrawBlaze()", "Image_5");
+		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 27 then
-		ImageLoad:LoadImage(PlotV,"Image/Bomb/Bomb.png","DrawBomb()", "Image_6");
+		ImageLoad:LoadImage(PlotV,"Image/Bomb/Dynamite.png","DrawDynamite()", "Image_6");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 28 then
-		ImageLoad:LoadImage(PlotV,"Image/Bomb/Blaze.png","DrawBlaze()", "Image_7");
+		ImageLoad:LoadImage(PlotV,"Image/Enemy.png","DrawEnemy()", "Image_7");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 29 then
-		ImageLoad:LoadImage(PlotV,"Image/Bomb/Dynamite.png","DrawDynamite()", "Image_8");
+		ImageLoad:LoadImage(PlotV,"Image/Map/assistant.png","DrawAssistant()", "Image_8");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 30 then
-		ImageLoad:LoadImage(PlotV,"Image/Enemy.png","DrawEnemy()", "Image_9");
+		ImageLoad:LoadImage(PlotV,"Image/ShortcutBar.png","DrawShortcutBar()", "Image_9");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 31 then
-		ImageLoad:LoadImage(PlotV,"Image/Map/assistant.png","DrawAssistant()", "Image_10");
+		ImageLoad:LoadImage(PlotV,"Image/Map/BackgroundColor4.png","DrawDialog()", "Image_10");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 32 then
-		ImageLoad:LoadImage(PlotV,"Image/ShortcutBar.png","DrawShortcutBar()", "Image_11");
-		NowLoadPos = NowLoadPos + 1;
+		ImageLoad:LoadImage(PlotV,"Image/Map/ExitButtons.png","DrawButtons()", "Image_11");
+		NowLoadPos = NowLoadPos + 1;	
 	end
 	
 end
@@ -1358,8 +1374,7 @@ function ActorKey()
 		if GKeyStatus == 1 then
 			GKeyStatus = 0;
 		elseif ISGameNotPause == true then
-			ISGameNotPause = false;
-						
+			ISGameNotPause = false;					
 		else ISGameNotPause = true;
 		end	
 	end
@@ -1442,6 +1457,9 @@ function ActorKey()
 				end
 				BombY = BombY + 50
 			end
+			if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][4] > 0 and mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][4] <= BoxRandRate) then
+				return
+			end
 			if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] ~= 1) then
 				while(i <= UserData["HaveBombNumber"]) do
 					if(UserBomb[i]["IsWrite"] == 0) then
@@ -1456,6 +1474,13 @@ function ActorKey()
 							end
 						end
 						mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
+						for j = 1,8 do
+							if(BombBlaze[j]["IsWrite"] == 0) then
+								BombBlaze[j]:Init(BombX,BombY)
+								TestBlazeImpact(j,0)
+							end
+						end
+						--TestBlazeImpact()
 						break
 					end
 					i = i + 1
@@ -1472,11 +1497,11 @@ function ActorKey()
 					local j = BombOrder[i]
 					BombOrder[i] = 0
 					mapTable[UserBomb[j]["Bomb"]["StartY"]/BlockSize + 1][UserBomb[j]["Bomb"]["StartX"]/BlockSize + 1][7] = 0
-					for k = 1,6 do 
+					for k = 1,8 do 
 						if BombBlaze[k]["IsWrite"] == 0 then
 							BombBlaze[k]:Init(UserBomb[j]["Bomb"]["StartX"],UserBomb[j]["Bomb"]["StartY"])
 							BombBlaze[k]["IsWrite"] = 1
-							TestBlazeImpact(k)
+							TestBlazeImpact(k,1)
 							break
 						end
 					end
@@ -1484,31 +1509,6 @@ function ActorKey()
 				end
 			end
 		end
-		--[[local BombX = 0
-		local BombY = 0
-		local i = 1
-		while(BombX <= TotalWidthPixels) do
-			if(BombX <= actorinf["AcStPosX"] + 25 and actorinf["AcStPosX"] + 25 < BombX + 50) then
-				break
-			end
-			BombX = BombX + 50
-		end
-		while(BombY <= TotalHeightPixels) do
-			if(BombY <= actorinf["AcStPosY"] - 25 and actorinf["AcStPosY"] - 25 < BombY + 50) then
-				break
-			end
-			BombY = BombY + 50
-		end
-		while(i <= UserData["HaveBombNumber"]) do
-			if(UserBomb[i]["IsWrite"] == 0) then
-				UserBomb[i]:Init(BombX,BombY)
-				UserBomb[i]["IsWrite"] = 1
-				mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
-				break
-			end
-			i = i + 1
-		end
-		--]]
 	end
 	
 	if ISGameNotPause == false then
