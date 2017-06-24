@@ -29,6 +29,8 @@ function KeyFunc()
 			ActorKey();
 		elseif 	NowView == BackpackV then
 			bpViewKC();
+		elseif 	NowView == HelpV then
+			HelpKeyControlFunc();
 		end
 	end
 	Gamebgm:Play(EndSwitch);

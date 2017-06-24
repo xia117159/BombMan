@@ -155,10 +155,11 @@ end
 	CancelButton:setImageFileSize(ExitButtonWidth*3, ExitButtonHeight*2);
 	CancelButton:setImage(300+1.5*ExitButtonWidth, 185, ExitButtonWidth, ExitButtonHeight, 0, ExitButtonWidth, ExitButtonHeight*1, ExitButtonHeight*2, 1.99);
 	
-	
+DialogStatus = false;--退出游戏弹框是否能显示和操作状态。
+
 
 function DrawDialog()
-	if ISGameNotPause == false and FrontGroundSS == false and FrontGroundES == false then
+	if DialogStatus then
 		ExitDialog:DrawImage();	
 		BackGroundColor:DrawImage();
 	end
@@ -166,7 +167,7 @@ function DrawDialog()
 end
 
 function DrawButtons()
-	if ISGameNotPause == false and FrontGroundSS == false and FrontGroundES == false  then
+	if DialogStatus then
 		ExitButton:DrawImage();	
 		CancelButton:DrawImage();	
 			
@@ -1080,6 +1081,7 @@ function GoToMainMenu()
 end	
 
 function CancelBack()
+	DialogStatus = false;
 	ISGameNotPause = true;
 end	
 
@@ -1089,10 +1091,12 @@ end
 function IintMapData()
 	initParams(24,40,1,math.random(1,1),0,550,true); --初始化地图参数	
 	ISGameNotPause = false;	--判断游戏是否没有暂停
+	DialogStatus = false;
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	EnemyInit();
 	InitStartBG();
 	-- EnableEndBG(0);
+	-- ExitJustBG();
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
 end
 
@@ -1168,7 +1172,7 @@ CountDown = 0;
 CountDownStatus = 0; --倒计时状态值
 FrontGroundStatus = 0;-- 前景动作值
 TempZoomFGN = 0.8;
-FrontGroundSS = true;
+FrontGroundSS = false;
 
 FrontGroundES = false;
 RewardCountStatus = 0;--奖励计算状态
@@ -1181,7 +1185,7 @@ function DrawFrontGround()
 		GFrontBGIR:setRelativelyStartPos(10,0);
 		if GFrontBGIL["StartX"] <= -500 then
 			FrontGroundStatus = 0;
-			ISGameNotPause = true;
+			ISGameNotPause = true;--使游戏开始
 			FrontGroundSS = false;
 		end
 	elseif FrontGroundStatus == 2 then
@@ -1190,6 +1194,13 @@ function DrawFrontGround()
 		if GFrontBGIL["StartX"] >= 0 then
 			FrontGroundStatus = 0;
 			RewardCountStatus = 1;
+		end
+	elseif FrontGroundStatus == 3 then
+		GFrontBGIL:setRelativelyStartPos(-10,0);
+		GFrontBGIR:setRelativelyStartPos(10,0);
+		if GFrontBGIL["StartX"] <= -500 then
+			FrontGroundStatus = 0;
+			
 		end
 	end
 	GFrontBGIL:DrawImage();
@@ -1235,6 +1246,10 @@ end
 
 
 
+
+
+
+
 -- 画数字
 function FuncDrawFBNumber(sx,xy,Num,P)
 	local GFrontNumber = ImageClass:new();
@@ -1255,6 +1270,21 @@ function InitStartBG()
 	GFrontBGIL:setAbsoluteStartPos(0, 0);
 	GFrontBGIR:setAbsoluteStartPos(500, 0);
 end
+
+--剧情模式下，背景故事滑动显示时的背景图
+function EnableJustBG()
+	FrontGroundSS = true;	
+	FrontGroundStatus = 0;-- 前景动作值
+	GFrontBGIL:setAbsoluteStartPos(0, 0);
+	GFrontBGIR:setAbsoluteStartPos(500, 0);
+end
+-- 剧情模式下，背景故事滑动显示时的背景图结束滑动的效果
+function ExitJustBG()
+	FrontGroundSS = false;
+	FrontGroundStatus = 3;-- 前景动作值
+end
+
+
 
 function EnableEndBG(GCn)
 	if GCn > 0 then
@@ -1481,6 +1511,31 @@ function ActorKey()
 	local ShortcutKey1_R = KeyDetect(DetectShortcutKey1);
 	local ShortcutKey2_R = KeyDetect(DetectShortcutKey2);
 	
+	
+	
+	if KeyResult_Esc == Press and FrontGroundSS == false and FrontGroundES == false then
+		if GKeyStatus == 1 then
+			GKeyStatus = 0;
+		else
+		
+			ISGameNotPause = not ISGameNotPause;
+			
+			DialogStatus = not DialogStatus;
+		end	
+		
+	end
+	if DialogStatus then
+		ExitResult = 0;
+		if DetectMousePos(ExitButton) == 1  then
+			ExitButtonEvent(1,ExitButton, GoToMainMenu);
+		elseif DetectMousePos(CancelButton) == 1 then
+			ExitButtonEvent(2,CancelButton, CancelBack);
+		elseif ExitResult == 0 then
+			GetMouseStatus();
+			ExitNotReSetButton(0);
+		end
+	end
+	
 	if FrontGroundSS == false and FrontGroundES == false then 
 		--快捷键1启动事件
 		if ShortcutKey1_R == Press then
@@ -1508,15 +1563,7 @@ function ActorKey()
 			end
 		end
 		
-		if KeyResult_Esc == Press then
-			if GKeyStatus == 1 then
-				GKeyStatus = 0;
-			elseif ISGameNotPause == true then
-				ISGameNotPause = false;
-	
-			else ISGameNotPause = true;
-			end	
-		end
+		
 		
 		
 		if GKeyStatus == 1 then
@@ -1653,17 +1700,7 @@ function ActorKey()
 		end
 	
 
-		if ISGameNotPause == false  then
-			ExitResult = 0;
-			if DetectMousePos(ExitButton) == 1  then
-				ExitButtonEvent(1,ExitButton, GoToMainMenu);
-			elseif DetectMousePos(CancelButton) == 1 then
-				ExitButtonEvent(2,CancelButton, CancelBack);
-			elseif ExitResult == 0 then
-				GetMouseStatus();
-				ExitNotReSetButton(0);
-			end
-		end
+		
 	end
 	if RewardCountStatus == 1 and GetMouseStatus() == MouseLeftDown then
 		goStartView();
