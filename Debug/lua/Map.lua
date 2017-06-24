@@ -95,8 +95,8 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitch)
 	actorimg:setImage(0, 550, BlockSize, BlockSize, 0, ActorWidth, 0, ActorHeight, 9.0);
 
 	assistantinf = AssistantClass:new();
-	assistantinf:setAbsolutePos(500,1200);
-	Assistantimg:setImage(500, 550, BlockSize, BlockSize, 0, AssistantWidth, 0, AssistantHeight, 9.01);
+	assistantinf:setAbsolutePos(500,1000);
+	Assistantimg:setImage(500, 350, BlockSize, BlockSize, 0, AssistantWidth, 0, AssistantHeight, 9.01);
 	
 	Bossinf = BossClass:new();
 	Bossinf:setBossAbsolutePos(500,1100);
@@ -355,6 +355,8 @@ Actor1 = ActorAnimationRecord:new();
 Actor1:SetValue(14, 2);
 Boss1 = ActorAnimationRecord:new();
 Boss1:SetValue(14,3);
+Actor2 = ActorAnimationRecord:new();
+Actor2:SetValue(14, 2);
 
 function DrawActorGesture(sx, sy, fr, gesturetype ,actortype)
 	actortype:setRelativelyStartPos(sx,sy);
@@ -1087,11 +1089,11 @@ end
 
 
 function IintMapData()
-	initParams(24,40,1,math.random(1,1),0,550,true); --初始化地图参数	
+	initParams(24,40,1,math.random(30,50),0,550,true); --初始化地图参数	
 	ISGameNotPause = false;	--判断游戏是否没有暂停
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	EnemyInit();
-	InitStartBG();
+	--InitStartBG();
 	-- EnableEndBG(0);
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
 end
@@ -1151,11 +1153,11 @@ FrontGroundH = 2733;
 
 GFrontBGIL = ImageClass:new();
 GFrontBGIL :setImageFileSize(FrontGroundW, FrontGroundH);
-GFrontBGIL :setImage(0, 0 ,500, 600,  0, 500,0, 600, 1.5);
+GFrontBGIL :setImage(-500, 0 ,500, 600,  0, 500,0, 600, 1.5);
 
 GFrontBGIR = ImageClass:new();
 GFrontBGIR :setImageFileSize(FrontGroundW, FrontGroundH);
-GFrontBGIR :setImage(500, 0 ,500, 600,  500, 1000,0, 600, 1.5);
+GFrontBGIR :setImage(1000, 0 ,500, 600,  500, 1000,0, 600, 1.5);
 
 GFGFontPrompt = ImageClass:new();
 GFGFontPrompt :setImageFileSize(FrontGroundW, FrontGroundH);
@@ -1168,7 +1170,7 @@ CountDown = 0;
 CountDownStatus = 0; --倒计时状态值
 FrontGroundStatus = 0;-- 前景动作值
 TempZoomFGN = 0.8;
-FrontGroundSS = true;
+FrontGroundSS = false;
 
 FrontGroundES = false;
 RewardCountStatus = 0;--奖励计算状态
