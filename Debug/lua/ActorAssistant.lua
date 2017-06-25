@@ -148,11 +148,104 @@ function DrawAssistant()
    
 end
 
+--function AssistantPutBomb()
+--    local BombX = 0
+--	local BombY = 0
+--	while(BombX <= TotalWidthPixels) do
+--		if(BombX <= assistantinf["AcStPosX"] + 25 and assistantinf["AcStPosX"] + 25 < BombX + 50) then
+--			break
+--		end
+--		BombX = BombX + 50
+--	end
+--	while(BombY <= TotalHeightPixels) do
+--		if(BombY <= assistantinf["AcStPosY"] - 25 and assistantinf["AcStPosY"] - 25 < BombY + 50) then
+--			break
+--		end
+--		BombY = BombY + 50
+--	end
+--	if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] ~= 1) then
+--		if(UserBomb[7]["IsWrite"] == 0) then
+--			UserBomb[7]:Init(BombX,BombY)
+--			UserBomb[7]["IsWrite"] = 1
+--			mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
+--            for j = 17,24 do
+--                if(BombBlaze[j]["IsWrite"] == 2) then
+--				    if(BombBlaze[j]["UpImpact"] > 0) then
+--                        for k = 1,BombBlaze[j]["UpImpact"] do
+--                            mapTable[(BombBlaze[j]["Blaze"]["StartY"] + k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] = mapTable[(BombBlaze[j]["Blaze"]["StartY"] + k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] - 1
+--                        end
+--                    end
+--                    if(BombBlaze[j]["LeftImpact"] > 0) then
+--                        for k = 1,BombBlaze[j]["LeftImpact"] do
+--                            mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] - k * 50) / 50 +1][9] = mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] - k * 50) / 50 +1][9] - 1
+--                        end
+--                    end
+--                    if(BombBlaze[j]["RightImpact"] > 0) then
+--                        for k = 1,BombBlaze[j]["RightImpact"] do
+--                            mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] + k * 50) / 50 +1][9] = mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] + k * 50) / 50 +1][9] - 1
+--                        end
+--                    end
+--                    if(BombBlaze[j]["DownImpact"] > 0) then
+--                        for k = 1,BombBlaze[j]["DownImpact"] do
+--                            mapTable[(BombBlaze[j]["Blaze"]["StartY"] - k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] = mapTable[(BombBlaze[j]["Blaze"]["StartY"] - k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] - 1
+--                        end
+--                    end
+--			    end
+--            end
+--		    for j = 17,24 do
+--		        if(BombBlaze[j]["IsWrite"] == 0) then
+--				    BombBlaze[j]:Init(BombX,BombY)
+--                    BombBlaze[j]["IsWrite"] = 2
+--                    break
+--			    end
+--		    end
+--            for j = 17,24 do
+--			    if(BombBlaze[j]["IsWrite"] == 2) then
+--                    TestBlazeImpact(j,0)
+--			    end
+--		    end
+--		    break
+--	    end
+--    end
+--end
+
+
+
+-- CenterRow表示扩散中心行 CenterColumn表示扩散中心列 SetType表示扩散类型：1表示斜方向以2为基数扩散 0表示斜方向以1为基数扩散
+function  CheckingAvaliableAssistantPos(CenterRow,CenterColumn,SetType)
+    local i;
+    local j;
+
+    if SetType == 0 then
+  
+    else 
+
+    end
+end
+
 function InitAssistantPos()
     local InitPosX;
     local InitPosY;
- --   if 
-
+    if ActorHaveUnitStatus == 1 then
+      if ActorHOneBoxNoIronCaculate(ActorRow1,ActorColumn1) == 3 then
+         CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,1);
+      else
+         CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,0);
+      end     
+    elseif  ActorHaveUnitStatus == 2 then
+        if ActorColumn1 % 2 == 0 then
+            CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,0);
+        else
+            CheckingAvaliableAssistantPos(ActorRow1,ActorColumn2,0);
+        end
+    elseif  ActorHaveUnitStatus == 3 then
+        if ActorRow1 % 2 == 0 then
+            CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,0);
+        else
+            CheckingAvaliableAssistantPos(ActorRow2,ActorColumn1,0);
+        end
+    end
+    AssistantSwitch = true;
 
 end
 

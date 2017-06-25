@@ -165,7 +165,13 @@ function EnemyMove(i)
 
     if(AllEnemy[i]["Enemy"]["StartX"] + AllEnemy[i]["MoveX"] > actorinf["AcStPosX"] - 50 and AllEnemy[i]["Enemy"]["StartX"] + AllEnemy[i]["MoveX"] < actorinf["AcStPosX"] + 50) then
         if(AllEnemy[i]["Enemy"]["StartY"] + AllEnemy[i]["MoveY"] < actorinf["AcStPosY"] and AllEnemy[i]["Enemy"]["StartY"] + AllEnemy[i]["MoveY"] > actorinf["AcStPosY"] - 100) then
-            MessageBox("1","1",MB_OK)
+            DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  
+        end
+    end
+
+    if(AllEnemy[i]["Enemy"]["StartX"] + AllEnemy[i]["MoveX"] > assistantinf["AcStPosX"] - 50 and AllEnemy[i]["Enemy"]["StartX"] + AllEnemy[i]["MoveX"] < assistantinf["AcStPosX"] + 50) then
+        if(AllEnemy[i]["Enemy"]["StartY"] + AllEnemy[i]["MoveY"] < assistantinf["AcStPosY"] and AllEnemy[i]["Enemy"]["StartY"] + AllEnemy[i]["MoveY"] > assistantinf["AcStPosY"] - 100) then
+            DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, Assistantimg);  
         end
     end
 end

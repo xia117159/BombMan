@@ -766,7 +766,7 @@ function DrawBoss()
 				end		
 			Bossinf:setBossRelativePos(0,-BossUnitYOffset);	
 			elseif  BossMoveDirection() == 0 then 
-				DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  --任务死亡
+				DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  --人物死亡
 				--DrawBossGesture(0, 0, Boss1:TimerGo(), 4, Bossimg);	
 				
 			end	
@@ -867,7 +867,7 @@ function BossMoveDirection()
 						TargetBlockY = ActorPosY+BlockSize;
 					end	
 					return TargetYMove(TargetBlockY);	--Boss朝缩小Y像素方向移动
-			elseif BossCouldMoveDirection == 0 or BossCouldMoveDirection == 1 then	--Boss可以水平移动
+			    elseif BossCouldMoveDirection == 0 or BossCouldMoveDirection == 1 then	--Boss可以水平移动
 					TargetBlockX = ActorPosX;
 					return TargetXMove(TargetBlockX);
 				end
@@ -1708,16 +1708,15 @@ function ActorKey()
                                         end
                                     end
                                     if(BombBlaze[j]["RightImpact"] > 0) then
-                                        for k = 1,BombBlaze[j]["UpImpact"] do
+                                        for k = 1,BombBlaze[j]["RightImpact"] do
                                             mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] + k * 50) / 50 +1][9] = mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] + k * 50) / 50 +1][9] - 1
                                         end
                                     end
                                     if(BombBlaze[j]["DownImpact"] > 0) then
-                                        for k = 1,BombBlaze[j]["UpImpact"] do
+                                        for k = 1,BombBlaze[j]["DownImpact"] do
                                             mapTable[(BombBlaze[j]["Blaze"]["StartY"] - k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] = mapTable[(BombBlaze[j]["Blaze"]["StartY"] - k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] - 1
                                         end
                                     end
-                                    break
 						    	end
                             end
 						    for j = 17,24 do
