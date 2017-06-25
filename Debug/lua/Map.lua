@@ -1,5 +1,5 @@
---s行n列矩阵 maptype：地图类型 Randrate：箱子随机概率 角色初始位置X,Y Boss开启/关闭
-function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitch)
+--s行n列矩阵 maptype：地图类型 Randrate：箱子随机概率 角色初始位置X,Y Boss开启/关闭 Assistant开启/关闭
+function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitchSetting,AssistantSwitchSetting)
 	
 	local i ;
 	local j;
@@ -14,7 +14,8 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitch)
 	TotalHeightPixels = s*BlockSize;
 	
 	BoxRandRate = Randrate;
-	BossSwitchSetting = BossSwitch;
+	BossSwitch = BossSwitchSetting;
+    AssistantSwitch = AssistantSwitchSetting;
 	--block = {posX,posY,brick=nil,wall=nil}; --0为无，1为存在
 	--brick = 砖；wall = 墙 
 	mapTable = {};
@@ -106,6 +107,13 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitch)
 	
 	originX=0;
 	originY=-(TotalRows-12)*BlockSize;
+    ActorHaveUnitStatus = 1;
+    ActorRow1 = 24;
+    ActorColumn1 = 1;
+    ActorRow2 = nil;
+    ActorColumn2 = nil;
+   -- ActorHaveUnitStatus,ActorRow1,ActorColumn1,ActorRow2,ActorColumn2 = GetObjectHaveBlock(actorinf:getAbsolutePosX(),actorinf:getAbsolutePosY());
+
 end
 
 	BlockSize = 50;
@@ -333,12 +341,18 @@ function ActorAnimationRecord:SetValue(t, fr)
 	self.ActorFrameRate = fr;
 end
 
-function ActorAnimationRecord:TimerGo(fr)
+
+function ActorAnimationRecord:TimerGo(DeathStatus)
 	self.ActorNowTimer = self.ActorNowTimer - 1;
 	if self.ActorNowTimer  <= 0 then
 		self.ActorNowFrameRate = self.ActorNowFrameRate + 1;
 		if self.ActorNowFrameRate > self.ActorFrameRate then
-			self.ActorNowFrameRate = 1;
+            if DeathStatus  then
+                self.ActorNowFrameRate = self.ActorNowFrameRate - 1;
+                self.ActorNowTimer = 0;
+            return self.ActorNowFrameRate;
+            else	self.ActorNowFrameRate = 1;
+            end
 		end
 		self.ActorNowTimer = self.ActorTimer;
 	end
@@ -720,7 +734,7 @@ end
 
 
 function DrawBoss()
-	if BossSwitchSetting then
+	if BossSwitch then
 		if ISGameNotPause  then
 			Bossimg:setAbsoluteStartPos(Bossinf:getBossAbsolutePosX()+originX,Bossinf:getBossAbsolutePosY()+originY-BlockSize);
 			if BossMoveDirection() == 1 then
@@ -752,7 +766,7 @@ function DrawBoss()
 				end		
 			Bossinf:setBossRelativePos(0,-BossUnitYOffset);	
 			elseif  BossMoveDirection() == 0 then 
-				DrawActorGesture(0, 0, Actor1:TimerGo(), 6, actorimg);
+				DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  --任务死亡
 				--DrawBossGesture(0, 0, Boss1:TimerGo(), 4, Bossimg);	
 				
 			end	
@@ -789,14 +803,14 @@ function GetObjectHaveBlock(NowPosX,NowPosY)
 	end
 	return ObjectHaveUnitStatus,ObjectRow1,ObjectColumn1,ObjectRow2,ObjectColumn2;
 end
-	
+
 function BossMoveDirection()
-	local ActorRow1;	--人物所占第一个位置的地图X坐标
-	local ActorRow2;	--人物所占第二个位置的地图X坐标
-	local ActorColumn1;	--人物所占第一个位置的地图Y坐标
-	local ActorColumn2;	--人物所占第二个位置的地图Y坐标
+--	local ActorRow1;	--人物所占第一个位置的地图X坐标
+--	local ActorRow2;	--人物所占第二个位置的地图X坐标
+--	local ActorColumn1;	--人物所占第一个位置的地图Y坐标
+--	local ActorColumn2;	--人物所占第二个位置的地图Y坐标
 	local BossCouldMoveDirection;	--Boss可以移动的方向
-	local ActorHaveUnitStatus;	--人物所占格数状况 1代表所占一格
+--	local ActorHaveUnitStatus;	--人物所占格数状况 1代表所占一格
 	-- 2代表所占水平方向两格且位置为mapTable[ActorRow1][ActorColumn1]，mapTable[ActorRow1][ActorColumn2]
 	-- 3代表所占竖直方向两格且位置为mapTable[ActorRow1][ActorColumn1]，mapTable[ActorRow2][ActorColumn1]
 	local ActorPosX = actorinf:getAbsolutePosX();	--人物X方向的像素坐标
@@ -1091,12 +1105,12 @@ end
 
 
 function IintMapData()
-	initParams(24,40,1,math.random(30,50),0,550,true); --初始化地图参数	
+	initParams(24,40,1,math.random(1,2),0,550,true,true); --初始化地图参数	
 	ISGameNotPause = false;	--判断游戏是否没有暂停
 	DialogStatus = false;
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	EnemyInit();
-	--InitStartBG();
+	InitStartBG();
 	-- EnableEndBG(0);
 	-- ExitJustBG();
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
@@ -1263,10 +1277,11 @@ end
 
 function InitStartBG()
 	TempZoomFGN = 0.7;
-	GNumberDelay = 100;
+	GNumberDelay = 0;
 	CountDownStatus = 1;
 	FrontGroundStatus = 0;-- 前景动作值
-	CountDown = 0; --倒计时时间
+	GNumberDelay = 0;--剩余时间
+	CountDown = -1; --倒计时
 	FrontGroundSS = true;
 	GFGFontPrompt :setImage(250, 410 ,500, 90,  0, 500,601, 691, 1.49);
 	GFrontBGIL:setAbsoluteStartPos(0, 0);
@@ -1619,7 +1634,7 @@ function ActorKey()
 			if KeyResult_right == KeepPressing then
 				releasestatus = 0;
 				movestatus = 1;
-				BossSwitchSetting = false;
+			--	BossSwitchSetting = false;
 			elseif KeyResult_right == Release then
 				releasestatus = 1;			
 				movestatus = 0;		
