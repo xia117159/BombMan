@@ -14,9 +14,9 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitchSetting,Ass
 	TotalHeightPixels = s*BlockSize;
 	
 	BoxRandRate = Randrate;
-    AssistantPutBombRate = AssistantRandRate;
+   	AssistantPutBombRate = AssistantRandRate;
 	BossSwitch = BossSwitchSetting;
-    AssistantSwitch = AssistantSwitchSetting;
+        AssistantSwitch = AssistantSwitchSetting;
 	--block = {posX,posY,brick=nil,wall=nil}; --0为无，1为存在
 	--brick = 砖；wall = 墙 
 	mapTable = {};
@@ -1178,8 +1178,9 @@ function IintMapData()
 	DialogStatus = false;
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	EnemyInit();
-	InitStartBG();
+	InitStartBG();--挑战模式，倒计时
 	--EnableEndBG(25);
+	-- EnableJustBG();
 	-- ExitJustBG();
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
 end
@@ -1260,7 +1261,7 @@ CountDown = 0;
 CountDownStatus = 0; --倒计时状态值
 FrontGroundStatus = 0;-- 前景动作值
 TempZoomFGN = 0.8;
-FrontGroundSS = false;
+FrontGroundSS = true;
 
 FrontGroundES = false;
 RewardCountStatus = 0;--奖励计算状态
@@ -1282,13 +1283,15 @@ function DrawFrontGround()
 		if GFrontBGIL["StartX"] >= 0 then
 			FrontGroundStatus = 0;
 			RewardCountStatus = 1;
+			ISGameNotPause = false;--使游戏开始
 		end
 	elseif FrontGroundStatus == 3 then
 		GFrontBGIL:setRelativelyStartPos(-10,0);
 		GFrontBGIR:setRelativelyStartPos(10,0);
 		if GFrontBGIL["StartX"] <= -500 then
 			FrontGroundStatus = 0;
-			
+			ISGameNotPause = true;--使游戏开始
+			FrontGroundSS = false;
 		end
 	end
 	GFrontBGIL:DrawImage();
@@ -1353,7 +1356,7 @@ function InitStartBG()
 	CountDownStatus = 1;
 	FrontGroundStatus = 0;-- 前景动作值
 	GNumberDelay = 0;--剩余时间
-	CountDown = -1; --倒计时
+	CountDown = 0; --倒计时
 	FrontGroundSS = true;
 	GFGFontPrompt :setImage(250, 410 ,500, 90,  0, 500,601, 691, 1.49);
 	GFrontBGIL:setAbsoluteStartPos(0, 0);
@@ -1362,14 +1365,13 @@ end
 
 --剧情模式下，背景故事滑动显示时的背景图
 function EnableJustBG()
-	FrontGroundSS = true;	
+	FrontGroundSS = true;
 	FrontGroundStatus = 0;-- 前景动作值
 	GFrontBGIL:setAbsoluteStartPos(0, 0);
 	GFrontBGIR:setAbsoluteStartPos(500, 0);
 end
 -- 剧情模式下，背景故事滑动显示时的背景图结束滑动的效果
 function ExitJustBG()
-	FrontGroundSS = false;
 	FrontGroundStatus = 3;-- 前景动作值
 end
 
@@ -1600,9 +1602,6 @@ function DrawShortcutBar()
 		GBBPUseY = GBBPUseY + originY - GBBPUseOY;
 		GBBPUseOX = originX;
 		GBBPUseOY = originY;
-		--相对于世界的位置
-		GBBPUseGlobalX = GBBPUseX - originX;
-		GBBPUseGlobalY = GBBPUseY - originY;
 	end
 	
 end
@@ -1642,6 +1641,8 @@ function ActorKey()
 			ExitNotReSetButton(0);
 		end
 	end
+	
+	
 	
 	if FrontGroundSS == false and FrontGroundES == false then 
 --        if WinFocus == WM_SETFOCUS and ISGameNotPause == false then
