@@ -91,57 +91,71 @@ function AssistantClass:setRelativePos(rx,ry)
 end
 
 function DrawAssistant()
-    AssistantMoveDirection = 0;	--助手移动方向	
-	AssistantAlgorithms();
+    
+    if AssistantSwitch then
+        if ISGameNotPause then
+            AssistantMoveDirection = 0;	--助手移动方向	
+	        AssistantAlgorithms();  --助手算法
 	
-	if AssistantMoveDirection == 1 then		--1表示向右，2表示向上，3表示向左，4表示向下
-		if WindowMoveChecking(1) then	
-			DrawActorGesture(0, 0, Actor2:TimerGo(), 1, Assistantimg);				
-		else 	
-			DrawActorGesture(UnitXOffset, 0, Actor2:TimerGo(), 1, Assistantimg);			
-		end	
-	--	Assistantimg:setRelativelyStartPos(UnitXOffset,0);
-		assistantinf:setRelativePos(UnitXOffset,0);	
-	elseif AssistantMoveDirection == 2 then
-		if WindowMoveChecking(2) then	
-			DrawActorGesture(0, 0, Actor2:TimerGo(), 2, Assistantimg);				
-		else 	
-			DrawActorGesture(0, UnitYOffset, Actor2:TimerGo(), 2, Assistantimg);			
-		end	
-		assistantinf:setRelativePos(0,UnitYOffset);	
-	elseif	AssistantMoveDirection == 3 then
-		if WindowMoveChecking(3) then	
-			DrawActorGesture(0, 0, Actor2:TimerGo(), 3, Assistantimg);				
-		else 	
-			DrawActorGesture(-UnitXOffset, 0, Actor2:TimerGo(), 3, Assistantimg);			
-		end	
-		assistantinf:setRelativePos(-UnitXOffset,0);	
-	elseif	AssistantMoveDirection == 4 then
-		if WindowMoveChecking(4) then	
-			DrawActorGesture(0, 0, Actor2:TimerGo(), 4, Assistantimg);				
-		else 	
-			DrawActorGesture(0, -UnitYOffset, Actor2:TimerGo(), 4, Assistantimg);			
-		end	
-		assistantinf:setRelativePos(0,-UnitYOffset);	
-	elseif	AssistantMoveDirection == 0 then
-		if AssistantLastDirection == 1 then
-			Assistantimg:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*5, ActorHeight*6);
-		elseif 	AssistantLastDirection == 2 then
-			Assistantimg:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*1, ActorHeight*2);
-		elseif	AssistantLastDirection == 3 then
-			Assistantimg:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*2, ActorHeight*3);
-		elseif	AssistantLastDirection == 4 then	
-			Assistantimg:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*0, ActorHeight*1);
-		end	
-	end
-	if AssistantMoveDirection ~= 0 then
-		AssistantLastDirection = AssistantMoveDirection;
-	end
-	
-	
-	Assistantimg:setAbsoluteStartPos(assistantinf:getAbsolutePosX()+originX,assistantinf:getAbsolutePosY()+originY-BlockSize);	
-	Assistantimg:DrawImage();
+	        if AssistantMoveDirection == 1 then		--1表示向右，2表示向上，3表示向左，4表示向下
+		        if WindowMoveChecking(1) then	
+			        DrawActorGesture(0, 0, Actor2:TimerGo(), 1, Assistantimg);				
+		        else 	
+			        DrawActorGesture(UnitXOffset, 0, Actor2:TimerGo(), 1, Assistantimg);			
+		        end	
+	        --	Assistantimg:setRelativelyStartPos(UnitXOffset,0);
+		        assistantinf:setRelativePos(UnitXOffset,0);	
+	        elseif AssistantMoveDirection == 2 then
+		        if WindowMoveChecking(2) then	
+			        DrawActorGesture(0, 0, Actor2:TimerGo(), 2, Assistantimg);				
+		        else 	
+			        DrawActorGesture(0, UnitYOffset, Actor2:TimerGo(), 2, Assistantimg);			
+		        end	
+		        assistantinf:setRelativePos(0,UnitYOffset);	
+	        elseif	AssistantMoveDirection == 3 then
+		        if WindowMoveChecking(3) then	
+			        DrawActorGesture(0, 0, Actor2:TimerGo(), 3, Assistantimg);				
+		        else 	
+			        DrawActorGesture(-UnitXOffset, 0, Actor2:TimerGo(), 3, Assistantimg);			
+		        end	
+		        assistantinf:setRelativePos(-UnitXOffset,0);	
+	        elseif	AssistantMoveDirection == 4 then
+		        if WindowMoveChecking(4) then	
+			        DrawActorGesture(0, 0, Actor2:TimerGo(), 4, Assistantimg);				
+		        else 	
+			        DrawActorGesture(0, -UnitYOffset, Actor2:TimerGo(), 4, Assistantimg);			
+		        end	
+		        assistantinf:setRelativePos(0,-UnitYOffset);	
+	        elseif	AssistantMoveDirection == 0 then
+		        if AssistantLastDirection == 1 then
+			        Assistantimg:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*5, ActorHeight*6);
+		        elseif 	AssistantLastDirection == 2 then
+			        Assistantimg:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*1, ActorHeight*2);
+		        elseif	AssistantLastDirection == 3 then
+			        Assistantimg:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*2, ActorHeight*3);
+		        elseif	AssistantLastDirection == 4 then	
+			        Assistantimg:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*0, ActorHeight*1);
+		        end	
+              --  DrawActorGesture(0, 0, Actor2:TimerGo(false), 6, Assistantimg);
+	        end
+	        if AssistantMoveDirection ~= 0 then
+		        AssistantLastDirection = AssistantMoveDirection;
+	        end		
+	        Assistantimg:setAbsoluteStartPos(assistantinf:getAbsolutePosX()+originX,assistantinf:getAbsolutePosY()+originY-BlockSize);	
+        end       
+	    Assistantimg:DrawImage();
+    end
+   
 end
+
+function InitAssistantPos()
+    local InitPosX;
+    local InitPosY;
+ --   if 
+
+
+end
+
 
 function AssistantAlgorithms()
 	--[[local AssistantRow1;	--助手所占第一个位置的地图X坐标
