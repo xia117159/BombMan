@@ -35,12 +35,12 @@ PlotV      =   0x0001
 ChallengeV =   0x0002
 ShopV      =   0x0003
 BackpackV  =   0x0004
-
+HelpV      =   0x0005
 
 LoadV      =   0x0019
 
 --总的图片数量
-AllImageNum = 33
+AllImageNum = 35
 NowLoadPos = 1
 NextLoadPos = 1
 --@@@@@@@@@@@@@@@@@@@@@@@结束@@@@@@@@@@@@@@@@@@@@@@@@@

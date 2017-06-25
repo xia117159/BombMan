@@ -49,6 +49,7 @@
     <Content Include="lua\BombMan.luaprj" />
     <Content Include="lua\Enemy.lua.orig" />
     <Content Include="lua\MainLua.lua.orig" />
+    <Content Include="lua\Map.lua.orig" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
 </Project>

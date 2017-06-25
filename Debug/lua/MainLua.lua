@@ -19,6 +19,7 @@ require "ShopKeyControl"
 require "BackpackVeiw"
 require "BackpackKeyControl"
 
+require "HelpVeiw"
 
 require "LoadView"
 

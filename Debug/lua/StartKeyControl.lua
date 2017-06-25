@@ -98,7 +98,8 @@ SetNowWindowView(ShopV);
 
 --跳转帮助页面并进行相关设置的函数
 function goHelpView()
-	
+	SetNowWindowView(HelpV);
+	NowView = HelpV;--设置视图位于商城
 	--加载商城界面
 	--NowView = ShopV;--设置视图位于商城
 end
