@@ -1,6 +1,6 @@
 UserBomb={n = 7}
 
-BombBlaze={n = 15}
+BombBlaze={n = 24}
 
 DynamiteWall={n = 28}
 
@@ -100,20 +100,16 @@ end
 
 --初始化
 function BombInit()
-	UserBomb[1] = BombClass:new()
-	UserBomb[2] = BombClass:new()
-	UserBomb[3] = BombClass:new()
-	UserBomb[4] = BombClass:new()
-	UserBomb[5] = BombClass:new()
-	UserBomb[6] = BombClass:new()
-	UserBomb[7] = BombClass:new()
+    for i = 1,UserBomb.n do
+		UserBomb[i] = BombClass:new()
+	end
 
-	for i = 1,15 do
+	for i = 1,BombBlaze.n do
 		BombBlaze[i] = BlazeClass:new()
 		BombBlaze[i]["Depth"] = 5.5 - i/10
 	end
 	
-	for i = 1, 28 do
+	for i = 1, DynamiteWall.n do
 		DynamiteWall[i] = WallClass:new()
 	end
 	
@@ -128,7 +124,7 @@ end
 --判断条件调用画炸弹函数
 function DrawBomb()
 	local i = 1
-	while(i <= UserData["HaveBombNumber"]) do
+	while(i <= UserBomb.n) do
 		if UserBomb[i]["IsWrite"] == 1 then
 			DrawBombFunc(i);
 		end
@@ -139,7 +135,7 @@ end
 --判断条件调用画火焰函数
 function DrawBlaze()
 	local i = 1
-	while(i <= UserData["HaveBombNumber"]) do
+	while(i <= 16) do
 		if BombBlaze[i]["IsWrite"] == 1 then
 			DrawBlazeFunc(i);
 		end
@@ -149,7 +145,7 @@ end
 
 --判断条件调用画墙被炸毁动画函数
 function DrawDynamite()
-	for i = 1,24 do
+	for i = 1,28 do
 		if(DynamiteWall[i]["IsWrite"] == 1) then
 			DrawDynamiteFunc(i)
 		end
@@ -235,6 +231,7 @@ function DrawBlazeFunc(i)
 			end
 			return
 		end
+        TestImpact(i)
 		if fr == 1 then
 			BombBlaze[i]["LeftBlazeAnimation"]:setImage(  startX - 50*LeftLength , startY                 , 50*LeftLength  , 50            , 32*(power - LeftLength) , 32*power                     , 0                           , 32                          ,  BombBlaze[i]["Depth"]);
 			BombBlaze[i]["RightBlazeAnimation"]:setImage( startX +50             , startY                 , 50*RightLength , 50            , 352-32*power            , 352-32*(power - RightLength) , 0                           , 32                          ,  BombBlaze[i]["Depth"]);
@@ -299,8 +296,82 @@ function DrawDynamiteFunc(i)
 	DynamiteWall[i]["WallAnimation"]:DrawImage();
 end
 
+function TestImpact(i)
+    local userLeftX = actorinf["AcStPosX"];
+    local userUpY = actorinf["AcStPosY"];
+    local assistantLeftX = assistantinf["AcStPosX"]
+    local assistantUpY = assistantinf["AcStPosY"]
+
+    local leftBlazeStartX = BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * 50;
+    local rightBlazeEndX = BombBlaze[i]["Blaze"]["StartX"] + BombBlaze[i]["RightImpact"] * 50 + 50;
+    local upBlazeEndY = BombBlaze[i]["Blaze"]["StartY"] + BombBlaze[i]["UpImpact"] * 50 + 50;
+    local downBlazeStartY = BombBlaze[i]["Blaze"]["StartY"] - BombBlaze[i]["DownImpact"] * 50;
+
+    if(userLeftX < rightBlazeEndX and userLeftX + 50 > rightBlazeEndX) or (userLeftX < leftBlazeStartX and userLeftX + 50 > leftBlazeStartX) or
+    (userLeftX >= leftBlazeStartX and userLeftX + 50 <= rightBlazeEndX) then
+        if(userUpY > BombBlaze[i]["Blaze"]["StartY"] and userUpY - 50 < BombBlaze[i]["Blaze"]["StartY"]) or (userUpY > BombBlaze[i]["Blaze"]["StartY"] + 50 and userUpY - 50 < BombBlaze[i]["Blaze"]["StartY"] + 50) or 
+        (userUpY == BombBlaze[i]["Blaze"]["StartY"] + 50) then
+            --MessageBox("1","1",MB_OK)
+        end
+    end
+
+    if(userUpY > downBlazeStartY and userUpY - 50 < downBlazeStartY) or (userUpY > upBlazeEndY and userUpY - 50 < upBlazeEndY) or
+    (userUpY <= upBlazeEndY and userUpY - 50 >= downBlazeStartY) then
+        if(userLeftX < BombBlaze[i]["Blaze"]["StartX"] and userLeftX + 50 > BombBlaze[i]["Blaze"]["StartX"]) or (userLeftX > BombBlaze[i]["Blaze"]["StartX"] and userLeftX < BombBlaze[i]["Blaze"]["StartX"] + 50) or 
+        (userLeftX == BombBlaze[i]["Blaze"]["StartX"]) then
+            --MessageBox("1","1",MB_OK)
+        end
+    end
+
+    if(assistantLeftX < rightBlazeEndX and assistantLeftX + 50 > rightBlazeEndX) or (assistantLeftX < leftBlazeStartX and assistantLeftX + 50 > leftBlazeStartX) or
+    (assistantLeftX >= leftBlazeStartX and assistantLeftX + 50 <= rightBlazeEndX) then
+        if(assistantUpY > BombBlaze[i]["Blaze"]["StartY"] and assistantUpY - 50 < BombBlaze[i]["Blaze"]["StartY"]) or (assistantUpY > BombBlaze[i]["Blaze"]["StartY"] + 50 and assistantUpY - 50 < BombBlaze[i]["Blaze"]["StartY"] + 50) or 
+        (assistantUpY == BombBlaze[i]["Blaze"]["StartY"] + 50) then
+            --MessageBox("1","1",MB_OK)
+        end
+    end
+
+    if(assistantUpY > downBlazeStartY and assistantUpY - 50 < downBlazeStartY) or (assistantUpY > upBlazeEndY and assistantUpY - 50 < upBlazeEndY) or
+    (assistantUpY <= upBlazeEndY and assistantUpY - 50 >= downBlazeStartY) then
+        if(assistantLeftX < BombBlaze[i]["Blaze"]["StartX"] and assistantLeftX + 50 > BombBlaze[i]["Blaze"]["StartX"]) or (assistantLeftX > BombBlaze[i]["Blaze"]["StartX"] and assistantLeftX < BombBlaze[i]["Blaze"]["StartX"] + 50) or 
+        (assistantLeftX == BombBlaze[i]["Blaze"]["StartX"]) then
+            --MessageBox("1","1",MB_OK)
+        end
+    end
+
+
+    for j = 1,AllEnemy.n do
+        if(AllEnemy[j]["IsSurvival"] == 1) then
+            if(AllEnemy[j]["Enemy"]["StartX"] + AllEnemy[j]["MoveX"] < rightBlazeEndX and AllEnemy[j]["Enemy"]["StartX"] + AllEnemy[j]["MoveX"] + 50 > rightBlazeEndX) or (AllEnemy[j]["Enemy"]["StartX"] + AllEnemy[j]["MoveX"] < leftBlazeStartX and AllEnemy[j]["Enemy"]["StartX"] + AllEnemy[j]["MoveX"] + 50 > leftBlazeStartX) or
+            (AllEnemy[j]["Enemy"]["StartX"] + AllEnemy[j]["MoveX"] >= leftBlazeStartX and AllEnemy[j]["Enemy"]["StartX"] + AllEnemy[j]["MoveX"] + 50 <= rightBlazeEndX) then
+                if(AllEnemy[j]["Enemy"]["StartY"] + AllEnemy[j]["MoveY"] + 50 > BombBlaze[i]["Blaze"]["StartY"] and AllEnemy[j]["Enemy"]["StartY"] + AllEnemy[j]["MoveY"] < BombBlaze[i]["Blaze"]["StartY"]) or (AllEnemy[j]["Enemy"]["StartY"] + AllEnemy[j]["MoveY"] > BombBlaze[i]["Blaze"]["StartY"] and AllEnemy[j]["Enemy"]["StartY"] + AllEnemy[j]["MoveY"] < BombBlaze[i]["Blaze"]["StartY"] + 50) or 
+                (AllEnemy[j]["Enemy"]["StartY"] + AllEnemy[j]["MoveY"] == BombBlaze[i]["Blaze"]["StartY"]) then
+                    --MessageBox("1","1",MB_OK)
+                    AllEnemy[j]["IsSurvival"] = 0
+                end
+            end
+            if(AllEnemy[j]["Enemy"]["StartY"] + AllEnemy[j]["MoveY"] + 50 > downBlazeStartY and AllEnemy[j]["Enemy"]["StartY"] + AllEnemy[j]["MoveY"] < downBlazeStartY) or (AllEnemy[j]["Enemy"]["StartY"] + AllEnemy[j]["MoveY"] + 50 > upBlazeEndY and AllEnemy[j]["Enemy"]["StartY"] + AllEnemy[j]["MoveY"] < upBlazeEndY) or
+            (AllEnemy[j]["Enemy"]["StartY"] + AllEnemy[j]["MoveY"] + 50 <= upBlazeEndY and AllEnemy[j]["Enemy"]["StartY"] + AllEnemy[j]["MoveY"] >= downBlazeStartY) then
+                if(AllEnemy[j]["Enemy"]["StartX"] + AllEnemy[j]["MoveX"] < BombBlaze[i]["Blaze"]["StartX"] and AllEnemy[j]["Enemy"]["StartX"] + AllEnemy[j]["MoveX"] + 50 > BombBlaze[i]["Blaze"]["StartX"]) or (AllEnemy[j]["Enemy"]["StartX"] + AllEnemy[j]["MoveX"] > BombBlaze[i]["Blaze"]["StartX"] and AllEnemy[j]["Enemy"]["StartX"] + AllEnemy[j]["MoveX"] < BombBlaze[i]["Blaze"]["StartX"] + 50) or 
+                (AllEnemy[j]["Enemy"]["StartX"] + AllEnemy[j]["MoveX"] == BombBlaze[i]["Blaze"]["StartX"]) then
+                    --MessageBox("1","1",MB_OK)
+                    AllEnemy[j]["IsSurvival"] = 0
+                end
+            end
+        end
+    end
+end
+
 --检测火焰碰撞
 function TestBlazeImpact(i,j)
+    if(j == 1 and i < 9) then
+        for k = 17,24 do
+            if(BombBlaze[i]["Blaze"]["StartY"] == BombBlaze[k]["Blaze"]["StartY"] and BombBlaze[i]["Blaze"]["StartX"] == BombBlaze[k]["Blaze"]["StartX"] and BombBlaze[k]["IsWrite"] == 2) then
+                BombBlaze[k]["IsWrite"] = 0
+                break
+            end
+        end
+    end
 	--上方火焰碰撞检测
 	while(BombBlaze[i]["UpImpact"] <= UserData["Power"]) do
 		if(BombBlaze[i]["Blaze"]["StartY"] + BombBlaze[i]["UpImpact"] * BlockSize == TotalHeightPixels) then

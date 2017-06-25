@@ -1,4 +1,4 @@
-AllEnemy = {n = 10}
+AllEnemy = {n = math.random(18,30)}
 
 EnemyClass = {
 	MoveX = 0,
@@ -24,36 +24,48 @@ end
 function EnemyClass:Init(x,y,enemytype,depth)
 	self.EnemyType = enemytype
 	self.Depth = depth
+    self.MoveX = 0
+	self.MoveY = 0
 	if enemytype == 1 then
 		self.Speed = 1
 		self.IsSurvival = 1
 		self.CanPassWall = 0
-		self.ImageStartX = 0
-		self.ImageStartY = 0
+		local tRandX  = math.random(0,7);
+        local tRandY  = math.random(0,1);
+		self.ImageStartX = 200 * tRandX
+		self.ImageStartY = 200 * tRandY
 	elseif enemytype == 2 then
 		self.Speed = 2
 		self.IsSurvival = 1
 		self.CanPassWall = 0
-		self.ImageStartX = 0
-		self.ImageStartY = 200
+        local tRandX  = math.random(0,7);
+        local tRandY  = math.random(0,1);
+		self.ImageStartX = 200 * tRandX
+		self.ImageStartY = 200 * tRandY
 	elseif enemytype == 3 then
 		self.Speed = 2
 		self.IsSurvival = 1
 		self.CanPassWall = 0
-		self.ImageStartX = 400
-		self.ImageStartY = 0
+		local tRandX  = math.random(0,7);
+        local tRandY  = math.random(0,1);
+		self.ImageStartX = 200 * tRandX
+		self.ImageStartY = 200 * tRandY
 	elseif enemytype == 4 then
 		self.Speed = 2
 		self.IsSurvival = 1
 		self.CanPassWall = 0
-		self.ImageStartX = 400
-		self.ImageStartY = 200
+		local tRandX  = math.random(0,7);
+        local tRandY  = math.random(0,1);
+		self.ImageStartX = 200 * tRandX
+		self.ImageStartY = 200 * tRandY
 	elseif enemytype == 5 then
 		self.Speed = 2
 		self.IsSurvival = 1
 		self.CanPassWall = 1
-		self.ImageStartX = 200
-		self.ImageStartY = 200
+		local tRandX  = math.random(0,7);
+        local tRandY  = math.random(0,1);
+		self.ImageStartX = 200 * tRandX
+		self.ImageStartY = 200 * tRandY
 	end
 
 	self.Enemy = AnimationRecord:new();
@@ -67,21 +79,21 @@ function EnemyInit()
 	local j = 1
 	local x = 1
 	local y = 1
-	for i = 1,10 do 
+	for i = 1,AllEnemy.n do 
 		AllEnemy[i] = EnemyClass:new()
 		j = math.random(1,5)
 		y = math.random(1,40)
 		x = math.random(1,24)
-		while((x < 7 and y > 17) or mapTable[x][y][3] == 1 or (mapTable[x][y][4] > 0 and mapTable[x][y][4] <= BoxRandRate)) do
+		while((x > 17 and y < 7) or mapTable[x][y][3] == 1 or (mapTable[x][y][4] > 0 and mapTable[x][y][4] <= BoxRandRate)) do
 			y = math.random(1,40)
 			x = math.random(1,24)
 		end
-		AllEnemy[i]:Init((y - 1) * 50 ,(x - 1) * 50,j,2.9+i/10)
+		AllEnemy[i]:Init((y - 1) * 50 ,(x - 1) * 50,j,4-i/100)
 	end
 end
 
 function DrawEnemy()
-	for i = 1,10 do
+	for i = 1,AllEnemy.n do
 		if(AllEnemy[i]["IsSurvival"] == 1) then
 			if(ISGameNotPause == true) then
 				EnemyMove(i)
@@ -97,19 +109,15 @@ function DrawEnemyFunc(i)
 	local imageStartX = AllEnemy[i]["ImageStartX"]
 	local imageStartY = AllEnemy[i]["ImageStartY"] + (AllEnemy[i]["MoveDirection"] - 1) * 50
 	if(ISGameNotPause == true) then
-	local fr = AllEnemy[i]["Enemy"]:TimerGo()
-	if  ISGameNotPause then
+	    local fr = AllEnemy[i]["Enemy"]:TimerGo()
 		if fr == 1 then
 			AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX       , imageStartX + 50  , imageStartY , imageStartY + 50 ,  AllEnemy[i]["Depth"]);	
-
 		elseif fr == 2 then
 			AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 50  , imageStartX + 100 , imageStartY , imageStartY + 50 ,  AllEnemy[i]["Depth"]);
 		elseif fr == 3 then
 			AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 100 , imageStartX + 150 , imageStartY , imageStartY + 50 ,  AllEnemy[i]["Depth"]);
-
 		elseif fr == 4 then
 			AllEnemy[i]["EnemyAnimation"]:setImage(startX , startY , 50 , 50 , imageStartX + 150 , imageStartX + 200 , imageStartY , imageStartY + 50 ,  AllEnemy[i]["Depth"]);
-		end
 		end
 	end
 	AllEnemy[i]["EnemyAnimation"]:DrawImage();
@@ -154,6 +162,12 @@ function EnemyMove(i)
 	elseif(AllEnemy[i]["MoveDirection"] == 4) then
 		AllEnemy[i]["MoveY"] = AllEnemy[i]["MoveY"] + AllEnemy[i]["Speed"]
 	end
+
+    if(AllEnemy[i]["Enemy"]["StartX"] + AllEnemy[i]["MoveX"] > actorinf["AcStPosX"] - 50 and AllEnemy[i]["Enemy"]["StartX"] + AllEnemy[i]["MoveX"] < actorinf["AcStPosX"] + 50) then
+        if(AllEnemy[i]["Enemy"]["StartY"] + AllEnemy[i]["MoveY"] < actorinf["AcStPosY"] and AllEnemy[i]["Enemy"]["StartY"] + AllEnemy[i]["MoveY"] > actorinf["AcStPosY"] - 100) then
+            MessageBox("1","1",MB_OK)
+        end
+    end
 end
 
 function TestEnemyImpact(i,x,y,j)
