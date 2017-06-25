@@ -1528,9 +1528,6 @@ function DrawShortcutBar()
 		GBBPUseY = GBBPUseY + originY - GBBPUseOY;
 		GBBPUseOX = originX;
 		GBBPUseOY = originY;
-		--相对于世界的位置
-		GBBPUseGlobalX = GBBPUseX - originX;
-		GBBPUseGlobalY = GBBPUseY - originY;
 	end
 	
 end
@@ -1708,16 +1705,15 @@ function ActorKey()
                                         end
                                     end
                                     if(BombBlaze[j]["RightImpact"] > 0) then
-                                        for k = 1,BombBlaze[j]["UpImpact"] do
+                                        for k = 1,BombBlaze[j]["RightImpact"] do
                                             mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] + k * 50) / 50 +1][9] = mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] + k * 50) / 50 +1][9] - 1
                                         end
                                     end
                                     if(BombBlaze[j]["DownImpact"] > 0) then
-                                        for k = 1,BombBlaze[j]["UpImpact"] do
+                                        for k = 1,BombBlaze[j]["DownImpact"] do
                                             mapTable[(BombBlaze[j]["Blaze"]["StartY"] - k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] = mapTable[(BombBlaze[j]["Blaze"]["StartY"] - k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] - 1
                                         end
                                     end
-                                    break
 						    	end
                             end
 						    for j = 17,24 do
