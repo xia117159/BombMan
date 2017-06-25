@@ -312,6 +312,7 @@ function TestImpact(i)
         if(userUpY > BombBlaze[i]["Blaze"]["StartY"] and userUpY - 50 < BombBlaze[i]["Blaze"]["StartY"]) or (userUpY > BombBlaze[i]["Blaze"]["StartY"] + 50 and userUpY - 50 < BombBlaze[i]["Blaze"]["StartY"] + 50) or 
         (userUpY == BombBlaze[i]["Blaze"]["StartY"] + 50) then
             --MessageBox("1","1",MB_OK)
+            DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  --人物死亡
         end
     end
 
@@ -320,6 +321,7 @@ function TestImpact(i)
         if(userLeftX < BombBlaze[i]["Blaze"]["StartX"] and userLeftX + 50 > BombBlaze[i]["Blaze"]["StartX"]) or (userLeftX > BombBlaze[i]["Blaze"]["StartX"] and userLeftX < BombBlaze[i]["Blaze"]["StartX"] + 50) or 
         (userLeftX == BombBlaze[i]["Blaze"]["StartX"]) then
             --MessageBox("1","1",MB_OK)
+            DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  --人物死亡
         end
     end
 
@@ -328,6 +330,8 @@ function TestImpact(i)
         if(assistantUpY > BombBlaze[i]["Blaze"]["StartY"] and assistantUpY - 50 < BombBlaze[i]["Blaze"]["StartY"]) or (assistantUpY > BombBlaze[i]["Blaze"]["StartY"] + 50 and assistantUpY - 50 < BombBlaze[i]["Blaze"]["StartY"] + 50) or 
         (assistantUpY == BombBlaze[i]["Blaze"]["StartY"] + 50) then
             --MessageBox("1","1",MB_OK)
+            DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, Assistantimg);  
+            AssistantSwitch = false;
         end
     end
 
@@ -336,6 +340,8 @@ function TestImpact(i)
         if(assistantLeftX < BombBlaze[i]["Blaze"]["StartX"] and assistantLeftX + 50 > BombBlaze[i]["Blaze"]["StartX"]) or (assistantLeftX > BombBlaze[i]["Blaze"]["StartX"] and assistantLeftX < BombBlaze[i]["Blaze"]["StartX"] + 50) or 
         (assistantLeftX == BombBlaze[i]["Blaze"]["StartX"]) then
             --MessageBox("1","1",MB_OK)
+             DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, Assistantimg);
+             AssistantSwitch = false;  
         end
     end
 
