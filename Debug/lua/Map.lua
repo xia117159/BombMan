@@ -1277,7 +1277,7 @@ end
 
 function InitStartBG()
 	TempZoomFGN = 0.7;
-	
+	GNumberDelay = 0;
 	CountDownStatus = 1;
 	FrontGroundStatus = 0;-- 前景动作值
 	GNumberDelay = 0;--剩余时间
@@ -1503,21 +1503,39 @@ function DrawShortcutBar()
 		if GBBPUseDecline["StartY"] <=  GBBPUseY + 75.0 then
 			GWarnStatus = false;
 			GBBPUseBomb = false;
-			
+			for i = 0,2 do
+                for j = 0,2 do
+                    MessageBox(GBBPUseGlobalY,GBBPUseGlobalX,MB_OK)
+                    --if(GBBPUseGlobalY + 50 * j <= TotalHeightPixels and GBBPUseGlobalX + 50 * i <= TotalWidthPixels)
+                    if(mapTable[(GBBPUseGlobalY + 50 * j) / 50 +1][(GBBPUseGlobalX + 50 * i) / 50 + 1][3] == 0 and 
+                    (mapTable[(GBBPUseGlobalY + 50 * j) / 50 +1][(GBBPUseGlobalX + 50 * i) / 50 + 1][4] <=0 or mapTable[(GBBPUseGlobalY + 50 * j) / 50 +1][(GBBPUseGlobalX + 50 * i) / 50 + 1][4] > BoxRandRate) and 
+                    mapTable[(GBBPUseGlobalY + 50 * j) / 50 +1][(GBBPUseGlobalX + 50 * i) / 50 + 1][4] ~=1000 and mapTable[(GBBPUseGlobalY + 50 * j) / 50 +1][(GBBPUseGlobalX + 50 * i) / 50 + 1][7] == 0 and
+                    (mapTable[(GBBPUseGlobalY + 50 * j) / 50 +1][(GBBPUseGlobalX + 50 * i) / 50 + 1][8] == 0 or mapTable[(GBBPUseGlobalY + 50 * j) / 50 +1][(GBBPUseGlobalX + 50 * i) / 50 + 1][8] > 7)) then
+                       -- MessageBox("1","1",MB_OK)
+                        for k = 9,16 do
+                            if(BombBlaze[k]["IsWrite"] == 0) then
+                                BombBlaze[k]:Init(GBBPUseGlobalX + 50 *i,GBBPUseGlobalY + 50 * j)
+                                BombBlaze[k]["IsWrite"] = 1
+                                TestBlazeImpact(k,1)
+                                break
+                            end
+                        end
+                    end
+                end
+            end
 		end
 		GBBPUseDecline:DrawImage();
 		GBBPUseY = GBBPUseY + originY - GBBPUseOY;
 		GBBPUseOX = originX;
 		GBBPUseOY = originY;
 		--相对于世界的位置
-		GBBPUseGlobalX = GBBPUseX + originX;
-		GBBPUseGlobalY = GBBPUseY + originY;
+		GBBPUseGlobalX = GBBPUseX - originX;
+		GBBPUseGlobalY = GBBPUseY - originY;
 	end
 	
 end
 
 function ActorKey()
-	
 	local KeyResult_right = KeyDetect(Right);
 	local KeyResult_Up = KeyDetect(Up);
 	local KeyResult_Left = KeyDetect(Left);
@@ -1560,8 +1578,8 @@ function ActorKey()
 				GKeyStatus = 1;
 				releasestatus = 0;
 				movestatus = 0;
-				GBBPUseX = actorinf:getWindowPosX() + 50 - actorinf:getWindowPosX()%50 - originX%50; --相对于窗口,设定位置必须为50的整数倍
-				GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 - originY%50; --相对于窗口,设定位置必须为50的整数倍
+				GBBPUseX = actorinf:getWindowPosX() + 50 - actorinf:getWindowPosX()%50 + originX%50; --相对于窗口,设定位置必须为50的整数倍
+				GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 + originY%50; --相对于窗口,设定位置必须为50的整数倍
 			elseif UserData["ShortCutBarAP"] == 1 then
 				--助手道具使用，待朱丹彤添加
 			end
@@ -1573,8 +1591,8 @@ function ActorKey()
 				GKeyStatus = 1;
 				releasestatus = 0;
 				movestatus = 0;
-				GBBPUseX = actorinf:getWindowPosX() + 50 - actorinf:getWindowPosX()%50 - originX%50; --相对于窗口,设定位置必须为50的整数倍
-				GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 - originY%50; --相对于窗口,设定位置必须为50的整数倍
+				GBBPUseX = actorinf:getWindowPosX() + 50 - actorinf:getWindowPosX()%50 + originX%50; --相对于窗口,设定位置必须为50的整数倍
+				GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 + originY%50; --相对于窗口,设定位置必须为50的整数倍
 			elseif UserData["ShortCutBarAP"] == 2 then
 				--助手道具使用，待朱丹彤添加
 			end
@@ -1606,8 +1624,8 @@ function ActorKey()
 				GBBPUseWarn:setAbsoluteStartPos(GBBPUseX,GBBPUseY);
 				GBBPUseOX = originX;
 				GBBPUseOY = originY;
-				GBBPUseGlobalX = GBBPUseX + originX;
-				GBBPUseGlobalY = GBBPUseY + originY;
+				GBBPUseGlobalX = GBBPUseX - originX;
+				GBBPUseGlobalY = GBBPUseY - originY;
 				GBBPUseRedBG:setAbsoluteStartPos(GBBPUseX,GBBPUseY);
 				GWarnStatus = true;
 			end
@@ -1660,37 +1678,67 @@ function ActorKey()
 					end
 					BombY = BombY + 50
 				end
-			if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][4] > 0 and mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][4] <= BoxRandRate) then
-				return
-			end
-				if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] ~= 1) then
-					while(i <= UserData["HaveBombNumber"]) do
-						if(UserBomb[i]["IsWrite"] == 0) then
-							UserBomb[i]:Init(BombX,BombY)
-							UserBomb[i]["IsWrite"] = 1
-							if UserData["TimeBomb"] == 1 then
-								for j = 1,6 do
-									if(BombOrder[j] == 0) then
-										BombOrder[j] = i
-										break
-									end
-								end
-							end
-							mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
-						for j = 1,8 do
-							if(BombBlaze[j]["IsWrite"] == 0) then
-								BombBlaze[j]:Init(BombX,BombY)
-								TestBlazeImpact(j,0)
-							end
-						end
-						--TestBlazeImpact()
-							break
-						end
-						i = i + 1
-					end
-				end
-			end
-		end
+			    if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][4] > 0 and mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][4] <= BoxRandRate) then
+			    	return
+			    end
+			    if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] ~= 1) then
+				    while(i <= 6) do
+				    	if(UserBomb[i]["IsWrite"] == 0) then
+					    	UserBomb[i]:Init(BombX,BombY)
+					    	UserBomb[i]["IsWrite"] = 1
+					    	if UserData["TimeBomb"] == 1 then
+						    	for j = 1,6 do
+						    		if(BombOrder[j] == 0) then
+						    			BombOrder[j] = i
+						    			break
+						    		end
+						    	end
+						    end
+						    mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
+                            for j = 17,24 do
+                                if(BombBlaze[j]["IsWrite"] == 2) then
+							    	if(BombBlaze[j]["UpImpact"] > 0) then
+                                        for k = 1,BombBlaze[j]["UpImpact"] do
+                                            mapTable[(BombBlaze[j]["Blaze"]["StartY"] + k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] = mapTable[(BombBlaze[j]["Blaze"]["StartY"] + k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] - 1
+                                        end
+                                    end
+                                    if(BombBlaze[j]["LeftImpact"] > 0) then
+                                        for k = 1,BombBlaze[j]["LeftImpact"] do
+                                            mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] - k * 50) / 50 +1][9] = mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] - k * 50) / 50 +1][9] - 1
+                                        end
+                                    end
+                                    if(BombBlaze[j]["RightImpact"] > 0) then
+                                        for k = 1,BombBlaze[j]["UpImpact"] do
+                                            mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] + k * 50) / 50 +1][9] = mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] + k * 50) / 50 +1][9] - 1
+                                        end
+                                    end
+                                    if(BombBlaze[j]["DownImpact"] > 0) then
+                                        for k = 1,BombBlaze[j]["UpImpact"] do
+                                            mapTable[(BombBlaze[j]["Blaze"]["StartY"] - k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] = mapTable[(BombBlaze[j]["Blaze"]["StartY"] - k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] - 1
+                                        end
+                                    end
+                                    break
+						    	end
+                            end
+						    for j = 17,24 do
+							    if(BombBlaze[j]["IsWrite"] == 0) then
+							    	BombBlaze[j]:Init(BombX,BombY)
+                                    BombBlaze[j]["IsWrite"] = 2
+                                    break
+						    	end
+						    end
+                            for j = 17,24 do
+							    if(BombBlaze[j]["IsWrite"] == 2) then
+                                    TestBlazeImpact(j,0)
+						    	end
+						    end
+						    break
+					    end
+					    i = i + 1
+				    end
+			    end
+		    end
+	    end
 		if KeyResult_K == Press then
 			if(UserData["TimeBomb"] == 1) then
 				for i = 6,1,-1 do
