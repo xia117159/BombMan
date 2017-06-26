@@ -22,7 +22,7 @@ end
 
 function BombClass:Init(NowX,NowY)
 	self.Bomb = AnimationRecord:new();
-	self.Bomb:SetValue(NowX, NowY, 50, 6);
+	self.Bomb:SetValue(NowX, NowY, 20, 6);
 	
 	self.BombAnimation = ImageClass:new();
 	self.BombAnimation :setImageFileSize(200, 600);
@@ -274,24 +274,42 @@ function DrawDynamiteFunc(i)
 	
     if(actorinf["AcStPosX"] == startX) then
         if(actorinf["AcStPosY"] > startY and actorinf["AcStPosY"] < startY + 100) then
-            DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg)
+            if UserData["HaveProtect"] == 1 then
+				UserData["HaveProtect"] = 0
+			else
+				DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  --人物死亡
+			end
         end
     end
     if(actorinf["AcStPosY"] - 50 == startY) then
         if(actorinf["AcStPosX"] > startX - 50 and actorinf["AcStPosX"] < startX + 50) then
-            DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg)
+            if UserData["HaveProtect"] == 1 then
+				UserData["HaveProtect"] = 0
+			else
+				DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  --人物死亡
+			end
+        end
+    end
+	if(assistantinf["AcStPosX"] == startX) then
+        if(assistantinf["AcStPosY"] > startY and assistantinf["AcStPosY"] < startY + 100) then
+			DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  --人物死亡
+        end
+    end
+    if(assistantinf["AcStPosY"] - 50 == startY) then
+        if(assistantinf["AcStPosX"] > startX - 50 and assistantinf["AcStPosX"] < startX + 50) then
+			DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, assistantinf);  --人物死亡
         end
     end
     for j = 1,AllEnemy.n do
         if(AllEnemy[j]["EnemyType"] == 5) then
             if(AllEnemy[j]["Enemy"]["StartX"] + AllEnemy[j]["MoveX"] == startX) then
                 if(AllEnemy[j]["Enemy"]["StartY"] + AllEnemy[j]["MoveY"] > startY - 50 and AllEnemy[j]["Enemy"]["StartY"] + AllEnemy[j]["MoveY"] < startY + 50) then
-                    DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg)
+                    AllEnemy[j]["IsSurvival"] = 0
                 end
             end
             if(AllEnemy[j]["Enemy"]["StartY"] + AllEnemy[j]["MoveY"] == startY) then
                 if(AllEnemy[j]["Enemy"]["StartX"] + AllEnemy[j]["MoveX"] > startX - 50 and AllEnemy[j]["Enemy"]["StartX"] + AllEnemy[j]["MoveX"] < startX + 50) then
-                    DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg)
+                    AllEnemy[j]["IsSurvival"] = 0
                 end
             end
         end
@@ -336,8 +354,11 @@ function TestImpact(i)
     (userLeftX >= leftBlazeStartX and userLeftX + 50 <= rightBlazeEndX) then
         if(userUpY > BombBlaze[i]["Blaze"]["StartY"] and userUpY - 50 < BombBlaze[i]["Blaze"]["StartY"]) or (userUpY > BombBlaze[i]["Blaze"]["StartY"] + 50 and userUpY - 50 < BombBlaze[i]["Blaze"]["StartY"] + 50) or 
         (userUpY == BombBlaze[i]["Blaze"]["StartY"] + 50) then
-            --MessageBox("1","1",MB_OK)
-            DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  --人物死亡
+			if UserData["HaveProtect"] == 1 then
+				UserData["HaveProtect"] = 0
+			else
+				DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  --人物死亡
+			end
         end
     end
 
@@ -346,7 +367,11 @@ function TestImpact(i)
         if(userLeftX < BombBlaze[i]["Blaze"]["StartX"] and userLeftX + 50 > BombBlaze[i]["Blaze"]["StartX"]) or (userLeftX > BombBlaze[i]["Blaze"]["StartX"] and userLeftX < BombBlaze[i]["Blaze"]["StartX"] + 50) or 
         (userLeftX == BombBlaze[i]["Blaze"]["StartX"]) then
             --MessageBox("1","1",MB_OK)
-            DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  --人物死亡
+            if UserData["HaveProtect"] == 1 then
+				UserData["HaveProtect"] = 0
+			else
+				DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  --人物死亡
+			end
         end
     end
 

@@ -75,14 +75,17 @@ end
 function goPlotView()
 
 	SetNowWindowView(PlotV);
-	IintMapData();
-	NowView = PlotV;--设置视图位于商城
+	IintMapData(0);
+	NowView = PlotV;--
 end
 
 
 --跳转挑战模式页面并进行相关设置的函数
 function goChallengeView()
 	
+	SetNowWindowView(PlotV);
+	IintMapData(1);	
+	NowView = PlotV;--
 	---加载商城界面自行添加
 	--NowView = ShopV;--设置视图位于商城
 end
@@ -107,7 +110,7 @@ end
 
 --跳转商城页面并进行相关设置的函数
 function goSaveView()
-	
+	Preserve();
 	--加载商城界面
 	--NowView = ShopV;--设置视图位于商城
 end

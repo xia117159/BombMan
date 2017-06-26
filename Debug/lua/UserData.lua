@@ -1,7 +1,7 @@
 UserData =
 {
 	GoldCoins = 9999,--金币数量
-	AssistantLock = 0, --助手是否被锁住
+	AssistantLock = 1, --助手是否被锁住
 	AssistantProps = GirlsAssistant,--解锁的助手类型
 	BigBombPropsAmount = 0, -- 超级炸弹拥有的个数
 	ShortCutBarBBP = 1,--所放置快捷栏
@@ -13,9 +13,9 @@ UserData =
 	SpeedY = 2, --Y轴速度
 	CanPassBomb = 0, --能否通过炸弹
 	CanPassWall = 0, --能否通过墙
-	TimeBomb = 0,    --有没有定时炸弹
+	TimeBomb = 1,    --有没有定时炸弹
 	HaveProtect = 0,  --有没有保护
-    	IsPassGame = 0 --是否通关
+    IsPassGame = 0 --是否通关
 }
 
 

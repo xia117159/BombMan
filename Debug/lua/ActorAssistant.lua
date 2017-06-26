@@ -211,40 +211,45 @@ end
 
 
 
-function OneBoxChecking(CheckBlockRow,CheckBlockColumn)
+function OneBoxChecking(CheckBlockRow,CheckBlockColumn,Actortype)
     if CheckBlockRow <= TotalRows and CheckBlockRow > 0 and CheckBlockColumn <= TotalLines and CheckBlockColumn > 0 then
         if (0 == mapTable[CheckBlockRow][CheckBlockColumn][4] or mapTable[CheckBlockRow][CheckBlockColumn][4] > BoxRandRate) and mapTable[CheckBlockRow][CheckBlockColumn][10] == 0 and mapTable[CheckBlockRow][CheckBlockColumn][7] == 0 then
-            assistantinf:setAbsolutePos((CheckBlockColumn-1)*BlockSize,CheckBlockRow*BlockSize);
-            Assistantimg:setAbsoluteStartPos(assistantinf:getAbsolutePosX()+originX,assistantinf:getAbsolutePosY()+originY-BlockSize);
+			if Actortype == 1 then
+				assistantinf:setAbsolutePos((CheckBlockColumn-1)*BlockSize,CheckBlockRow*BlockSize);
+				Assistantimg:setAbsoluteStartPos(assistantinf:getAbsolutePosX()+originX,assistantinf:getAbsolutePosY()+originY-BlockSize);
+			else
+				actorinf:setAbsolutePos((CheckBlockColumn-1)*BlockSize,CheckBlockRow*BlockSize);
+				actorimg:setAbsoluteStartPos(actorinf:getAbsolutePosX()+originX,actorinf:getAbsolutePosY()+originY-BlockSize);
+			end
             return true;
         end
     end
     return false;
 end
 
-function OneRoundSearch(CenterRow,CenterColumn,CheckBlockRow,CheckBlockColumn,t)
+function OneRoundSearch(CenterRow,CenterColumn,CheckBlockRow,CheckBlockColumn,t,Actortype)
             --右上方的点
             CheckBlockRow  = CenterRow+1+t;
             CheckBlockColumn  = CenterColumn+1+t;
-            if OneBoxChecking(CheckBlockRow,CheckBlockColumn) then  --找到可落脚点
+            if OneBoxChecking(CheckBlockRow,CheckBlockColumn,Actortype) then  --找到可落脚点
                 return true;              
             end
             --右下方的点
             CheckBlockRow  = CenterRow-1-t;
             CheckBlockColumn  = CenterColumn+1+t;                 
-            if OneBoxChecking(CheckBlockRow,CheckBlockColumn) then  --找到可落脚点
+            if OneBoxChecking(CheckBlockRow,CheckBlockColumn,Actortype) then  --找到可落脚点
                 return true;
             end
             --左上方的点
             CheckBlockRow  = CenterRow+1+t;
             CheckBlockColumn  = CenterColumn-1-t;  
-            if OneBoxChecking(CheckBlockRow,CheckBlockColumn) then  --找到可落脚点
+            if OneBoxChecking(CheckBlockRow,CheckBlockColumn,Actortype) then  --找到可落脚点
                 return true;                     
             end
             --左下方的点
             CheckBlockRow  = CenterRow-1-t;
             CheckBlockColumn  = CenterColumn-1-t;  
-            if OneBoxChecking(CheckBlockRow,CheckBlockColumn) then  --找到可落脚点
+            if OneBoxChecking(CheckBlockRow,CheckBlockColumn,Actortype) then  --找到可落脚点
                 return true;
             end
 
@@ -253,28 +258,28 @@ end
 
 
 -- CenterRow表示扩散中心行 CenterColumn表示扩散中心列 SetType表示扩散类型：1表示斜方向以2为基数扩散 0表示斜方向以1为基数扩散 RoundNumber表示扩散轮数
-function  CheckingAvaliableAssistantPos(CenterRow,CenterColumn,SetType,RoundNumber)
+function  CheckingAvaliableAssistantPos(CenterRow,CenterColumn,SetType,RoundNumber,Actortype)
     local i;
     local j;
     local CheckBlockRow;
     local CheckBlockColumn;
     if SetType == 0 then
         for j=1,RoundNumber do    
-            if OneRoundSearch(CenterRow,CenterColumn,CheckBlockRow,CheckBlockColumn,j) then
+            if OneRoundSearch(CenterRow,CenterColumn,CheckBlockRow,CheckBlockColumn,j,Actortype) then
                 return;
             end
         end
        
     else 
         for j=1,RoundNumber do    
-            if OneRoundSearch(CenterRow,CenterColumn,CheckBlockRow,CheckBlockColumn,j*2-1) then
+            if OneRoundSearch(CenterRow,CenterColumn,CheckBlockRow,CheckBlockColumn,j*2-1,Actortype) then
                 return;
             end
         end
     end
 end
 
-function InitAssistantPos(RoundNumber) --初始化助手位置RoundNumber代表扩散轮数
+function InitAssistantPos(RoundNumber,Actortype) --初始化助手位置RoundNumber代表扩散轮数
 	local ActorRow1;	--人物所占第一个位置的地图X坐标
 	local ActorRow2;	--人物所占第二个位置的地图X坐标
 	local ActorColumn1;	--人物所占第一个位置的地图Y坐标
@@ -284,24 +289,30 @@ function InitAssistantPos(RoundNumber) --初始化助手位置RoundNumber代表扩散轮数
 	
     if ActorHaveUnitStatus == 1 then
       if ActorHOneBoxNoIronCaculate(ActorRow1,ActorColumn1) == 3 then
-         CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,1,RoundNumber);
+         CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,1,RoundNumber,Actortype);
       else
-         CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,0,RoundNumber);
+         CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,0,RoundNumber,Actortype);
       end     
     elseif  ActorHaveUnitStatus == 2 then
         if ActorColumn1 % 2 == 0 then
-            CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,0,RoundNumber);
+            CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,0,RoundNumber,Actortype);
         else
-            CheckingAvaliableAssistantPos(ActorRow1,ActorColumn2,0,RoundNumber);
+            CheckingAvaliableAssistantPos(ActorRow1,ActorColumn2,0,RoundNumber,Actortype);
         end
     elseif  ActorHaveUnitStatus == 3 then
         if ActorRow1 % 2 == 0 then
-            CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,0,RoundNumber);
+            CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,0,RoundNumber,Actortype);
         else
-            CheckingAvaliableAssistantPos(ActorRow2,ActorColumn1,0,RoundNumber);
+            CheckingAvaliableAssistantPos(ActorRow2,ActorColumn1,0,RoundNumber,Actortype);
         end
     end
-    AssistantSwitch = true;
+	if Actortype == 1 then	--助手类型为1
+		AssistantSwitch = true;
+	else
+		if ActorReviveLag <= 0 then
+			ActorSwitch = true;
+		end		
+	end   
 
 end
 

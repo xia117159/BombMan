@@ -36,7 +36,7 @@ LoadThisBackGroundImage();
 
 
 
---Read()
+Read()
 
 
 BombInit();

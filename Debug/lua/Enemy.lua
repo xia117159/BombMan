@@ -1,4 +1,4 @@
-AllEnemy = {n = math.random(18,30)}
+AllEnemy = {n = math.random(15,25)}
 
 EnemyClass = {
 	MoveX = 0,
@@ -170,7 +170,11 @@ function EnemyMove(i)
 
     if(AllEnemy[i]["Enemy"]["StartX"] + AllEnemy[i]["MoveX"] > actorinf["AcStPosX"] - 50 and AllEnemy[i]["Enemy"]["StartX"] + AllEnemy[i]["MoveX"] < actorinf["AcStPosX"] + 50) then
         if(AllEnemy[i]["Enemy"]["StartY"] + AllEnemy[i]["MoveY"] < actorinf["AcStPosY"] and AllEnemy[i]["Enemy"]["StartY"] + AllEnemy[i]["MoveY"] > actorinf["AcStPosY"] - 100) then
-            DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  
+            if UserData["HaveProtect"] == 1 then
+				UserData["HaveProtect"] = 0
+			else
+				DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  --»ÀŒÔÀ¿Õˆ
+			end  
         end
     end
 

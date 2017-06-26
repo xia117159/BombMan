@@ -113,7 +113,7 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitchSetting,Ass
     -- ActorColumn1 = 1;
     -- ActorRow2 = nil;
     -- ActorColumn2 = nil;
-    BossCountDown = 2000; --Boss倒计时
+    BossCountDown = 1000; --Boss倒计时
    -- ActorHaveUnitStatus,ActorRow1,ActorColumn1,ActorRow2,ActorColumn2 = GetObjectHaveBlock(actorinf:getAbsolutePosX(),actorinf:getAbsolutePosY());
 
 end
@@ -138,6 +138,7 @@ end
 	Bossimg = ImageClass:new();
 	Bossimg:setImageFileSize(96,192);
 	
+	ChallengeOrStory = 0; --0代表剧情模式 1代表挑战模式
 	
 	ExitButtonWidth = 150;
 	ExitButtonHeight = 64;
@@ -415,14 +416,20 @@ function DrawActorGesture(sx, sy, fr, gesturetype ,actortype)
 			actortype:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*4, ActorHeight*5);				
 		elseif fr == 2 then 		
 			actortype:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*4, ActorHeight*5);
-            		if actortype == actorimg then
-               		 EnableEndBG(-1);--结算画面
+            		if actortype == actorimg and WinBossStatus then
+					 UserDie();
+					 WinBossStatus = false;
 			elseif  actortype == Assistantimg then
 				assistantinf["assistantDeath"] = true;
 				AssistantSwitch = false;	
 			end
 		end
 	end
+
+end
+
+function SetActorPos()
+	
 
 end
 
@@ -547,12 +554,15 @@ function PressingMoving()
 	end
 end
 
+ActorReviveLag = 200;
+
+
 --1代表向右 2代表向上 3代表向左 4代表向下
 function DrawActor()
 	NowActorPosX = actorinf:getAbsolutePosX();
 	NowActorPosY = actorinf:getAbsolutePosY();
 	NeedISRevise = false;	
-	if ISGameNotPause  then
+	if ISGameNotPause then
 		ReleaseMoving();
 		PressingMoving();
 	end	
@@ -764,12 +774,16 @@ function WindowMoveChecking(Direction)
 	else return false;
 	end	
 end
-
+gold = 0;
+WinBossStatus = true;
 function BOSSCountDown()
     if BossCountDown > 0 then
         BossCountDown = BossCountDown - 1;
     else
-        WinAndGoToEnd(1);
+		if WinBossStatus then
+			WinBossStatus = false;
+			CheckingStoryModeOrChallengeMode(1);
+		end
     end
 end
 
@@ -817,7 +831,7 @@ function DrawBoss()
 				DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  --人物死亡
 	--			AcoterDeathFromBoss = true;--DrawBossGesture(0, 0, Boss1:TimerGo(), 4, Bossimg);	
 				if SettlementStatus then
-					WinAndGoToEnd(0);       --跳到结算页面
+					CheckingStoryModeOrChallengeMode(0);       --跳到结算页面
 					SettlementStatus = false;
 				end
 			end	
@@ -829,8 +843,18 @@ function DrawBoss()
 	
 end
 
+function CheckingStoryModeOrChallengeMode(WinStatus)	-- WinStatus : 0代表被Boss抓住 1代表成功躲过Boss
+	if ChallengeOrStory == 0 then	--剧情模式
+		if Glife >= 0 then
+			UserData["IsPassGame"] = 3;
+		end
+	elseif ChallengeOrStory == 1 then	--挑战模式
+		WinAndGoToEnd(WinStatus);
+	
+	end
+end
+
 function WinAndGoToEnd(WinStatus)   -- WinStatus : 0代表被Boss抓住 1代表成功躲过Boss
-    local gold = 0;
     for i = 1,AllEnemy.n do
         if(AllEnemy[i]["IsSurvival"] == 0) then
             if(AllEnemy[i]["EnemyType"] == 1) then
@@ -845,7 +869,8 @@ function WinAndGoToEnd(WinStatus)   -- WinStatus : 0代表被Boss抓住 1代表成功躲过
     if WinStatus == 1 then  
         gold = gold + 10;
     end
-    EnableEndBG(gold);--结算画面                                                                                                  
+	
+    EnableEndBG(gold);                                                                                                
 end
 
 
@@ -1176,16 +1201,31 @@ end
 
 
 
-function IintMapData()
+function IintMapData(Modestatus)
 	initParams(24,40,1,math.random(20,30),0,550,false,false,math.random(20,100)); --初始化地图参数	
 	ISGameNotPause = false;	--判断游戏是否没有暂停
 	DialogStatus = false;
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	EnemyInit();
+	Glife = 3;
+	GlifeStatus = true;
 	-- InitStartBG();--挑战模式，倒计时
 	SettlementStatus = true;--结算状态
-	EnableJustBG();
-    	UserData["IsPassGame"] = 1
+	WinBossStatus = true;
+	SettlementStatus = true;
+	gold = 0;
+	
+	if Modestatus == 0 and UserData["IsPassGame"] ~= 4 then	
+		ChallengeOrStory = 0;
+		EnableJustBG();
+		UserData["IsPassGame"] = 1 --剧情模式
+	else
+		ChallengeOrStory = 1;
+		InitStartBG();--挑战模式，倒计时
+	-- elseif	Modestatus == 4 or Modestatus == 1 then
+		-- UserData["IsPassGame"] = 0;	--挑战模式
+	end
+    
 	
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
 end
@@ -1299,8 +1339,11 @@ function DrawFrontGround()
 		if GFrontBGIL["StartX"] <= -500 then
 			FrontGroundStatus = 0;
 			ISGameNotPause = false;--使游戏开始
-            UserData["IsPassGame"] = 2 
-            imageStartY = 100
+			if Modestatus == 0 and UserData["IsPassGame"] ~= 4 then	
+				UserData["IsPassGame"] = 2 
+				imageStartY = 100
+			end
+            
 			FrontGroundSS = false;
 		end
 	end
@@ -1501,8 +1544,24 @@ PromptFontNum =ImageClass:new();
 PromptFontNum :setImageFileSize(GShortcutPosW, GShortcutPosH);
 PromptFontNum :setscaling_ratio(0.8);
 
-Glife = 5;
-gold = 20;
+Glife = 0;
+GlifeStatus = true;
+
+
+
+
+function UserDie()
+	if GlifeStatus then
+		if Glife <= 0 then
+			EnableEndBG(-1);
+		end
+		GlifeStatus = false;
+		ActorReviveLag = 200;
+		Glife = Glife - 1;
+		releasestatus = 0;
+		movestatus = 0;
+	end
+end
 --画快捷栏
 function DrawShortcutBar()
 
@@ -1667,7 +1726,6 @@ function DrawShortcutBar()
                     (mapTable[(GBBPUseGlobalY + 50 * j) / 50 +1][(GBBPUseGlobalX + 50 * i) / 50 + 1][4] <=0 or mapTable[(GBBPUseGlobalY + 50 * j) / 50 +1][(GBBPUseGlobalX + 50 * i) / 50 + 1][4] > BoxRandRate) and 
                     mapTable[(GBBPUseGlobalY + 50 * j) / 50 +1][(GBBPUseGlobalX + 50 * i) / 50 + 1][4] ~=1000 and mapTable[(GBBPUseGlobalY + 50 * j) / 50 +1][(GBBPUseGlobalX + 50 * i) / 50 + 1][7] == 0 and
                     (mapTable[(GBBPUseGlobalY + 50 * j) / 50 +1][(GBBPUseGlobalX + 50 * i) / 50 + 1][8] == 0 or mapTable[(GBBPUseGlobalY + 50 * j) / 50 +1][(GBBPUseGlobalX + 50 * i) / 50 + 1][8] > 7)) then
-                       -- MessageBox("1","1",MB_OK)
                         for k = 9,16 do
                             if(BombBlaze[k]["IsWrite"] == 0) then
                                 BombBlaze[k]:Init(GBBPUseGlobalX + 50 *i,GBBPUseGlobalY + 50 * j)
@@ -1697,10 +1755,19 @@ function ActorKey()
 	local KeyResult_J = KeyDetect(0x24);
 	local KeyResult_K = KeyDetect(0x25);
     local KeyResult_ENTER = KeyDetect(0x1C);
+	local KeyResult_NUMBERENTER = KeyDetect(0x9C);
 	local ShortcutKey1_R = KeyDetect(DetectShortcutKey1);
 	local ShortcutKey2_R = KeyDetect(DetectShortcutKey2);
 	
 	
+	if GlifeStatus == false then
+		ActorReviveLag = ActorReviveLag - 1;
+		if ActorReviveLag <= 0 then
+			InitAssistantPos(4,0);
+			GlifeStatus = true;
+			WinBossStatus = true;
+		end
+	end
 	
 	if KeyResult_Esc == Press and FrontGroundSS == false and FrontGroundES == false then
 		if GKeyStatus == 1 then
@@ -1714,7 +1781,7 @@ function ActorKey()
 		
 	end
     
-    if KeyResult_Left == Press and UserData["IsPassGame"] == 3 then
+    if KeyResult_Left == Press and UserData["IsPassGame"] == 3 and imageStartY == 1120 then
         if(chooseAssistant == 1) then
             chooseAssistant = 2
         elseif(chooseAssistant == 2) then
@@ -1722,7 +1789,7 @@ function ActorKey()
         end
     end
 
-    if KeyResult_right == Press and UserData["IsPassGame"] == 3 then
+    if KeyResult_right == Press and UserData["IsPassGame"] == 3 and imageStartY == 1120 then
         if(chooseAssistant == 1) then
             chooseAssistant = 2
         elseif(chooseAssistant == 2) then
@@ -1730,20 +1797,25 @@ function ActorKey()
         end
     end
 
-    if KeyResult_ENTER == Press and (UserData["IsPassGame"] == 2 or UserData["IsPassGame"] == 3) then
+    if (KeyResult_ENTER == Press or KeyResult_NUMBERENTER == Press) and (UserData["IsPassGame"] == 2 or UserData["IsPassGame"] == 3) then
         if(UserData["IsPassGame"] == 2) then
             imageStartY = imageStartY + 68
         end
         if(UserData["IsPassGame"] == 3) then
-            if(imageStartY == 1188) then
+            if(imageStartY == 1120) then
+				UserData["AssistantLock"] = 0;
                 if(chooseAssistant == 1) then
                     UserData["AssistantProps"] = BoysAssistant
                 elseif(chooseAssistant == 2) then
                     UserData["AssistantProps"] = GirlsAssistant
                 end
-                imageStartY = 1324
-            elseif(imageStartY == 1324) then
-                UserData["IsPassGame"] = 0
+                imageStartY = 1256
+            elseif(imageStartY == 1256) then
+                UserData["IsPassGame"] = 4
+				if WinBossStatus then
+					WinBossStatus = false;
+					EnableEndBG(gold);--结算画面
+				end
             else
                 imageStartY = imageStartY + 68
             end
@@ -1780,7 +1852,7 @@ function ActorKey()
 				GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 + originY%50; --相对于窗口,设定位置必须为50的整数倍
 			elseif UserData["ShortCutBarAP"] == 1 then
 				if assistantinf["assistantDeath"] then
-					InitAssistantPos(4);
+					InitAssistantPos(4,1);
 					assistantinf["assistantDeath"] = false;
 				end
 			end
@@ -1796,7 +1868,7 @@ function ActorKey()
 				GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 + originY%50; --相对于窗口,设定位置必须为50的整数倍
 			elseif UserData["ShortCutBarAP"] == 2 then
 				if  assistantinf["assistantDeath"] then
-					InitAssistantPos(4);
+					InitAssistantPos(4,1);
 					assistantinf["assistantDeath"] = false;
 				end             
 			end
@@ -1834,7 +1906,7 @@ function ActorKey()
 				GWarnStatus = true;
 			end
 		
-		elseif GKeyStatus == 0 then
+		elseif GKeyStatus == 0 and GlifeStatus then
 			if KeyResult_right == KeepPressing then
 				releasestatus = 0;
 				movestatus = 1;
@@ -2004,7 +2076,7 @@ function DrawPlot()
         BackGroundAnimation:DrawImage()
         PlotAnimation:setImage(210 , 100  , 585 , 350 , 0 , 580 , imageStartY , imageStartY + 350 , 0.5);
         PlotAnimation:DrawImage()
-        imageStartY = imageStartY + 10;
+        imageStartY = imageStartY + 1;
     elseif( imageStartY >= 2270 and UserData["IsPassGame"] == 1) then
         BackGroundAnimation:setImage(210 , 450  , 585 , 100 , 0 , 580 , 1360 , 1460 , 0.5);
         BackGroundAnimation:DrawImage()
@@ -2015,7 +2087,7 @@ function DrawPlot()
             ExitJustBG();
             UserData["IsPassGame"] = 0 
         end
-        imageStartY = imageStartY + 10;
+        imageStartY = imageStartY + 1;
     end
     if(UserData["IsPassGame"] == 2) then
         if(imageStartY == 644) then
@@ -2028,30 +2100,30 @@ function DrawPlot()
     end
 
     if(UserData["IsPassGame"] == 3) then
-        if(imageStartY == 1188) then
+        if(imageStartY == 1120) then
             BackGroundAnimation:setImage(0 , 0  , 1000 , 100 , 0 , 1000 , 0 , 100 , 0.6);
             BackGroundAnimation:DrawImage()
             if(chooseAssistant == 1) then
                 PlotAnimation:setImage(100 , 0  , 120 , 68 , 120 , 240 , imageStartY , imageStartY + 68 , 0.5);
                 PlotAnimation:DrawImage()
-                PlotAnimation:setImage(100 , 0  , 120 , 68 , 0 , 120 , imageStartY + 68 , imageStartY + 136 , 0.5);
+                PlotAnimation:setImage(300 , 0  , 120 , 68 , 0 , 120 , imageStartY + 68 , imageStartY + 136 , 0.5);
                 PlotAnimation:DrawImage()
             elseif(chooseAssistant == 2) then
                 PlotAnimation:setImage(100 , 0  , 120 , 68 , 0 , 120 , imageStartY , imageStartY + 68 , 0.5);
                 PlotAnimation:DrawImage()
-                PlotAnimation:setImage(100 , 0  , 120 , 68 , 120 , 240 , imageStartY + 68 , imageStartY + 136 , 0.5);
+                PlotAnimation:setImage(300 , 0  , 120 , 68 , 120 , 240 , imageStartY + 68 , imageStartY + 136 , 0.5);
                 PlotAnimation:DrawImage()
             end
-        end
-        if(imageStartY == 1324) then
+        elseif(imageStartY == 1256) then
             BackGroundAnimation:setImage(0 , 0  , 1000 , 100 , 0 , 1000 , 0 , 100 , 0.6);
             BackGroundAnimation:DrawImage()
             PlotAnimation:setImage(0 , 0  , 1000 , 68 , 0 , 1000 , imageStartY , imageStartY + 68 , 0.5);
             PlotAnimation:DrawImage()
-        end
-        BackGroundAnimation:setImage(0 , 0  , 1000 , 100 , 0 , 1000 , 0 , 100 , 0.6);
-        BackGroundAnimation:DrawImage()
-        PlotAnimation:setImage(0 , 0  , 1000 , 68 , 0 , 1000 , imageStartY , imageStartY + 68 , 0.5);
-        PlotAnimation:DrawImage()
+		else
+			BackGroundAnimation:setImage(0 , 0  , 1000 , 100 , 0 , 1000 , 0 , 100 , 0.6);
+			BackGroundAnimation:DrawImage()
+			PlotAnimation:setImage(0 , 0  , 1000 , 68 , 0 , 1000 , imageStartY , imageStartY + 68 , 0.5);
+			PlotAnimation:DrawImage()
+		end
     end
 end
