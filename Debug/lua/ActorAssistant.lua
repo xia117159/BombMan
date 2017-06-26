@@ -4,7 +4,6 @@ ActorClass =
 	AcStPosY = 1200;
 	actorWindowPosX = 0;
 	actorWindowPosY = 600;
-	
 }
 
 function ActorClass:moveTOALL(mx,my)
@@ -59,8 +58,9 @@ end
 
 AssistantClass = 
 {
-	AcStPosX = 500;
-	AcStPosY = 1000;
+	AcStPosX = 500,
+	AcStPosY = 1000,
+	assistantDeath = true
 }
 
 function AssistantClass:moveTOALL(mx,my)
@@ -101,31 +101,31 @@ function DrawAssistant()
 		        if WindowMoveChecking(1) then	
 			        DrawActorGesture(0, 0, Actor2:TimerGo(), 1, Assistantimg);				
 		        else 	
-			        DrawActorGesture(UnitXOffset, 0, Actor2:TimerGo(), 1, Assistantimg);			
+			        DrawActorGesture(AssistantUnitXOffset, 0, Actor2:TimerGo(), 1, Assistantimg);			
 		        end	
 	        --	Assistantimg:setRelativelyStartPos(UnitXOffset,0);
-		        assistantinf:setRelativePos(UnitXOffset,0);	
+		        assistantinf:setRelativePos(AssistantUnitXOffset,0);	
 	        elseif AssistantMoveDirection == 2 then
 		        if WindowMoveChecking(2) then	
 			        DrawActorGesture(0, 0, Actor2:TimerGo(), 2, Assistantimg);				
 		        else 	
-			        DrawActorGesture(0, UnitYOffset, Actor2:TimerGo(), 2, Assistantimg);			
+			        DrawActorGesture(0, AssistantUnitYOffset, Actor2:TimerGo(), 2, Assistantimg);			
 		        end	
-		        assistantinf:setRelativePos(0,UnitYOffset);	
+		        assistantinf:setRelativePos(0,AssistantUnitYOffset);	
 	        elseif	AssistantMoveDirection == 3 then
 		        if WindowMoveChecking(3) then	
 			        DrawActorGesture(0, 0, Actor2:TimerGo(), 3, Assistantimg);				
 		        else 	
-			        DrawActorGesture(-UnitXOffset, 0, Actor2:TimerGo(), 3, Assistantimg);			
+			        DrawActorGesture(-AssistantUnitXOffset, 0, Actor2:TimerGo(), 3, Assistantimg);			
 		        end	
-		        assistantinf:setRelativePos(-UnitXOffset,0);	
+		        assistantinf:setRelativePos(-AssistantUnitXOffset,0);	
 	        elseif	AssistantMoveDirection == 4 then
 		        if WindowMoveChecking(4) then	
 			        DrawActorGesture(0, 0, Actor2:TimerGo(), 4, Assistantimg);				
 		        else 	
-			        DrawActorGesture(0, -UnitYOffset, Actor2:TimerGo(), 4, Assistantimg);			
+			        DrawActorGesture(0, -AssistantUnitYOffset, Actor2:TimerGo(), 4, Assistantimg);			
 		        end	
-		        assistantinf:setRelativePos(0,-UnitYOffset);	
+		        assistantinf:setRelativePos(0,-AssistantUnitYOffset);	
 	        elseif	AssistantMoveDirection == 0 then
 		        if AssistantLastDirection == 1 then
 			        Assistantimg:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*5, ActorHeight*6);
@@ -148,101 +148,157 @@ function DrawAssistant()
    
 end
 
---function AssistantPutBomb()
---    local BombX = 0
---	local BombY = 0
---	while(BombX <= TotalWidthPixels) do
---		if(BombX <= assistantinf["AcStPosX"] + 25 and assistantinf["AcStPosX"] + 25 < BombX + 50) then
---			break
---		end
---		BombX = BombX + 50
---	end
---	while(BombY <= TotalHeightPixels) do
---		if(BombY <= assistantinf["AcStPosY"] - 25 and assistantinf["AcStPosY"] - 25 < BombY + 50) then
---			break
---		end
---		BombY = BombY + 50
---	end
---	if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] ~= 1) then
---		if(UserBomb[7]["IsWrite"] == 0) then
---			UserBomb[7]:Init(BombX,BombY)
---			UserBomb[7]["IsWrite"] = 1
---			mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
---            for j = 17,24 do
---                if(BombBlaze[j]["IsWrite"] == 2) then
---				    if(BombBlaze[j]["UpImpact"] > 0) then
---                        for k = 1,BombBlaze[j]["UpImpact"] do
---                            mapTable[(BombBlaze[j]["Blaze"]["StartY"] + k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] = mapTable[(BombBlaze[j]["Blaze"]["StartY"] + k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] - 1
---                        end
---                    end
---                    if(BombBlaze[j]["LeftImpact"] > 0) then
---                        for k = 1,BombBlaze[j]["LeftImpact"] do
---                            mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] - k * 50) / 50 +1][9] = mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] - k * 50) / 50 +1][9] - 1
---                        end
---                    end
---                    if(BombBlaze[j]["RightImpact"] > 0) then
---                        for k = 1,BombBlaze[j]["RightImpact"] do
---                            mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] + k * 50) / 50 +1][9] = mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] + k * 50) / 50 +1][9] - 1
---                        end
---                    end
---                    if(BombBlaze[j]["DownImpact"] > 0) then
---                        for k = 1,BombBlaze[j]["DownImpact"] do
---                            mapTable[(BombBlaze[j]["Blaze"]["StartY"] - k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] = mapTable[(BombBlaze[j]["Blaze"]["StartY"] - k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] - 1
---                        end
---                    end
---			    end
---            end
---		    for j = 17,24 do
---		        if(BombBlaze[j]["IsWrite"] == 0) then
---				    BombBlaze[j]:Init(BombX,BombY)
---                    BombBlaze[j]["IsWrite"] = 2
---                    break
---			    end
---		    end
---            for j = 17,24 do
---			    if(BombBlaze[j]["IsWrite"] == 2) then
---                    TestBlazeImpact(j,0)
---			    end
---		    end
---		    break
---	    end
---    end
---end
-
-
-
--- CenterRow±íÊ¾À©É¢ÖĞĞÄĞĞ CenterColumn±íÊ¾À©É¢ÖĞĞÄÁĞ SetType±íÊ¾À©É¢ÀàĞÍ£º1±íÊ¾Ğ±·½ÏòÒÔ2Îª»ùÊıÀ©É¢ 0±íÊ¾Ğ±·½ÏòÒÔ1Îª»ùÊıÀ©É¢
-function  CheckingAvaliableAssistantPos(CenterRow,CenterColumn,SetType)
-    local i;
-    local j;
-
-    if SetType == 0 then
-  
-    else 
-
+function AssistantPutBomb()
+    local BombX = 0
+	local BombY = 0
+	while(BombX <= TotalWidthPixels) do
+		if(BombX <= assistantinf["AcStPosX"] + 25 and assistantinf["AcStPosX"] + 25 < BombX + 50) then
+			break
+		end
+		BombX = BombX + 50
+	end
+	while(BombY <= TotalHeightPixels) do
+		if(BombY <= assistantinf["AcStPosY"] - 25 and assistantinf["AcStPosY"] - 25 < BombY + 50) then
+			break
+		end
+		BombY = BombY + 50
+	end
+	if(mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] ~= 1) then
+		if(UserBomb[7]["IsWrite"] == 0) then
+			UserBomb[7]:Init(BombX,BombY)
+			UserBomb[7]["IsWrite"] = 1
+			mapTable[BombY/BlockSize + 1][BombX/BlockSize + 1][7] = 1
+            for j = 17,24 do
+                if(BombBlaze[j]["IsWrite"] == 2) then
+				    if(BombBlaze[j]["UpImpact"] > 0) then
+                        for k = 1,BombBlaze[j]["UpImpact"] do
+                            mapTable[(BombBlaze[j]["Blaze"]["StartY"] + k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] = mapTable[(BombBlaze[j]["Blaze"]["StartY"] + k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] - 1
+                        end
+                    end
+                    if(BombBlaze[j]["LeftImpact"] > 0) then
+                        for k = 1,BombBlaze[j]["LeftImpact"] do
+                            mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] - k * 50) / 50 +1][9] = mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] - k * 50) / 50 +1][9] - 1
+                        end
+                    end
+                    if(BombBlaze[j]["RightImpact"] > 0) then
+                        for k = 1,BombBlaze[j]["RightImpact"] do
+                            mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] + k * 50) / 50 +1][9] = mapTable[BombBlaze[j]["Blaze"]["StartY"] / 50 + 1][(BombBlaze[j]["Blaze"]["StartX"] + k * 50) / 50 +1][9] - 1
+                        end
+                    end
+                    if(BombBlaze[j]["DownImpact"] > 0) then
+                        for k = 1,BombBlaze[j]["DownImpact"] do
+                            mapTable[(BombBlaze[j]["Blaze"]["StartY"] - k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] = mapTable[(BombBlaze[j]["Blaze"]["StartY"] - k * 50) / 50 + 1][BombBlaze[j]["Blaze"]["StartX"] / 50 +1][9] - 1
+                        end
+                    end
+			    end
+            end
+		    for j = 17,24 do
+		        if(BombBlaze[j]["IsWrite"] == 0) then
+				    BombBlaze[j]:Init(BombX,BombY)
+                    BombBlaze[j]["IsWrite"] = 2
+                    break
+			    end
+		    end
+            for j = 17,24 do
+			    if(BombBlaze[j]["IsWrite"] == 2) then
+                    TestBlazeImpact(j,0)
+			    end
+		    end
+	    end
     end
 end
 
-function InitAssistantPos()
-    local InitPosX;
-    local InitPosY;
+
+
+
+function OneBoxChecking(CheckBlockRow,CheckBlockColumn)
+    if CheckBlockRow <= TotalRows and CheckBlockRow > 0 and CheckBlockColumn <= TotalLines and CheckBlockColumn > 0 then
+        if (0 == mapTable[CheckBlockRow][CheckBlockColumn][4] or mapTable[CheckBlockRow][CheckBlockColumn][4] > BoxRandRate) and mapTable[CheckBlockRow][CheckBlockColumn][10] == 0 and mapTable[CheckBlockRow][CheckBlockColumn][7] == 0 then
+            assistantinf:setAbsolutePos((CheckBlockColumn-1)*BlockSize,CheckBlockRow*BlockSize);
+            Assistantimg:setAbsoluteStartPos(assistantinf:getAbsolutePosX()+originX,assistantinf:getAbsolutePosY()+originY-BlockSize);
+            return true;
+        end
+    end
+    return false;
+end
+
+function OneRoundSearch(CenterRow,CenterColumn,CheckBlockRow,CheckBlockColumn,t)
+            --ÓÒÉÏ·½µÄµã
+            CheckBlockRow  = CenterRow+1+t;
+            CheckBlockColumn  = CenterColumn+1+t;
+            if OneBoxChecking(CheckBlockRow,CheckBlockColumn) then  --ÕÒµ½¿ÉÂä½Åµã
+                return true;              
+            end
+            --ÓÒÏÂ·½µÄµã
+            CheckBlockRow  = CenterRow-1-t;
+            CheckBlockColumn  = CenterColumn+1+t;                 
+            if OneBoxChecking(CheckBlockRow,CheckBlockColumn) then  --ÕÒµ½¿ÉÂä½Åµã
+                return true;
+            end
+            --×óÉÏ·½µÄµã
+            CheckBlockRow  = CenterRow+1+t;
+            CheckBlockColumn  = CenterColumn-1-t;  
+            if OneBoxChecking(CheckBlockRow,CheckBlockColumn) then  --ÕÒµ½¿ÉÂä½Åµã
+                return true;                     
+            end
+            --×óÏÂ·½µÄµã
+            CheckBlockRow  = CenterRow-1-t;
+            CheckBlockColumn  = CenterColumn-1-t;  
+            if OneBoxChecking(CheckBlockRow,CheckBlockColumn) then  --ÕÒµ½¿ÉÂä½Åµã
+                return true;
+            end
+
+            return false;
+end
+
+
+-- CenterRow±íÊ¾À©É¢ÖĞĞÄĞĞ CenterColumn±íÊ¾À©É¢ÖĞĞÄÁĞ SetType±íÊ¾À©É¢ÀàĞÍ£º1±íÊ¾Ğ±·½ÏòÒÔ2Îª»ùÊıÀ©É¢ 0±íÊ¾Ğ±·½ÏòÒÔ1Îª»ùÊıÀ©É¢ RoundNumber±íÊ¾À©É¢ÂÖÊı
+function  CheckingAvaliableAssistantPos(CenterRow,CenterColumn,SetType,RoundNumber)
+    local i;
+    local j;
+    local CheckBlockRow;
+    local CheckBlockColumn;
+    if SetType == 0 then
+        for j=1,RoundNumber do    
+            if OneRoundSearch(CenterRow,CenterColumn,CheckBlockRow,CheckBlockColumn,j) then
+                return;
+            end
+        end
+       
+    else 
+        for j=1,RoundNumber do    
+            if OneRoundSearch(CenterRow,CenterColumn,CheckBlockRow,CheckBlockColumn,j*2-1) then
+                return;
+            end
+        end
+    end
+end
+
+function InitAssistantPos(RoundNumber) --³õÊ¼»¯ÖúÊÖÎ»ÖÃRoundNumber´ú±íÀ©É¢ÂÖÊı
+	local ActorRow1;	--ÈËÎïËùÕ¼µÚÒ»¸öÎ»ÖÃµÄµØÍ¼X×ø±ê
+	local ActorRow2;	--ÈËÎïËùÕ¼µÚ¶ş¸öÎ»ÖÃµÄµØÍ¼X×ø±ê
+	local ActorColumn1;	--ÈËÎïËùÕ¼µÚÒ»¸öÎ»ÖÃµÄµØÍ¼Y×ø±ê
+	local ActorColumn2;	--ÈËÎïËùÕ¼µÚ¶ş¸öÎ»ÖÃµÄµØÍ¼Y×ø±ê
+    local ActorHaveUnitStatus;	--ÈËÎïËùÕ¼¸ñÊı×´¿ö 1´ú±íËùÕ¼Ò»¸ñ
+	ActorHaveUnitStatus,ActorRow1,ActorColumn1,ActorRow2,ActorColumn2 = GetObjectHaveBlock(actorinf:getAbsolutePosX(),actorinf:getAbsolutePosY());
+	
     if ActorHaveUnitStatus == 1 then
       if ActorHOneBoxNoIronCaculate(ActorRow1,ActorColumn1) == 3 then
-         CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,1);
+         CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,1,RoundNumber);
       else
-         CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,0);
+         CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,0,RoundNumber);
       end     
     elseif  ActorHaveUnitStatus == 2 then
         if ActorColumn1 % 2 == 0 then
-            CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,0);
+            CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,0,RoundNumber);
         else
-            CheckingAvaliableAssistantPos(ActorRow1,ActorColumn2,0);
+            CheckingAvaliableAssistantPos(ActorRow1,ActorColumn2,0,RoundNumber);
         end
     elseif  ActorHaveUnitStatus == 3 then
         if ActorRow1 % 2 == 0 then
-            CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,0);
+            CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,0,RoundNumber);
         else
-            CheckingAvaliableAssistantPos(ActorRow2,ActorColumn1,0);
+            CheckingAvaliableAssistantPos(ActorRow2,ActorColumn1,0,RoundNumber);
         end
     end
     AssistantSwitch = true;
@@ -270,17 +326,12 @@ function AssistantAlgorithms()
 	-- 2´ú±íËùÕ¼Ë®Æ½·½ÏòÁ½¸ñÇÒÎ»ÖÃÎªmapTable[ActorRow1][ActorColumn1]£¬mapTable[ActorRow1][ActorColumn2]
 	-- 3´ú±íËùÕ¼ÊúÖ±·½ÏòÁ½¸ñÇÒÎ»ÖÃÎªmapTable[ActorRow1][ActorColumn1]£¬mapTable[ActorRow2][ActorColumn1]
 	-- AssistantHaveUnitStatus;	ÖúÊÖËùÕ¼¸ñÊı×´¿ö 1´ú±íËùÕ¼Ò»¸ñ 2´ú±íËùÕ¼Ë®Æ½·½ÏòÁ½¸ñ 3´ú±íËùÕ¼ÊúÖ±·½ÏòÁ½¸ñ
-	
+	local TempRandRate;
+    local AssistantWillMoveDirection;
     AvoidMark = 0; --ÍË±Ü±ê×¢Î» 0´ú±í²»ÍË±Ü(Ö÷¶¯) 1´ú±í»ğÑæÍË±Ü 2´ú±í¹ÖÎïÍË±Ü 
 	AssistantHaveUnitStatus,AssistantRow1,AssistantColumn1,AssistantRow2,AssistantColumn2 = GetObjectHaveBlock(assistantinf:getAbsolutePosX(),assistantinf:getAbsolutePosY());
     AvoidBlaze(8);
 	
-	
-	-- if AvoidMark == 1 then	--Ö´ĞĞ·ÅÕ¨µ¯Ëã·¨
-		
-	-- end
-	
-	-- SkillRelease();		--Ö´ĞĞ·Å¼¼ÄÜËã·¨
 	if AvoidMark == 1 then	--ĞèÒª½øĞĞ»ğÑæÍË±Ü
 		if AssistantHaveUnitStatus == 1 then 
 			if AssistantRow1 == DestinationBlockRow then --ÈôÄ¿µÄ¸ñÓëÖúÊÖËùÔÚ¸ñĞĞÏàÍ¬
@@ -307,6 +358,69 @@ function AssistantAlgorithms()
 		end
 	end
 	
+    if AvoidMark == 0 then  --²»ĞèÒª½øĞĞ»ğÑæÍË±Ü£¬ÖúÊÖ½øÈëÖ÷¶¯×´Ì¬
+        if AssistantHaveUnitStatus ~= 1 then --ÖúÊÖÎ»ÓÚÁ½¸ñ£¬ÔòÑØ×ÅÔ­·½ÏòÒÆ¶¯
+           AssistantMoveDirection =  AssistantLastDirection;
+        else    --ÖúÊÖÎ»ÓÚÒ»¸ö¸ñ×Ó
+            AssistantWillMoveDirection = math.random(1,2);	--1´ú±íÖúÊÖÏòÉÏÒÆ¶¯»òÏòÓÒÒÆ¶¯£¬2´ú±íÏòÏÂÒÆ¶¯»òÏò×óÒÆ¶¯
+            if ActorHOneBoxNoIronCaculate(AssistantRow1,AssistantColumn1) == 1 then  --ÖúÊÖÖ»ÄÜÊúÖ±ÒÆ¶¯            
+                    if AssistantWillMoveDirection == 1 and AssistantRow1+1 <= TotalRows then
+                         if   mapTable[AssistantRow1+1][AssistantColumn1][3] == 0 and (mapTable[AssistantRow1+1][AssistantColumn1][4] > BoxRandRate or mapTable[AssistantRow1+1][AssistantColumn1][4] == 0)
+                         and mapTable[AssistantRow1+1][AssistantColumn1][7] == 0 and mapTable[AssistantRow1+1][AssistantColumn1][10] == 0 and mapTable[AssistantRow1+1][AssistantColumn1][9] == 0 then --ÖúÊÖÏ£ÍûÍùÉÏÒÆ¶¯ÇÒÄÜÍùÉÏ·½ÒÆ¶¯
+                             AssistantMoveDirection = 2;    
+                         end
+                    end
+                    if AssistantWillMoveDirection == 2 and AssistantRow1-1 > 0 then
+                         if  mapTable[AssistantRow1-1][AssistantColumn1][3] == 0 and (mapTable[AssistantRow1-1][AssistantColumn1][4] > BoxRandRate or mapTable[AssistantRow1-1][AssistantColumn1][4] == 0)
+                         and mapTable[AssistantRow1-1][AssistantColumn1][7] == 0 and mapTable[AssistantRow1-1][AssistantColumn1][10] == 0 and mapTable[AssistantRow1-1][AssistantColumn1][9] == 0 then --ÖúÊÖÏ£ÍûÍùÏÂÒÆ¶¯ÇÒÄÜÍùÏÂ·½ÒÆ¶¯
+                              AssistantMoveDirection = 4;
+                         end
+                    end    
+            elseif ActorHOneBoxNoIronCaculate(AssistantRow1,AssistantColumn1) == 2 then  --ÖúÊÖÖ»ÄÜË®Æ½ÒÆ¶¯
+                if AssistantWillMoveDirection == 1 and AssistantColumn1+1 <= TotalLines then
+                         if   mapTable[AssistantRow1][AssistantColumn1+1][3] == 0 and (mapTable[AssistantRow1][AssistantColumn1+1][4] > BoxRandRate or mapTable[AssistantRow1][AssistantColumn1+1][4] == 0)
+                         and mapTable[AssistantRow1][AssistantColumn1+1][7] == 0 and mapTable[AssistantRow1][AssistantColumn1+1][10] == 0 and mapTable[AssistantRow1][AssistantColumn1+1][9] == 0 then --ÖúÊÖÏ£ÍûÍùÓÒÒÆ¶¯ÇÒÄÜÍùÓÒ·½ÒÆ¶¯
+                             AssistantMoveDirection = 1;    
+                         end
+                end
+                if AssistantWillMoveDirection == 2 and AssistantColumn1-1 > 0 then
+                         if  mapTable[AssistantRow1][AssistantColumn1-1][3] == 0 and (mapTable[AssistantRow1][AssistantColumn1-1][4] > BoxRandRate or mapTable[AssistantRow1][AssistantColumn1-1][4] == 0)
+                         and mapTable[AssistantRow1][AssistantColumn1-1][7] == 0 and mapTable[AssistantRow1][AssistantColumn1-1][10] == 0 and mapTable[AssistantRow1][AssistantColumn1-1][9] == 0 then --ÖúÊÖÏ£ÍûÍù×óÒÆ¶¯ÇÒÄÜÍù×ó·½ÒÆ¶¯
+                              AssistantMoveDirection = 3;
+                         end
+                end 
+            else 
+                AssistantWillMoveDirection = math.random(1,4);
+                if AssistantWillMoveDirection == 1 and AssistantColumn1+1 <= TotalLines then
+                    if mapTable[AssistantRow1][AssistantColumn1+1][3] == 0 and (mapTable[AssistantRow1][AssistantColumn1+1][4] > BoxRandRate or mapTable[AssistantRow1][AssistantColumn1+1][4] == 0)
+                       and mapTable[AssistantRow1][AssistantColumn1+1][7] == 0 and mapTable[AssistantRow1][AssistantColumn1+1][10] == 0 and mapTable[AssistantRow1][AssistantColumn1+1][9] == 0 then --ÖúÊÖÏ£ÍûÍùÓÒÒÆ¶¯ÇÒÄÜÍùÓÒ·½ÒÆ¶¯
+                          AssistantMoveDirection = 1;    
+                    end
+                elseif  AssistantWillMoveDirection == 2 and AssistantRow1+1 <= TotalRows then
+                    if mapTable[AssistantRow1+1][AssistantColumn1][3] == 0 and (mapTable[AssistantRow1+1][AssistantColumn1][4] > BoxRandRate or mapTable[AssistantRow1+1][AssistantColumn1][4] == 0)
+                       and mapTable[AssistantRow1+1][AssistantColumn1][7] == 0 and mapTable[AssistantRow1+1][AssistantColumn1][10] == 0 and mapTable[AssistantRow1+1][AssistantColumn1][9] == 0 then --ÖúÊÖÏ£ÍûÍùÉÏÒÆ¶¯ÇÒÄÜÍùÉÏ·½ÒÆ¶¯
+                          AssistantMoveDirection = 2;    
+                    end
+                elseif  AssistantWillMoveDirection == 3 and AssistantColumn1-1 > 0 then
+                   if mapTable[AssistantRow1][AssistantColumn1-1][3] == 0 and (mapTable[AssistantRow1][AssistantColumn1-1][4] > BoxRandRate or mapTable[AssistantRow1][AssistantColumn1-1][4] == 0)
+                      and mapTable[AssistantRow1][AssistantColumn1-1][7] == 0 and mapTable[AssistantRow1][AssistantColumn1-1][10] == 0 and mapTable[AssistantRow1][AssistantColumn1-1][9] == 0 then --ÖúÊÖÏ£ÍûÍù×óÒÆ¶¯ÇÒÄÜÍù×ó·½ÒÆ¶¯
+                          AssistantMoveDirection = 3;
+                   end
+                elseif  AssistantWillMoveDirection == 4 and AssistantRow1-1 > 0 then
+                    if  mapTable[AssistantRow1-1][AssistantColumn1][3] == 0 and (mapTable[AssistantRow1-1][AssistantColumn1][4] > BoxRandRate or mapTable[AssistantRow1-1][AssistantColumn1][4] == 0)
+                    and mapTable[AssistantRow1-1][AssistantColumn1][7] == 0 and mapTable[AssistantRow1-1][AssistantColumn1][10] == 0 and mapTable[AssistantRow1-1][AssistantColumn1][9] == 0 then --ÖúÊÖÏ£ÍûÍùÏÂÒÆ¶¯ÇÒÄÜÍùÏÂ·½ÒÆ¶¯
+                          AssistantMoveDirection = 4;
+                    end
+                end
+            end
+        end
+        
+        TempRandRate = math.random(1,100);
+        if TempRandRate <= AssistantPutBombRate then
+            AssistantPutBomb();
+        end
+    end
+
 	
 end
 
@@ -370,7 +484,7 @@ function GetAvoidBlazeDestinationBlock(DistanceNum,TempIndex) --DistanceNum±íÊ¾µ
 		LoopCondition = 1;
 	else	LoopCondition = 0;
 	end
-	while DistanceNum > LoopCondition do	--ÒÔÄ³Ò»½Úµã¿ªÊ¼ÍùÉÏ»ñÈ¡Ä¿µÄ½Úµã(¼´ÈËÎïÕ¼Á½¸ñµÄÊ±ºò»ñÈ¡ÆäÖĞµÄÄ³Ò»¸ñÎªÄ¿µÄ¸ñ£¬ÈËÎïÕ¼Ò»¸ñµÄÊ±ºò»ñÈ¡ÏàÁìµÄÒ»¸ñÎªÄ¿µÄ¸ñ)
+	while DistanceNum > LoopCondition do	--ÒÔÄ³Ò»½Úµã¿ªÊ¼ÍùÉÏ»ñÈ¡Ä¿µÄ½Úµã(¼´ÈËÎïÕ¼Á½¸ñµÄÊ±ºò»ñÈ¡ÆäÖĞµÄÄ³Ò»¸ñÎªÄ¿µÄ¸ñ£¬ÈËÎïÕ¼Ò»¸ñµÄÊ±ºò»ñÈ¡ÏàÁÚµÄÒ»¸ñÎªÄ¿µÄ¸ñ)
 		TempIndex = DistanceArraySet[DistanceNum+1][TempIndex][1]; --¼ÆËã³ö¸¸½ÚµãµÄË÷Òı	
 		DistanceNum = DistanceNum-1;
 	end
@@ -425,25 +539,26 @@ function DistanceDiffusion(OriginBlockIndex,OriginBlockRow,OriginBlockColumn,Set
 	local UpBlockRow = OriginBlockRow+1;
 	local LeftBlockColumn = OriginBlockColumn-1;
 	local DownBlockRow = OriginBlockRow-1;
-	if RightBlockColumn <= TotalLines then	--¼ì²âÓÒ²à¸ñÊÇ·ñ³¬¹ı±ß½ç ¸Ã¸ñµØÍ¼×ø±êÎªmapTable[OriginBlockRow][RightBlockColumn]
+    local RandNumberDir = math.random(1,4);
+	if RandNumberDir == 1 and RightBlockColumn <= TotalLines then	--¼ì²âÓÒ²à¸ñÊÇ·ñ³¬¹ı±ß½ç ¸Ã¸ñµØÍ¼×ø±êÎªmapTable[OriginBlockRow][RightBlockColumn]
 		if mapTable[OriginBlockRow][RightBlockColumn][3] == 0 and (mapTable[OriginBlockRow][RightBlockColumn][4] == 0 or mapTable[OriginBlockRow][RightBlockColumn][4] > BoxRandRate) 
 		and mapTable[OriginBlockRow][RightBlockColumn][7] == 0 and mapTable[OriginBlockRow][RightBlockColumn][10] == 0 and  mapTable[OriginBlockRow][RightBlockColumn][11] > SetDistance then
 			CreateDistanceElement(OriginBlockIndex,OriginBlockRow,RightBlockColumn,SetDistance);
 		end
 	end
-	if UpBlockRow <= TotalRows then	--¼ì²âÉÏ²à¸ñÊÇ·ñ³¬¹ı±ß½ç ¸Ã¸ñµØÍ¼×ø±êÎªmapTable[UpBlockRow][OriginBlockColumn]
+	if RandNumberDir == 2 and UpBlockRow <= TotalRows then	--¼ì²âÉÏ²à¸ñÊÇ·ñ³¬¹ı±ß½ç ¸Ã¸ñµØÍ¼×ø±êÎªmapTable[UpBlockRow][OriginBlockColumn]
 		if mapTable[UpBlockRow][OriginBlockColumn][3] == 0 and (mapTable[UpBlockRow][OriginBlockColumn][4] == 0 or mapTable[UpBlockRow][OriginBlockColumn][4] > BoxRandRate) 
 		and mapTable[UpBlockRow][OriginBlockColumn][7] == 0 and mapTable[UpBlockRow][OriginBlockColumn][10] == 0 and  mapTable[UpBlockRow][OriginBlockColumn][11] > SetDistance then
 			CreateDistanceElement(OriginBlockIndex,UpBlockRow,OriginBlockColumn,SetDistance);			
 		end	
 	end	
-	if LeftBlockColumn > 0 then	--¼ì²â×ó²à¸ñÊÇ·ñ³¬¹ı±ß½ç ¸Ã¸ñµØÍ¼×ø±êÎªmapTable[OriginBlockRow][LeftBlockColumn]
+	if RandNumberDir == 3 and LeftBlockColumn > 0 then	--¼ì²â×ó²à¸ñÊÇ·ñ³¬¹ı±ß½ç ¸Ã¸ñµØÍ¼×ø±êÎªmapTable[OriginBlockRow][LeftBlockColumn]
 		if mapTable[OriginBlockRow][LeftBlockColumn][3] == 0 and (mapTable[OriginBlockRow][LeftBlockColumn][4] == 0 or mapTable[OriginBlockRow][LeftBlockColumn][4] > BoxRandRate) 
 		and mapTable[OriginBlockRow][LeftBlockColumn][7] == 0 and mapTable[OriginBlockRow][LeftBlockColumn][10] == 0 and  mapTable[OriginBlockRow][LeftBlockColumn][11] > SetDistance then
 			CreateDistanceElement(OriginBlockIndex,OriginBlockRow,LeftBlockColumn,SetDistance);			
 		end	
 	end	
-	if DownBlockRow > 0 then	--¼ì²âÏÂ²à¸ñÊÇ·ñ³¬¹ı±ß½ç ¸Ã¸ñµØÍ¼×ø±êÎªmapTable[DownBlockRow][OriginBlockColumn]
+	if RandNumberDir == 4 and DownBlockRow > 0 then	--¼ì²âÏÂ²à¸ñÊÇ·ñ³¬¹ı±ß½ç ¸Ã¸ñµØÍ¼×ø±êÎªmapTable[DownBlockRow][OriginBlockColumn]
 		if mapTable[DownBlockRow][OriginBlockColumn][3] == 0 and (mapTable[DownBlockRow][OriginBlockColumn][4] == 0 or mapTable[DownBlockRow][OriginBlockColumn][4] > BoxRandRate) 
 		and mapTable[DownBlockRow][OriginBlockColumn][7] == 0 and mapTable[DownBlockRow][OriginBlockColumn][10] == 0 and  mapTable[DownBlockRow][OriginBlockColumn][11] > SetDistance then
 			CreateDistanceElement(OriginBlockIndex,DownBlockRow,OriginBlockColumn,SetDistance);			
@@ -465,13 +580,6 @@ function CreateDistanceElement(OriginBlockIndex,CreateBlockRow,CreateBlockColumn
 	DistanceLength[SetDistance+1] = DistanceLength[SetDistance+1]+1;
 end
 
-function AvoidMonster()
-
-end
-
-function SkillRelease()
-
-end
 
 function AssistantClass:new()
 	pk = {};

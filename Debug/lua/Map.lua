@@ -1,5 +1,5 @@
---s行n列矩阵 maptype：地图类型 Randrate：箱子随机概率 角色初始位置X,Y Boss开启/关闭 Assistant开启/关闭
-function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitchSetting,AssistantSwitchSetting)
+--s行n列矩阵 maptype：地图类型 Randrate：箱子随机概率 角色初始位置X,Y Boss开启/关闭 Assistant开启/关闭 助手放炸弹的随机概率
+function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitchSetting,AssistantSwitchSetting,AssistantRandRate)
 	
 	local i ;
 	local j;
@@ -14,8 +14,9 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitchSetting,Ass
 	TotalHeightPixels = s*BlockSize;
 	
 	BoxRandRate = Randrate;
+   	AssistantPutBombRate = AssistantRandRate;
 	BossSwitch = BossSwitchSetting;
-    AssistantSwitch = AssistantSwitchSetting;
+        AssistantSwitch = AssistantSwitchSetting;
 	--block = {posX,posY,brick=nil,wall=nil}; --0为无，1为存在
 	--brick = 砖；wall = 墙 
 	mapTable = {};
@@ -97,7 +98,7 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitchSetting,Ass
 
 	assistantinf = AssistantClass:new();
 	assistantinf:setAbsolutePos(500,1000);
-	Assistantimg:setImage(500, 350, BlockSize, BlockSize, 0, AssistantWidth, 0, AssistantHeight, 9.01);
+	Assistantimg:setImage(500, 350, BlockSize, BlockSize, 0, AssistantWidth, 0, AssistantHeight, 7.9);
 	
 	Bossinf = BossClass:new();
 	Bossinf:setBossAbsolutePos(500,1100);
@@ -107,11 +108,12 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitchSetting,Ass
 	
 	originX=0;
 	originY=-(TotalRows-12)*BlockSize;
-    ActorHaveUnitStatus = 1;
-    ActorRow1 = 24;
-    ActorColumn1 = 1;
-    ActorRow2 = nil;
-    ActorColumn2 = nil;
+    -- ActorHaveUnitStatus = 1;
+    -- ActorRow1 = 24;
+    -- ActorColumn1 = 1;
+    -- ActorRow2 = nil;
+    -- ActorColumn2 = nil;
+    BossCountDown = 2000; --Boss倒计时
    -- ActorHaveUnitStatus,ActorRow1,ActorColumn1,ActorRow2,ActorColumn2 = GetObjectHaveBlock(actorinf:getAbsolutePosX(),actorinf:getAbsolutePosY());
 
 end
@@ -121,6 +123,8 @@ end
 	UnitYOffset = UserData["SpeedY"];				
     BossUnitXOffset = 2;
 	BossUnitYOffset = 2;
+    AssistantUnitXOffset = 2;
+    AssistantUnitYOffset = 2;
 	ActorWidth = 64;
 	ActorHeight = 64;
 	AssistantWidth = 64;
@@ -412,6 +416,12 @@ function DrawActorGesture(sx, sy, fr, gesturetype ,actortype)
 			actortype:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*4, ActorHeight*5);				
 		elseif fr == 2 then 		
 			actortype:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*4, ActorHeight*5);
+            		if actortype == actorimg then
+               		 EnableEndBG(-1);--结算画面
+			elseif  actortype == Assistantimg then
+				assistantinf["assistantDeath"] = true;
+				AssistantSwitch = false;	
+			end
 		end
 	end
 
@@ -464,7 +474,7 @@ end
 function PressingMoving()
 	if movestatus == 1 then
 		if BorderChecking(NowActorPosX,1) then		
-			if ImpactChecking(NowActorPosX+UnitXOffset,NowActorPosY,1) then
+			if ImpactChecking(NowActorPosX+UnitXOffset,NowActorPosY,1,1) then
 				if WindowMoveChecking(1) then
 					originX=originX-UnitXOffset;					
 					DrawActorGesture(0, 0, Actor1:TimerGo(), 1, actorimg);
@@ -482,7 +492,7 @@ function PressingMoving()
 	
 	elseif movestatus == 2  then
 		if  BorderChecking(NowActorPosY,2) then
-			if ImpactChecking(NowActorPosX,NowActorPosY+UnitYOffset,2) then
+			if ImpactChecking(NowActorPosX,NowActorPosY+UnitYOffset,2,1) then
 				if WindowMoveChecking(2) then
 					originY=originY-UnitYOffset;
 					DrawActorGesture(0, 0, Actor1:TimerGo(), 2, actorimg);			
@@ -503,7 +513,7 @@ function PressingMoving()
 	
 	elseif movestatus == 3  then
 		if BorderChecking(NowActorPosX,3) then
-			if ImpactChecking(NowActorPosX-UnitXOffset,NowActorPosY,3) then
+			if ImpactChecking(NowActorPosX-UnitXOffset,NowActorPosY,3,1) then
 				if WindowMoveChecking(3) then
 					originX=originX+UnitXOffset;
 					DrawActorGesture(0, 0, Actor1:TimerGo(), 3, actorimg);
@@ -521,7 +531,7 @@ function PressingMoving()
 	
 	elseif movestatus == 4  then
 		if BorderChecking(NowActorPosY,4) then
-			if ImpactChecking(NowActorPosX,NowActorPosY-UnitYOffset,4) then
+			if ImpactChecking(NowActorPosX,NowActorPosY-UnitYOffset,4,1) then
 				if WindowMoveChecking(4) then
 					originY=originY+UnitYOffset;
 					DrawActorGesture(0, 0, Actor1:TimerGo(), 4, actorimg);
@@ -543,7 +553,7 @@ function DrawActor()
 	NowActorPosX = actorinf:getAbsolutePosX();
 	NowActorPosY = actorinf:getAbsolutePosY();
 	NeedISRevise = false;	
-	if ISGameNotPause then
+	if ISGameNotPause  then
 		ReleaseMoving();
 		PressingMoving();
 	end	
@@ -582,7 +592,8 @@ function CanPassBombOrWallChecking(i)	--检测炸弹或者墙是否可以穿过
 	end
 end	
 	
-function ImpactChecking(CheckingPosX,CheckingPosY,Direction)	
+    --CheckingPosX代表需要检查的X像素 CheckingPosY代表需要检查的Y像素 Direction代表移动方向 actortype代表角色类型 1为人，2为助手
+function ImpactChecking(CheckingPosX,CheckingPosY,Direction,actortype)	
 	
 	local CheckingX1;
 	local CheckingY1;
@@ -600,10 +611,16 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 			if mapTable[CheckingX1][CheckingY1][3] == 1 then
 				return false;
 			elseif 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
-				return CanPassBombOrWallChecking(1);
+                if actortype == 1 then
+                    return CanPassBombOrWallChecking(1);
+                else return false;
+                end			
 			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingY1*BlockSize-CheckingPosX >= BlockSize-UnitXOffset then	--检测人物未嵌入在炸弹内 即人物未放炸弹
-			    return CanPassBombOrWallChecking(2);				
-			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] then
+                if actortype == 1 then
+                     return CanPassBombOrWallChecking(2);
+                else return false;
+			   	end			
+			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] and actortype == 1 then
 				GetBuff(mapTable[CheckingX1][CheckingY1][8]);
 				mapTable[CheckingX1][CheckingY1][8] = 0;
 				return true;
@@ -629,10 +646,16 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 			if mapTable[CheckingX1][CheckingY1][3] == 1 then
 				return false;
 			elseif 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
-				return CanPassBombOrWallChecking(1);
+                if actortype == 1 then
+                    return CanPassBombOrWallChecking(1);
+                else return false;
+                end	
 			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingX1*BlockSize-CheckingPosY >= BlockSize-UnitYOffset then	--检测人物未嵌入在炸弹内 即人物未放炸弹
-				return CanPassBombOrWallChecking(2);
-			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] then
+				if actortype == 1 then
+                    return CanPassBombOrWallChecking(2);
+                else return false;
+                end	              
+			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] and actortype == 1 then
 				GetBuff(mapTable[CheckingX1][CheckingY1][8]);
 				mapTable[CheckingX1][CheckingY1][8] = 0;
 				return true;
@@ -661,10 +684,16 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 			if mapTable[CheckingX1][CheckingY1][3] == 1 then
 				return false;
 			elseif 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
-				return CanPassBombOrWallChecking(1);
+                if actortype == 1 then
+                    return CanPassBombOrWallChecking(1);
+                else return false;
+				end
 			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingPosX-CheckingY1*BlockSize >= -UnitXOffset then	--检测人物未嵌入在炸弹内 即人物未放炸弹
-				return CanPassBombOrWallChecking(2);
-			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] then
+				if actortype == 1 then
+                    return CanPassBombOrWallChecking(2);
+                else return false;
+				end          
+			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] and actortype == 1 then
 				GetBuff(mapTable[CheckingX1][CheckingY1][8]);
 				mapTable[CheckingX1][CheckingY1][8] = 0;
 				return true;
@@ -694,10 +723,16 @@ function ImpactChecking(CheckingPosX,CheckingPosY,Direction)
 			if mapTable[CheckingX1][CheckingY1][3] == 1 then
 				return false;
 			elseif 0 < mapTable[CheckingX1][CheckingY1][4] and mapTable[CheckingX1][CheckingY1][4] <= BoxRandRate then
-				return CanPassBombOrWallChecking(1);
+                if actortype == 1 then
+                    return CanPassBombOrWallChecking(1);
+                else return false;
+				end
 			elseif mapTable[CheckingX1][CheckingY1][7] == 1 and CheckingPosY-CheckingX1*BlockSize >= (-UnitYOffset) then		--检测人物未嵌入在炸弹内 即人物未放炸弹
-				return CanPassBombOrWallChecking(2);
-			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] then
+				 if actortype == 1 then
+                    return CanPassBombOrWallChecking(2);
+                else return false;
+				end             
+			elseif mapTable[CheckingX1][CheckingY1][8] <= 7 and 0 < mapTable[CheckingX1][CheckingY1][8] and actortype == 1 then
 				GetBuff(mapTable[CheckingX1][CheckingY1][8]);
 				mapTable[CheckingX1][CheckingY1][8] = 0;
 				return true;
@@ -731,11 +766,25 @@ function WindowMoveChecking(Direction)
 	end	
 end
 
+function BOSSCountDown()
+    if BossCountDown > 0 then
+        BossCountDown = BossCountDown - 1;
+    else
+        WinAndGoToEnd(1);
+    end
+end
+
+
+
+
+SettlementStatus = true;
 
 
 function DrawBoss()
+    
 	if BossSwitch then
-		if ISGameNotPause  then
+		if ISGameNotPause then
+            BOSSCountDown();
 			Bossimg:setAbsoluteStartPos(Bossinf:getBossAbsolutePosX()+originX,Bossinf:getBossAbsolutePosY()+originY-BlockSize);
 			if BossMoveDirection() == 1 then
 				if WindowMoveChecking(1) then	
@@ -767,8 +816,11 @@ function DrawBoss()
 			Bossinf:setBossRelativePos(0,-BossUnitYOffset);	
 			elseif  BossMoveDirection() == 0 then 
 				DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  --人物死亡
-				--DrawBossGesture(0, 0, Boss1:TimerGo(), 4, Bossimg);	
-				
+	--			AcoterDeathFromBoss = true;--DrawBossGesture(0, 0, Boss1:TimerGo(), 4, Bossimg);	
+				if SettlementStatus then
+					WinAndGoToEnd(0);       --跳到结算页面
+					SettlementStatus = false;
+				end
 			end	
 		end
 		Bossimg:DrawImage();	
@@ -777,6 +829,27 @@ function DrawBoss()
 	end
 	
 end
+
+function WinAndGoToEnd(WinStatus)   -- WinStatus : 0代表被Boss抓住 1代表成功躲过Boss
+    local gold = 0;
+    for i = 1,AllEnemy.n do
+        if(AllEnemy[i]["IsSurvival"] == 0) then
+            if(AllEnemy[i]["EnemyType"] == 1) then
+                 gold = gold + 2
+            elseif(AllEnemy[i]["EnemyType"] == 2 or AllEnemy[i]["EnemyType"] == 3) then
+                 gold = gold + 4
+            elseif(AllEnemy[i]["EnemyType"] == 4 or AllEnemy[i]["EnemyType"] == 5) then
+                 gold = gold + 5
+            end
+        end                 
+    end
+    if WinStatus == 1 then  
+        gold = gold + 10;
+    end
+    EnableEndBG(gold);--结算画面                                                                                                  
+end
+
+
 function GetObjectHaveBlock(NowPosX,NowPosY)
 	local ObjectRow1;	--人物或助手所占第一个位置的地图X坐标
 	local ObjectRow2;	--人物或助手所占第二个位置的地图X坐标
@@ -805,12 +878,12 @@ function GetObjectHaveBlock(NowPosX,NowPosY)
 end
 
 function BossMoveDirection()
---	local ActorRow1;	--人物所占第一个位置的地图X坐标
---	local ActorRow2;	--人物所占第二个位置的地图X坐标
---	local ActorColumn1;	--人物所占第一个位置的地图Y坐标
---	local ActorColumn2;	--人物所占第二个位置的地图Y坐标
+	local ActorRow1;	--人物所占第一个位置的地图X坐标
+	local ActorRow2;	--人物所占第二个位置的地图X坐标
+	local ActorColumn1;	--人物所占第一个位置的地图Y坐标
+	local ActorColumn2;	--人物所占第二个位置的地图Y坐标
 	local BossCouldMoveDirection;	--Boss可以移动的方向
---	local ActorHaveUnitStatus;	--人物所占格数状况 1代表所占一格
+    local ActorHaveUnitStatus;	--人物所占格数状况 1代表所占一格
 	-- 2代表所占水平方向两格且位置为mapTable[ActorRow1][ActorColumn1]，mapTable[ActorRow1][ActorColumn2]
 	-- 3代表所占竖直方向两格且位置为mapTable[ActorRow1][ActorColumn1]，mapTable[ActorRow2][ActorColumn1]
 	local ActorPosX = actorinf:getAbsolutePosX();	--人物X方向的像素坐标
@@ -1105,15 +1178,15 @@ end
 
 
 function IintMapData()
-	initParams(24,40,1,math.random(1,2),0,550,true,true); --初始化地图参数	
+	initParams(24,40,1,math.random(20,30),0,550,false,false,math.random(20,100)); --初始化地图参数	
 	ISGameNotPause = false;	--判断游戏是否没有暂停
 	DialogStatus = false;
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	EnemyInit();
 	-- InitStartBG();--挑战模式，倒计时
-	-- EnableEndBG(0);
+	SettlementStatus = true;--结算状态
 	EnableJustBG();
-    UserData["IsPassGame"] = 1
+    	UserData["IsPassGame"] = 1
 	
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
 end
@@ -1150,10 +1223,14 @@ function LoadMapViewImageFile()
 		ImageLoad:LoadImage(PlotV,"Image/Enemy.png","DrawEnemy()", "Image_7");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 29 then
-		ImageLoad:LoadImage(PlotV,"Image/Map/assistant.png","DrawAssistant()", "Image_8");
+        if UserData["AssistantProps"] == "GirlsAssistant" then
+            ImageLoad:LoadImage(PlotV,"Image/Map/assistant.png","DrawAssistant()", "Image_8");
+        else    
+            ImageLoad:LoadImage(PlotV,"Image/Map/assistant1.png","DrawAssistant()", "Image_8");
+        end	
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 30 then
-		ImageLoad:LoadImage(PlotV,"Image/ShortcutBar.png","DrawShortcutBar()", "Image_9");
+		ImageLoad:LoadImage(PlotV,"Image/ShortcutBar1.png","DrawShortcutBar()", "Image_9");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 31 then
 		ImageLoad:LoadImage(PlotV,"Image/Map/BackgroundColor4.png","DrawDialog()", "Image_10");
@@ -1280,7 +1357,7 @@ function FuncDrawFBNumber(sx,xy,Num,P)
 	local GFrontNumber = ImageClass:new();
 	GFrontNumber :setImageFileSize(FrontGroundW, FrontGroundH);
 	GFrontNumber :setscaling_ratio(P);
-	GFrontNumber :setImage(sx-117*P/2 , xy-250*P/2 ,117, 250,  1084, 1201, 60+260*Num, 60+260*(Num+1), 1.49);
+	GFrontNumber :setImage(sx-117*P/2 , xy-250*P/2 ,117, 250,  1084, 1201, 60+262*Num, 60+262*(Num+1), 1.49);
 	GFrontNumber :DrawImage();
 end
 
@@ -1333,8 +1410,9 @@ function ResetEndBG()
 end
 
 
+GShortcutPosW = 630
+GShortcutPosH = 863
 
-GShortcutPosH = 544
 
 GShortcutPosX = 40
 GShortcutPosY = 40
@@ -1343,26 +1421,26 @@ GShortCutBarW = 100
 GShortCutBarH = 81
 
 GShortCutBar1 = ImageClass:new();
-GShortCutBar1 :setImageFileSize(400, GShortcutPosH);
+GShortCutBar1 :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GShortCutBar1 :setImage(GShortcutPosX, GShortcutPosY ,GShortCutBarW, GShortCutBarH,  GShortCutBarW, GShortCutBarW*2,0, GShortCutBarH, 2+0.8);
 
 GShortCutBar2 = ImageClass:new();
-GShortCutBar2 :setImageFileSize(400, GShortcutPosH);
+GShortCutBar2 :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GShortCutBar2 :setImage(GShortcutPosX+100, GShortcutPosY ,GShortCutBarW, GShortCutBarH, GShortCutBarW*3, GShortCutBarW*4,0, GShortCutBarH, 2+0.8);
 
 GSCBBBP = ImageClass:new();
-GSCBBBP :setImageFileSize(400, GShortcutPosH);
+GSCBBBP :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GSCBBBP :setscaling_ratio(0.6);
 GSCBBBP :setImage(GShortcutPosX+20, GShortcutPosY+7 ,100, 110, 0, 100, 200, 310, 2+0.79);
 
 GSCBAP = ImageClass:new();
-GSCBAP :setImageFileSize(400, GShortcutPosH);
+GSCBAP :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GSCBAP :setscaling_ratio(0.5);
 GSCBAP :setImage(GShortcutPosX+18, GShortcutPosY+10 ,135, 119, 135*UserData["AssistantProps"], 135*(UserData["AssistantProps"]+1), 81, 200, 2+0.79);
 
 GSCBNumberW = 38.0 
 GSCBNumber = ImageClass:new();
-GSCBNumber :setImageFileSize(400, GShortcutPosH);
+GSCBNumber :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GSCBNumber :setscaling_ratio(0.8);
 GSCBNumber :setImage(GShortcutPosX+35, GShortcutPosY-35 ,GSCBNumberW,44,0,0, 0,0, 2+0.79);
 
@@ -1380,30 +1458,102 @@ GBBPUseGlobalX = 300.0 --相对于世界的位置，设定位置必须为50的整数倍
 GBBPUseGlobalY = 300.0 --相对于世界的位置，设定位置必须为50的整数倍
 
 GBBPUseRect = ImageClass:new();
-GBBPUseRect :setImageFileSize(400, GShortcutPosH);
+GBBPUseRect :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GBBPUseRect :setImage(GBBPUseX, GBBPUseY ,150,150,0,51, 323, 374, 2+0.69);
 
 GBBPUseRedBG = ImageClass:new();
-GBBPUseRedBG :setImageFileSize(400, GShortcutPosH);
+GBBPUseRedBG :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GBBPUseRedBG :setImage(GBBPUseX, GBBPUseY ,50,50,60,100, 330, 370, 2+0.59);
 MaxGBBPUseRedBG = 6 --红色提示的最大格子数量
 
 GWarnStatus = false;
 GWarnTimer = 50;
 GBBPUseWarn = ImageClass:new();
-GBBPUseWarn :setImageFileSize(400, GShortcutPosH);
+GBBPUseWarn :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GBBPUseWarn :setImage(GBBPUseX, GBBPUseY ,150,150,0,114, 387, 501, 2+0.59);
 GBBPUseWarn :SetCenterRotate();
 
 GBBPUseBomb = false;--记录超级大炸弹是否已落到指定位置
 
 GBBPUseDecline = ImageClass:new();
-GBBPUseDecline :setImageFileSize(400, GShortcutPosH);
+GBBPUseDecline :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GBBPUseDecline :setImage(GBBPUseX, 700 ,60,110, 110,170, 200, 310, 2+0.58);
 
 
+GPromptX = 450
+GPromptY = 564
+
+
+GPromptBGI = ImageClass:new();
+GPromptBGI :setImageFileSize(GShortcutPosW, GShortcutPosH);
+GPromptBGI :setImage(GPromptX, GPromptY ,700,50, 500, GShortcutPosW, 730, GShortcutPosH, 2+0.68);
+
+PropsPrompt = ImageClass:new();
+PropsPrompt :setImageFileSize(GShortcutPosW, GShortcutPosH);
+PropsPrompt :setImage(GPromptX+300, GPromptY ,30,30, 0, 90, 544, 544+90, 2+0.58);
+
+PromptFont =ImageClass:new();
+PromptFont :setImageFileSize(GShortcutPosW, GShortcutPosH);
+PromptFont :setscaling_ratio(0.6);
+
+PromptFontNumW = 28
+
+PromptFontNum =ImageClass:new();
+PromptFontNum :setImageFileSize(GShortcutPosW, GShortcutPosH);
+PromptFontNum :setscaling_ratio(0.8);
+
+Glife = 5;
+gold = 20;
 --画快捷栏
 function DrawShortcutBar()
+
+	GPromptBGI :setImage(GPromptX, GPromptY ,700,36, 500, GShortcutPosW, 730, GShortcutPosH, 2+0.68);
+	GPromptBGI:DrawImage();
+	
+	
+	
+	--剩余生命提示
+	PromptFont:setImage(GPromptX, GPromptY+(36-36*0.6)/2  ,180,36, 0, 180, 644, 680, 2+0.58);
+	PromptFont:DrawImage();
+	PromptFontNum:setImage(GPromptX+108, GPromptY+(36-28) ,PromptFontNumW,28,PromptFontNumW*Glife+10, PromptFontNumW*(Glife+1)+10, 820, 848, 2+0.48);
+	PromptFontNum:DrawImage();
+	
+	--获得金币提示
+	PromptFont:setImage(GPromptX+125, GPromptY+(36-36*0.6)/2  ,180,36, 0, 180, 700, 736, 2+0.58);
+	PromptFont:DrawImage();
+	if gold < 10 then
+		PromptFontNum:setImage(GPromptX+235, GPromptY+(36-28) ,PromptFontNumW,28,PromptFontNumW*gold+10, PromptFontNumW*(gold+1)+10, 820, 848, 2+0.48);
+		PromptFontNum:DrawImage();
+	elseif gold > 10 then
+		PromptFontNum:setImage(GPromptX+232, GPromptY+(36-28) ,PromptFontNumW,28,PromptFontNumW*GetBitNum(gold, 1)+10, PromptFontNumW*(GetBitNum(gold, 1)+1)+10, 820, 848, 2+0.48);
+		PromptFontNum:DrawImage();
+		PromptFontNum:setImage(GPromptX+232+18, GPromptY+(36-28) ,PromptFontNumW,28,PromptFontNumW*GetBitNum(gold, 2)+10, PromptFontNumW*(GetBitNum(gold, 2)+1)+10, 820, 848, 2+0.48);
+		PromptFontNum:DrawImage();
+	end
+	
+	--获得BUFF提示
+	PromptFont:setImage(GPromptX+265, GPromptY+(36-36*0.6)/2 ,180,36, 0, 180, 759, 795, 2+0.58);
+	PromptFont:DrawImage();
+	if UserData["CanPassBomb"] == 1 then
+		PropsPrompt:setImage(GPromptX+380, GPromptY+(36-30)/2 ,30,30, 90*4, 90*5, 544, 544+90, 2+0.58);
+		PropsPrompt:DrawImage();
+	end
+	if UserData["CanPassWall"] == 1 then
+		PropsPrompt:setImage(GPromptX+410, GPromptY+(36-30)/2 ,30,30, 90*5, 90*6, 544, 544+90, 2+0.58);
+		PropsPrompt:DrawImage();
+	end
+	if UserData["TimeBomb"] == 1 then
+		PropsPrompt:setImage(GPromptX+440, GPromptY+(36-30)/2 ,30,30, 90*3, 90*4, 544, 544+90, 2+0.58);
+		PropsPrompt:DrawImage();
+	end
+	if UserData["HaveProtect"] == 1 then
+		PropsPrompt:setImage(GPromptX+470, GPromptY+(36-30)/2 ,30,30, 90*6, 90*7, 544, 544+90, 2+0.58);
+		PropsPrompt:DrawImage();
+	end
+	if UserData["SpeedX"] ~= 2 then
+		PropsPrompt:setImage(GPromptX+500, GPromptY+(36-30)/2 ,30,30, 90*2, 90*3, 544, 544+90, 2+0.58);
+		PropsPrompt:DrawImage();
+	end
 
 	GSCBAP:setImagePos(135*UserData["AssistantProps"], 135*(UserData["AssistantProps"]+1), 81, 200);
 	if UserData["ShortCutBarBBP"] == 1 or UserData["ShortCutBarAP"] == 1 then
@@ -1617,6 +1767,11 @@ function ActorKey()
 	
 	
 	if FrontGroundSS == false and FrontGroundES == false then 
+--        if WinFocus == WM_SETFOCUS and ISGameNotPause == false then
+--            ISGameNotPause = true;
+--        elseif WinFocus == WM_KILLFOCUS then
+--            ISGameNotPause = false;
+--        end
 		--快捷键1启动事件
 		if ShortcutKey1_R == Press then
 			if UserData["ShortCutBarBBP"] == 1 and GWarnStatus == false and GBBPUseBomb == false and GKeyStatus == 0 then
@@ -1626,7 +1781,10 @@ function ActorKey()
 				GBBPUseX = actorinf:getWindowPosX() + 50 - actorinf:getWindowPosX()%50 + originX%50; --相对于窗口,设定位置必须为50的整数倍
 				GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 + originY%50; --相对于窗口,设定位置必须为50的整数倍
 			elseif UserData["ShortCutBarAP"] == 1 then
-				--助手道具使用，待朱丹彤添加
+				if assistantinf["assistantDeath"] then
+					InitAssistantPos(4);
+					assistantinf["assistantDeath"] = false;
+				end
 			end
 		end
 		-- 快捷键2启动事件
@@ -1639,7 +1797,10 @@ function ActorKey()
 				GBBPUseX = actorinf:getWindowPosX() + 50 - actorinf:getWindowPosX()%50 + originX%50; --相对于窗口,设定位置必须为50的整数倍
 				GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 + originY%50; --相对于窗口,设定位置必须为50的整数倍
 			elseif UserData["ShortCutBarAP"] == 2 then
-				--助手道具使用，待朱丹彤添加
+				if  assistantinf["assistantDeath"] then
+					InitAssistantPos(4);
+					assistantinf["assistantDeath"] = false;
+				end             
 			end
 		end
 		
@@ -1807,7 +1968,7 @@ function ActorKey()
 		end
 	end
 	if RewardCountStatus == 1 and GetMouseStatus() == MouseLeftDown then
-		goStartView();
+		GoToMainMenu();
 		ResetEndBG();
 	end
 	
