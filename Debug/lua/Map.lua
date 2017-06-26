@@ -108,11 +108,11 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitchSetting,Ass
 	
 	originX=0;
 	originY=-(TotalRows-12)*BlockSize;
-    ActorHaveUnitStatus = 1;
-    ActorRow1 = 24;
-    ActorColumn1 = 1;
-    ActorRow2 = nil;
-    ActorColumn2 = nil;
+    -- ActorHaveUnitStatus = 1;
+    -- ActorRow1 = 24;
+    -- ActorColumn1 = 1;
+    -- ActorRow2 = nil;
+    -- ActorColumn2 = nil;
     BossCountDown = 2000; --Boss倒计时
    -- ActorHaveUnitStatus,ActorRow1,ActorColumn1,ActorRow2,ActorColumn2 = GetObjectHaveBlock(actorinf:getAbsolutePosX(),actorinf:getAbsolutePosY());
 
@@ -873,12 +873,12 @@ function GetObjectHaveBlock(NowPosX,NowPosY)
 end
 
 function BossMoveDirection()
---	local ActorRow1;	--人物所占第一个位置的地图X坐标
---	local ActorRow2;	--人物所占第二个位置的地图X坐标
---	local ActorColumn1;	--人物所占第一个位置的地图Y坐标
---	local ActorColumn2;	--人物所占第二个位置的地图Y坐标
+	local ActorRow1;	--人物所占第一个位置的地图X坐标
+	local ActorRow2;	--人物所占第二个位置的地图X坐标
+	local ActorColumn1;	--人物所占第一个位置的地图Y坐标
+	local ActorColumn2;	--人物所占第二个位置的地图Y坐标
 	local BossCouldMoveDirection;	--Boss可以移动的方向
---	local ActorHaveUnitStatus;	--人物所占格数状况 1代表所占一格
+    local ActorHaveUnitStatus;	--人物所占格数状况 1代表所占一格
 	-- 2代表所占水平方向两格且位置为mapTable[ActorRow1][ActorColumn1]，mapTable[ActorRow1][ActorColumn2]
 	-- 3代表所占竖直方向两格且位置为mapTable[ActorRow1][ActorColumn1]，mapTable[ActorRow2][ActorColumn1]
 	local ActorPosX = actorinf:getAbsolutePosX();	--人物X方向的像素坐标
