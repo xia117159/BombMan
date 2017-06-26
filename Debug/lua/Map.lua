@@ -418,7 +418,10 @@ function DrawActorGesture(sx, sy, fr, gesturetype ,actortype)
 			actortype:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*4, ActorHeight*5);
             if actortype == actorimg then
                 EnableEndBG(-1);--Ω·À„ª≠√Ê
-            end           
+            end 
+			if actortype == Assistantimg then
+				AssistantSwitch = false;
+			end
 		end	
 	end
 
