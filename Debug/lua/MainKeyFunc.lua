@@ -17,7 +17,7 @@ end
 --此函数名不可更改，否者无效
 function KeyFunc()
 
-	if WinFocus == WM_SETFOCUS and DialogStatus == false and FrontGroundSS == false then
+	if WinFocus == WM_SETFOCUS and DialogStatus == false and FrontGroundSS == false and UserData["IsPassGame"] ==  0 then
 		ISGameNotPause = true;
 	elseif WinFocus == WM_KILLFOCUS then
 		ISGameNotPause = false;

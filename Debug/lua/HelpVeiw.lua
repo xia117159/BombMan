@@ -1,9 +1,9 @@
 function LoadHelpVeiwImagePath()
 	local ImageLoad = ImageClass:new();
-	if NowLoadPos == 34 then
+	if NowLoadPos == 35 then
 		ImageLoad:LoadImage(HelpV,"Image/Help.jpg","DrawHelpBGIFunc()", "Image_0");
 		NowLoadPos = NowLoadPos + 1;
-	elseif NowLoadPos == 35 then
+	elseif NowLoadPos == 36 then
 		ImageLoad:LoadImage(HelpV,"Image/Return.png","DrawReturnButtonFunc()", "Image_1");
 		NowLoadPos = NowLoadPos + 1;
 	end

@@ -120,43 +120,6 @@ int MouseControl::DetectMouse(float startX, float startY, float endX, float endY
 	return Result;
 }
 
-int MouseControl::GetMouseStatus()
-{
-	int Result = 0;
-
-	mouseDevice_->GetDeviceState( sizeof ( mouseState_ ), ( LPVOID ) &mouseState_ );
-
-	mousePosX_ += mouseState_.lX;
-	mousePosY_ += mouseState_.lY;
-	mouseWheel_ += mouseState_.lZ;
-
-
-	if( MOUSEDOWN( prevMouseState_, 0 ) && !MOUSEDOWN( mouseState_, 0 ) ) 
-	{
-		Result = MouseLeftUp;
-	}
-	else if( !MOUSEDOWN( prevMouseState_, 0 ) && MOUSEDOWN( mouseState_, 0) )
-	{
-		Result = MouseLeftDown;
-	}
-	else if( !MOUSEDOWN( prevMouseState_, 1 ) && MOUSEDOWN( mouseState_, 1) )
-	{
-		Result = MouseRightDown;
-	}
-	else if( MOUSEDOWN( prevMouseState_, 1 ) && !MOUSEDOWN( mouseState_, 1) )
-	{
-		Result = MouseRightUp;
-	}
-	else if( !MOUSEDOWN( prevMouseState_, 0 ) && !MOUSEDOWN( mouseState_, 0) )
-	{
-		Result = MouseHover;
-	}
-	memcpy( &prevMouseState_, &mouseState_, sizeof( mouseState_ ) );
-
-
-	return Result;
-}
-
 
 
 void MouseControl::UpdateMousePos()

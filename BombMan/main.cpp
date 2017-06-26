@@ -37,7 +37,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine
 	if (FAILED(InitWindow(hInstance, cmdShow)))
         return 0;
 
-    // Demo Initialize
+
     bool result = demo.Initialize( hInstance, hwnd );
 
 	if( result == false )
@@ -74,7 +74,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine
 				Sleep(DWORD(timeInOneFps-timeTotal));
 		}
     }
-    // Demo Shutdown
+    //Çå³ýÉè±¸
     demo.Shutdown( );
 
     return static_cast<int>( msg.wParam );
