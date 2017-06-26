@@ -98,7 +98,7 @@ function initParams(s,n,maptype,Randrate,AcStPosX,AcStPosY,BossSwitchSetting,Ass
 
 	assistantinf = AssistantClass:new();
 	assistantinf:setAbsolutePos(500,1000);
-	Assistantimg:setImage(500, 350, BlockSize, BlockSize, 0, AssistantWidth, 0, AssistantHeight, 9.01);
+	Assistantimg:setImage(500, 350, BlockSize, BlockSize, 0, AssistantWidth, 0, AssistantHeight, 7.9);
 	
 	Bossinf = BossClass:new();
 	Bossinf:setBossAbsolutePos(500,1100);
@@ -418,7 +418,9 @@ function DrawActorGesture(sx, sy, fr, gesturetype ,actortype)
 			actortype:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*4, ActorHeight*5);
             if actortype == actorimg then
                 EnableEndBG(-1);--结算画面
-            end           
+			elseif  actortype == Assistantimg then
+				assistantinf["assistantDeath"] = true;
+			end         
 		end	
 	end
 
@@ -773,6 +775,10 @@ end
 
 
 
+
+SettlementStatus = true;
+
+
 function DrawBoss()
     
 	if BossSwitch then
@@ -809,8 +815,11 @@ function DrawBoss()
 			Bossinf:setBossRelativePos(0,-BossUnitYOffset);	
 			elseif  BossMoveDirection() == 0 then 
 				DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg);  --人物死亡
-	--			AcoterDeathFromBoss = true;--DrawBossGesture(0, 0, Boss1:TimerGo(), 4, Bossimg);				
-                WinAndGoToEnd(0);       --跳到结算页面
+	--			AcoterDeathFromBoss = true;--DrawBossGesture(0, 0, Boss1:TimerGo(), 4, Bossimg);	
+				if SettlementStatus then
+					WinAndGoToEnd(0);       --跳到结算页面
+					SettlementStatus = false;
+				end
 			end	
 		end
 		Bossimg:DrawImage();	
@@ -834,13 +843,8 @@ function WinAndGoToEnd(WinStatus)   -- WinStatus : 0代表被Boss抓住 1代表成功躲过
         end                 
     end
     if WinStatus == 1 then  
-        gold = gold + 100;
+        gold = gold + 10;
     end
-    if(UserData["GoldCoins"] + gold > 9999) then
-        UserData["GoldCoins"] = 9999
-    else
-        UserData["GoldCoins"] = UserData["GoldCoins"] + gold;
-    end 
     EnableEndBG(gold);--结算画面                                                                                                  
 end
 
@@ -1179,6 +1183,7 @@ function IintMapData()
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	EnemyInit();
 	InitStartBG();--挑战模式，倒计时
+	SettlementStatus = true;--结算状态
 	--EnableEndBG(25);
 	-- EnableJustBG();
 	-- ExitJustBG();
@@ -1224,7 +1229,7 @@ function LoadMapViewImageFile()
         end	
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 30 then
-		ImageLoad:LoadImage(PlotV,"Image/ShortcutBar.png","DrawShortcutBar()", "Image_9");
+		ImageLoad:LoadImage(PlotV,"Image/ShortcutBar1.png","DrawShortcutBar()", "Image_9");
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 31 then
 		ImageLoad:LoadImage(PlotV,"Image/Map/BackgroundColor4.png","DrawDialog()", "Image_10");
@@ -1399,8 +1404,9 @@ function ResetEndBG()
 end
 
 
+GShortcutPosW = 630
+GShortcutPosH = 863
 
-GShortcutPosH = 544
 
 GShortcutPosX = 40
 GShortcutPosY = 40
@@ -1409,26 +1415,26 @@ GShortCutBarW = 100
 GShortCutBarH = 81
 
 GShortCutBar1 = ImageClass:new();
-GShortCutBar1 :setImageFileSize(400, GShortcutPosH);
+GShortCutBar1 :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GShortCutBar1 :setImage(GShortcutPosX, GShortcutPosY ,GShortCutBarW, GShortCutBarH,  GShortCutBarW, GShortCutBarW*2,0, GShortCutBarH, 2+0.8);
 
 GShortCutBar2 = ImageClass:new();
-GShortCutBar2 :setImageFileSize(400, GShortcutPosH);
+GShortCutBar2 :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GShortCutBar2 :setImage(GShortcutPosX+100, GShortcutPosY ,GShortCutBarW, GShortCutBarH, GShortCutBarW*3, GShortCutBarW*4,0, GShortCutBarH, 2+0.8);
 
 GSCBBBP = ImageClass:new();
-GSCBBBP :setImageFileSize(400, GShortcutPosH);
+GSCBBBP :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GSCBBBP :setscaling_ratio(0.6);
 GSCBBBP :setImage(GShortcutPosX+20, GShortcutPosY+7 ,100, 110, 0, 100, 200, 310, 2+0.79);
 
 GSCBAP = ImageClass:new();
-GSCBAP :setImageFileSize(400, GShortcutPosH);
+GSCBAP :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GSCBAP :setscaling_ratio(0.5);
 GSCBAP :setImage(GShortcutPosX+18, GShortcutPosY+10 ,135, 119, 135*UserData["AssistantProps"], 135*(UserData["AssistantProps"]+1), 81, 200, 2+0.79);
 
 GSCBNumberW = 38.0 
 GSCBNumber = ImageClass:new();
-GSCBNumber :setImageFileSize(400, GShortcutPosH);
+GSCBNumber :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GSCBNumber :setscaling_ratio(0.8);
 GSCBNumber :setImage(GShortcutPosX+35, GShortcutPosY-35 ,GSCBNumberW,44,0,0, 0,0, 2+0.79);
 
@@ -1446,30 +1452,102 @@ GBBPUseGlobalX = 300.0 --相对于世界的位置，设定位置必须为50的整数倍
 GBBPUseGlobalY = 300.0 --相对于世界的位置，设定位置必须为50的整数倍
 
 GBBPUseRect = ImageClass:new();
-GBBPUseRect :setImageFileSize(400, GShortcutPosH);
+GBBPUseRect :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GBBPUseRect :setImage(GBBPUseX, GBBPUseY ,150,150,0,51, 323, 374, 2+0.69);
 
 GBBPUseRedBG = ImageClass:new();
-GBBPUseRedBG :setImageFileSize(400, GShortcutPosH);
+GBBPUseRedBG :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GBBPUseRedBG :setImage(GBBPUseX, GBBPUseY ,50,50,60,100, 330, 370, 2+0.59);
 MaxGBBPUseRedBG = 6 --红色提示的最大格子数量
 
 GWarnStatus = false;
 GWarnTimer = 50;
 GBBPUseWarn = ImageClass:new();
-GBBPUseWarn :setImageFileSize(400, GShortcutPosH);
+GBBPUseWarn :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GBBPUseWarn :setImage(GBBPUseX, GBBPUseY ,150,150,0,114, 387, 501, 2+0.59);
 GBBPUseWarn :SetCenterRotate();
 
 GBBPUseBomb = false;--记录超级大炸弹是否已落到指定位置
 
 GBBPUseDecline = ImageClass:new();
-GBBPUseDecline :setImageFileSize(400, GShortcutPosH);
+GBBPUseDecline :setImageFileSize(GShortcutPosW, GShortcutPosH);
 GBBPUseDecline :setImage(GBBPUseX, 700 ,60,110, 110,170, 200, 310, 2+0.58);
 
 
+GPromptX = 450
+GPromptY = 564
+
+
+GPromptBGI = ImageClass:new();
+GPromptBGI :setImageFileSize(GShortcutPosW, GShortcutPosH);
+GPromptBGI :setImage(GPromptX, GPromptY ,700,50, 500, GShortcutPosW, 730, GShortcutPosH, 2+0.68);
+
+PropsPrompt = ImageClass:new();
+PropsPrompt :setImageFileSize(GShortcutPosW, GShortcutPosH);
+PropsPrompt :setImage(GPromptX+300, GPromptY ,30,30, 0, 90, 544, 544+90, 2+0.58);
+
+PromptFont =ImageClass:new();
+PromptFont :setImageFileSize(GShortcutPosW, GShortcutPosH);
+PromptFont :setscaling_ratio(0.6);
+
+PromptFontNumW = 28
+
+PromptFontNum =ImageClass:new();
+PromptFontNum :setImageFileSize(GShortcutPosW, GShortcutPosH);
+PromptFontNum :setscaling_ratio(0.8);
+
+Glife = 5;
+gold = 20;
 --画快捷栏
 function DrawShortcutBar()
+
+	GPromptBGI :setImage(GPromptX, GPromptY ,700,36, 500, GShortcutPosW, 730, GShortcutPosH, 2+0.68);
+	GPromptBGI:DrawImage();
+	
+	
+	
+	--剩余生命提示
+	PromptFont:setImage(GPromptX, GPromptY+(36-36*0.6)/2  ,180,36, 0, 180, 644, 680, 2+0.58);
+	PromptFont:DrawImage();
+	PromptFontNum:setImage(GPromptX+108, GPromptY+(36-28) ,PromptFontNumW,28,PromptFontNumW*Glife+10, PromptFontNumW*(Glife+1)+10, 820, 848, 2+0.48);
+	PromptFontNum:DrawImage();
+	
+	--获得金币提示
+	PromptFont:setImage(GPromptX+125, GPromptY+(36-36*0.6)/2  ,180,36, 0, 180, 700, 736, 2+0.58);
+	PromptFont:DrawImage();
+	if gold < 10 then
+		PromptFontNum:setImage(GPromptX+235, GPromptY+(36-28) ,PromptFontNumW,28,PromptFontNumW*gold+10, PromptFontNumW*(gold+1)+10, 820, 848, 2+0.48);
+		PromptFontNum:DrawImage();
+	elseif gold > 10 then
+		PromptFontNum:setImage(GPromptX+232, GPromptY+(36-28) ,PromptFontNumW,28,PromptFontNumW*GetBitNum(gold, 1)+10, PromptFontNumW*(GetBitNum(gold, 1)+1)+10, 820, 848, 2+0.48);
+		PromptFontNum:DrawImage();
+		PromptFontNum:setImage(GPromptX+232+18, GPromptY+(36-28) ,PromptFontNumW,28,PromptFontNumW*GetBitNum(gold, 2)+10, PromptFontNumW*(GetBitNum(gold, 2)+1)+10, 820, 848, 2+0.48);
+		PromptFontNum:DrawImage();
+	end
+	
+	--获得BUFF提示
+	PromptFont:setImage(GPromptX+265, GPromptY+(36-36*0.6)/2 ,180,36, 0, 180, 759, 795, 2+0.58);
+	PromptFont:DrawImage();
+	if UserData["CanPassBomb"] == 1 then
+		PropsPrompt:setImage(GPromptX+380, GPromptY+(36-30)/2 ,30,30, 90*4, 90*5, 544, 544+90, 2+0.58);
+		PropsPrompt:DrawImage();
+	end
+	if UserData["CanPassWall"] == 1 then
+		PropsPrompt:setImage(GPromptX+410, GPromptY+(36-30)/2 ,30,30, 90*5, 90*6, 544, 544+90, 2+0.58);
+		PropsPrompt:DrawImage();
+	end
+	if UserData["TimeBomb"] == 1 then
+		PropsPrompt:setImage(GPromptX+440, GPromptY+(36-30)/2 ,30,30, 90*3, 90*4, 544, 544+90, 2+0.58);
+		PropsPrompt:DrawImage();
+	end
+	if UserData["HaveProtect"] == 1 then
+		PropsPrompt:setImage(GPromptX+470, GPromptY+(36-30)/2 ,30,30, 90*6, 90*7, 544, 544+90, 2+0.58);
+		PropsPrompt:DrawImage();
+	end
+	if UserData["SpeedX"] ~= 2 then
+		PropsPrompt:setImage(GPromptX+500, GPromptY+(36-30)/2 ,30,30, 90*2, 90*3, 544, 544+90, 2+0.58);
+		PropsPrompt:DrawImage();
+	end
 
 	GSCBAP:setImagePos(135*UserData["AssistantProps"], 135*(UserData["AssistantProps"]+1), 81, 200);
 	if UserData["ShortCutBarBBP"] == 1 or UserData["ShortCutBarAP"] == 1 then
@@ -1659,8 +1737,10 @@ function ActorKey()
 				GBBPUseX = actorinf:getWindowPosX() + 50 - actorinf:getWindowPosX()%50 + originX%50; --相对于窗口,设定位置必须为50的整数倍
 				GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 + originY%50; --相对于窗口,设定位置必须为50的整数倍
 			elseif UserData["ShortCutBarAP"] == 1 then
-
-                InitAssistantPos(4);
+				if assistantinf["assistantDeath"] then
+					InitAssistantPos(4);
+					assistantinf["assistantDeath"] = false;
+				end
 			end
 		end
 		-- 快捷键2启动事件
@@ -1673,8 +1753,10 @@ function ActorKey()
 				GBBPUseX = actorinf:getWindowPosX() + 50 - actorinf:getWindowPosX()%50 + originX%50; --相对于窗口,设定位置必须为50的整数倍
 				GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 + originY%50; --相对于窗口,设定位置必须为50的整数倍
 			elseif UserData["ShortCutBarAP"] == 2 then
-
-                InitAssistantPos(4);
+				if  assistantinf["assistantDeath"] then
+					InitAssistantPos(4);
+					assistantinf["assistantDeath"] = false;
+				end             
 			end
 		end
 		

@@ -58,8 +58,9 @@ end
 
 AssistantClass = 
 {
-	AcStPosX = 500;
-	AcStPosY = 1000;
+	AcStPosX = 500,
+	AcStPosY = 1000,
+	assistantDeath = true
 }
 
 function AssistantClass:moveTOALL(mx,my)

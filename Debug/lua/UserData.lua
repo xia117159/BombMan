@@ -13,7 +13,7 @@ UserData =
 	SpeedY = 2, --Y轴速度
 	CanPassBomb = 0, --能否通过炸弹
 	CanPassWall = 0, --能否通过墙
-	TimeBomb = 1,    --有没有定时炸弹
+	TimeBomb = 0,    --有没有定时炸弹
 	HaveProtect = 0  --有没有保护
 }
 
