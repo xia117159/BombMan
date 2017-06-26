@@ -14,7 +14,8 @@ UserData =
 	CanPassBomb = 0, --能否通过炸弹
 	CanPassWall = 0, --能否通过墙
 	TimeBomb = 1,    --有没有定时炸弹
-	HaveProtect = 0  --有没有保护
+	HaveProtect = 0,  --有没有保护
+    IsPassGame = 0 --是否通关
 }
 
 

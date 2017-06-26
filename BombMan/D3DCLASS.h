@@ -23,7 +23,6 @@ class D3DCLASS
         D3DCLASS();
         ~D3DCLASS();
 
-		HRESULT CreateDeviceIndependentResources();
         bool Initialize( HINSTANCE hInstance, HWND hwnd );
         void Shutdown( );
 

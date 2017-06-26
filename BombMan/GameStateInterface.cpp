@@ -55,7 +55,7 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 		DXTRACE_MSG( L"Error compiling the effect shader!" );
 		return false;
 	}
-
+	//创建效果
 	result = D3DX11CreateEffectFromMemory( buffer->GetBufferPointer( ),
 		buffer->GetBufferSize( ), 0, d3dDevice_, &effect_ );
     
@@ -83,9 +83,10 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 
 	D3DX11_PASS_SHADER_DESC passDesc;
 	D3DX11_EFFECT_SHADER_DESC shaderDesc;
-	effectPass->GetVertexShaderDesc( &passDesc );
-	passDesc.pShaderVariable->GetShaderDesc( passDesc.ShaderIndex, &shaderDesc );
+	effectPass->GetVertexShaderDesc( &passDesc ); //获得顶点着色器描述
+	passDesc.pShaderVariable->GetShaderDesc( passDesc.ShaderIndex, &shaderDesc ); //取得顶点着色器字节码和字节大小
 
+	//创建输入布局
 	result = d3dDevice_->CreateInputLayout( solidColorLayout, totalLayoutElements,
 		shaderDesc.pBytecode, shaderDesc.BytecodeLength, &inputLayout_ );
 
@@ -96,7 +97,7 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 		DXTRACE_MSG( L"Error creating the input layout!" );
 		return false;
 	}
-
+	//描述采样状态对象
 	D3D11_SAMPLER_DESC colorMapDesc;
 	ZeroMemory( &colorMapDesc, sizeof( colorMapDesc ) );
 	colorMapDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -113,7 +114,7 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 		DXTRACE_MSG( L"Failed to create color map sampler state!" );
 		return false;
 	}
-
+	//顶点缓存
 	D3D11_BUFFER_DESC vertexDesc;
 	ZeroMemory( &vertexDesc, sizeof( vertexDesc ) );
 	vertexDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -130,7 +131,7 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 		DXTRACE_MSG( L"Failed to create vertex buffer!" );
 		return false;
 	}
-
+	//常量缓存
 	D3D11_BUFFER_DESC constDesc;
 	ZeroMemory( &constDesc, sizeof( constDesc ) );
 	constDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -144,12 +145,12 @@ bool GameStateInterface::LoadContent(HWND hwnd)
         return false;
     }
 
-	XMMATRIX view = XMMatrixIdentity( );
-    XMMATRIX projection = XMMatrixOrthographicOffCenterLH( 0.0f, 1000.0f, 0.0f, 600.0f, 0.1f, 100.0f );
-    vpMatrix_ = XMMatrixMultiply( view, projection );
+	XMMATRIX view = XMMatrixIdentity( ); //单位矩阵
+    XMMATRIX projection = XMMatrixOrthographicOffCenterLH( 0.0f, 1000.0f, 0.0f, 600.0f, 0.1f, 100.0f ); //正交投影矩阵
+    vpMatrix_ = XMMatrixMultiply( view, projection ); //两矩阵相乘
 
 
-	//透明
+	//混合状态对象，设置透明
 	D3D11_BLEND_DESC blendDesc;
     ZeroMemory( &blendDesc, sizeof( blendDesc ) );
     blendDesc.RenderTarget[0].BlendEnable = TRUE;
@@ -163,8 +164,9 @@ bool GameStateInterface::LoadContent(HWND hwnd)
 
 
     float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-
+	//创建混合状态对象
     d3dDevice_->CreateBlendState( &blendDesc, &alphaBlendState_ );
+	//设置输出合并阶段的混合状态
     d3dContext_->OMSetBlendState( alphaBlendState_, blendFactor, 0xFFFFFFFF );
 
 	return true;
@@ -175,7 +177,7 @@ bool temp = true;
 bool GameStateInterface::DrawImage(float StartX,float StartY, float Width, float Height,float tuStartX, float tuEndX, float tuStartY, float tuEndY, float Priority)
 {
 	HRESULT result;
-	D3D11_MAPPED_SUBRESOURCE mapResource;
+	D3D11_MAPPED_SUBRESOURCE mapResource;  //提供对子资源数据的访问
     result = d3dContext_->Map( vertexBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapResource );
 
 	if( FAILED( result ) )
@@ -225,6 +227,14 @@ bool GameStateInterface::DrawImage(float StartX,float StartY, float Width, float
 
 void GameStateInterface::UnloadContent( )
 {
+	Shutdown();
+	SafeRelease(&effect_);
+	SafeRelease(&inputLayout_);
+	SafeRelease(&ImageMap_);
+	SafeRelease(&colorMapSampler_);
+	SafeRelease(&vertexBuffer_);
+	SafeRelease(&alphaBlendState_);
+	SafeRelease(&mvpCB_);
 }
 
 void GameStateInterface::Update( float dt)

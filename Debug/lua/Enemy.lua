@@ -179,25 +179,25 @@ end
 function TestEnemyImpact(i,x,y,j)
 	if(j == 1) then
 		if(y == 0 or mapTable[(y - 50) / 50 + 1][x / 50 + 1][3] == 1 or mapTable[(y - 50) / 50 + 1][x / 50 + 1][7] == 1 or
-		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[(y - 50) / 50 + 1][x / 50 + 1][4] > 0 and  mapTable[(y - 50) / 50 + 1][x / 50 + 1][4] <= BoxRandRate)) then
+		(AllEnemy[i]["CanPassWall"] == 0 and ((mapTable[(y - 50) / 50 + 1][x / 50 + 1][4] > 0 and  mapTable[(y - 50) / 50 + 1][x / 50 + 1][4] <= BoxRandRate) or mapTable[(y - 50) / 50 + 1][x / 50 + 1][4] == 1000))) then
 			return 1
 		end
 		return 0
 	elseif(j == 2) then
 		if(x == 0 or mapTable[y / 50 + 1][(x - 50) / 50 + 1][3] == 1 or mapTable[y / 50 + 1][(x - 50) / 50 + 1][7] == 1 or
-		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[y / 50 + 1][(x - 50) / 50 + 1][4] > 0 and  mapTable[y / 50 + 1][(x - 50) / 50 + 1][4] <= BoxRandRate)) then
+		(AllEnemy[i]["CanPassWall"] == 0 and ((mapTable[y / 50 + 1][(x - 50) / 50 + 1][4] > 0 and  mapTable[y / 50 + 1][(x - 50) / 50 + 1][4] <= BoxRandRate) or mapTable[y / 50 + 1][(x - 50) / 50 + 1][4] == 1000))) then
 			return 1
 		end
 		return 0
 	elseif(j == 3) then
 		if(x + 50 == TotalWidthPixels or mapTable[y / 50 + 1][(x + 50) / 50 + 1][3] == 1 or mapTable[y / 50 + 1][(x + 50) / 50 + 1][7] == 1 or
-		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[y / 50 + 1][(x + 50) / 50 + 1][4] > 0 and mapTable[y / 50 + 1][(x + 50) / 50 + 1][4] <= BoxRandRate)) then
+		(AllEnemy[i]["CanPassWall"] == 0 and ((mapTable[y / 50 + 1][(x + 50) / 50 + 1][4] > 0 and mapTable[y / 50 + 1][(x + 50) / 50 + 1][4] <= BoxRandRate) or mapTable[y / 50 + 1][(x + 50) / 50 + 1][4] == 1000))) then
 			return 1
 		end
 		return 0
 	elseif(j == 4) then
 		if(y + 50 == TotalHeightPixels or mapTable[(y + 50) / 50 +1][x / 50 + 1][3] == 1 or mapTable[(y + 50) / 50 +1][x / 50 + 1][7] == 1 or
-		(AllEnemy[i]["CanPassWall"] == 0 and mapTable[(y + 50) / 50 +1][x / 50 + 1][4] > 0 and  mapTable[(y + 50) / 50 +1][x / 50 + 1][4] <= BoxRandRate)) then
+		(AllEnemy[i]["CanPassWall"] == 0 and ((mapTable[(y + 50) / 50 +1][x / 50 + 1][4] > 0 and  mapTable[(y + 50) / 50 +1][x / 50 + 1][4] <= BoxRandRate) or mapTable[(y + 50) / 50 +1][x / 50 + 1][4] == 1000))) then
 			return 1
 		end
 		return 0

@@ -25,6 +25,7 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
     unsigned int width = dimensions.right - dimensions.left;
     unsigned int height = dimensions.bottom - dimensions.top;
 
+	//驱动类型枚举
     D3D_DRIVER_TYPE driverTypes[] =
     {
         D3D_DRIVER_TYPE_HARDWARE, D3D_DRIVER_TYPE_WARP,
@@ -33,6 +34,7 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
 
     unsigned int totalDriverTypes = ARRAYSIZE( driverTypes );
 
+	//Direct3D设备的功能级别
     D3D_FEATURE_LEVEL featureLevels[] =
     {
         D3D_FEATURE_LEVEL_11_0,
@@ -42,19 +44,20 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
 
     unsigned int totalFeatureLevels = ARRAYSIZE( featureLevels );
 
+	//设置交换链
     DXGI_SWAP_CHAIN_DESC swapChainDesc;
     ZeroMemory( &swapChainDesc, sizeof( swapChainDesc ) );
-    swapChainDesc.BufferCount = 1;
-    swapChainDesc.BufferDesc.Width = width;
-    swapChainDesc.BufferDesc.Height = height;
-    swapChainDesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-    swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
-    swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swapChainDesc.OutputWindow = hwnd;
-    swapChainDesc.Windowed = TRUE;
-    swapChainDesc.SampleDesc.Count = 1;
-    swapChainDesc.SampleDesc.Quality = 0;
+    swapChainDesc.BufferCount = 1; //交换链缓存数量
+    swapChainDesc.BufferDesc.Width = width; //宽度
+    swapChainDesc.BufferDesc.Height = height; //高度
+    swapChainDesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM; //DXGI_FORMAT结构描述的显示格式
+    swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;   //赫兹刷新率
+    swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;  //赫兹刷新率
+    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT; //描述后台缓存的表面用法和CPU访问设置
+    swapChainDesc.OutputWindow = hwnd; //输出Window的窗口句柄
+    swapChainDesc.Windowed = TRUE; //窗口模式显示
+    swapChainDesc.SampleDesc.Count = 1;  //每个像素的多采样数
+    swapChainDesc.SampleDesc.Quality = 0; //图像质量等级
 
     unsigned int creationFlags = 0;
 
@@ -64,11 +67,12 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
 
     HRESULT result;
     unsigned int driver = 0;
-
+	//创建Direct2D资源的工厂对象
 	D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pD2DFactory_);
 
     for( driver = 0; driver < totalDriverTypes; ++driver )
     {
+		//创建Direct设备
         result = D3D11CreateDevice(0,driverTypes[driver],0,
 			D3D11_CREATE_DEVICE_BGRA_SUPPORT,
 			featureLevels,totalFeatureLevels,
@@ -93,25 +97,29 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
 	IDXGIFactory *pDxgiFactory(NULL);  
 	pDxgiAdapter->GetParent(IID_PPV_ARGS(&pDxgiFactory)); 
 
+	//创建交换链
 	result = pDxgiFactory->CreateSwapChain(d3dDevice_,&swapChainDesc,&swapChain_);
 
 	IDXGISurface *pBackBuffer = NULL;
 
 	if(SUCCEEDED(result))
 	{
+		//获取缓存指针
 		result = swapChain_->GetBuffer(0,IID_PPV_ARGS(&pBackBuffer));
 	}
 
 	FLOAT dpiX;
 	FLOAT dpiY;
-	pD2DFactory_->GetDesktopDpi(&dpiX,&dpiY);
+	pD2DFactory_->GetDesktopDpi(&dpiX,&dpiY); //获取桌面DPI
 
+	//渲染目标的渲染选项（硬件或软件），像素格式，DPI信息，远程处理选项和Direct3D支持要求
 	D2D1_RENDER_TARGET_PROPERTIES props = 
 		D2D1::RenderTargetProperties(
 			D2D1_RENDER_TARGET_TYPE_DEFAULT,
 			D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN,D2D1_ALPHA_MODE_PREMULTIPLIED),
 			dpiX,
 			dpiY);
+	//创建绘制到DirectX图形基础架构（DXGI）曲面的渲染目标
 	result = pD2DFactory_->CreateDxgiSurfaceRenderTarget(
 		pBackBuffer,
 		&props,
@@ -143,7 +151,7 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
 		DXTRACE_MSG( L"Failed to create the render target view!" );
 		return false;
 	}
-	
+	//2D纹理
 	D3D11_TEXTURE2D_DESC depthTexDesc;
     ZeroMemory( &depthTexDesc, sizeof( depthTexDesc ) );
     depthTexDesc.Width = width;
@@ -157,7 +165,7 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
     depthTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
     depthTexDesc.CPUAccessFlags = 0;
     depthTexDesc.MiscFlags = 0;
-
+	//创建2D纹理
     result = d3dDevice_->CreateTexture2D( &depthTexDesc, NULL, &depthTexture_ );
 
     if( FAILED( result ) )
@@ -166,7 +174,7 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
         return false;
     }
 
-    // Create the depth stencil view
+    // 创建深度模板视图
     D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
     ZeroMemory( &descDSV, sizeof( descDSV ) );
     descDSV.Format = depthTexDesc.Format;
@@ -182,7 +190,7 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
     }
 	
 	d3dContext_->OMSetRenderTargets( 1, &backBufferTarget_, depthStencilView_ );
-
+	//定义视口的尺寸
 	D3D11_VIEWPORT viewport;
 	viewport.Width = static_cast<float>( width );
 	viewport.Height = static_cast<float>( height );
@@ -199,7 +207,6 @@ bool D3DCLASS::Initialize( HINSTANCE hInstance, HWND hwnd )
 
 
 
-
 bool D3DCLASS::CompileD3DShader( LPCWSTR filePath, char* entry, char* shaderModel, ID3DBlob** buffer )
 {
     DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
@@ -210,7 +217,7 @@ bool D3DCLASS::CompileD3DShader( LPCWSTR filePath, char* entry, char* shaderMode
 
     ID3DBlob* errorBuffer = 0;
     HRESULT result;
-
+	//编译着色器和效果
     result = D3DX11CompileFromFile( filePath, 0, 0, entry, shaderModel,
         shaderFlags, 0, 0, buffer, &errorBuffer, 0 );
 
@@ -244,13 +251,14 @@ void D3DCLASS::UnloadContent( )
 
 void D3DCLASS::Shutdown( )
 {
-    UnloadContent( );
 	SafeRelease(&backBufferTarget_);
 	SafeRelease(&swapChain_);
 	SafeRelease(&d3dContext_);
 	SafeRelease(&d3dDevice_);
 	SafeRelease(&pD2DFactory_);
 	SafeRelease(&pRT_);
+	SafeRelease(&depthStencilView_);
+	SafeRelease(&depthTexture_);
 }
 
 void D3DCLASS::Update( float dt )

@@ -272,6 +272,31 @@ function DrawDynamiteFunc(i)
 	local startY = DynamiteWall[i]["Wall"]["StartY"] + originY
 	local buffId = 0
 	
+    if(actorinf["AcStPosX"] == startX) then
+        if(actorinf["AcStPosY"] > startY and actorinf["AcStPosY"] < startY + 100) then
+            DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg)
+        end
+    end
+    if(actorinf["AcStPosY"] - 50 == startY) then
+        if(actorinf["AcStPosX"] > startX - 50 and actorinf["AcStPosX"] < startX + 50) then
+            DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg)
+        end
+    end
+    for j = 1,AllEnemy.n do
+        if(AllEnemy[j]["EnemyType"] == 5) then
+            if(AllEnemy[j]["Enemy"]["StartX"] + AllEnemy[j]["MoveX"] == startX) then
+                if(AllEnemy[j]["Enemy"]["StartY"] + AllEnemy[j]["MoveY"] > startY - 50 and AllEnemy[j]["Enemy"]["StartY"] + AllEnemy[j]["MoveY"] < startY + 50) then
+                    DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg)
+                end
+            end
+            if(AllEnemy[j]["Enemy"]["StartY"] + AllEnemy[j]["MoveY"] == startY) then
+                if(AllEnemy[j]["Enemy"]["StartX"] + AllEnemy[j]["MoveX"] > startX - 50 and AllEnemy[j]["Enemy"]["StartX"] + AllEnemy[j]["MoveX"] < startX + 50) then
+                    DrawActorGesture(0, 0, Actor1:TimerGo(true), 6, actorimg)
+                end
+            end
+        end
+    end
+
 	if(ISGameNotPause == true) then
 		local fr = DynamiteWall[i]["Wall"]:TimerGo()
 		if DynamiteWall[i]["IsEnd"] == 1 and fr == 1 then
@@ -536,6 +561,12 @@ function TestBlazeImpact(i,j)
 				end
 				BombBlaze[i]["LeftImpact"] = BombBlaze[i]["LeftImpact"] - 1
 			end
+            if(j == 0) then
+			    mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][9] = mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][9] + 1
+		    elseif(j == 1) then
+			    mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][9] = mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][9] - 1
+			    mapTable[BombBlaze[i]["Blaze"]["StartY"] / BlockSize + 1][(BombBlaze[i]["Blaze"]["StartX"] - BombBlaze[i]["LeftImpact"] * BlockSize)/BlockSize + 1][10] = 1
+		    end
 			break
 		end
 		
@@ -779,6 +810,12 @@ function TestBlazeImpact(i,j)
 				end
 				BombBlaze[i]["DownImpact"] = BombBlaze[i]["DownImpact"] - 1
 			end
+            if(j == 0) then
+			    mapTable[(BombBlaze[i]["Blaze"]["StartY"] -  BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][9] = mapTable[(BombBlaze[i]["Blaze"]["StartY"] -  BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][9] + 1
+		    elseif(j == 1) then
+			    mapTable[(BombBlaze[i]["Blaze"]["StartY"] -  BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][9] = mapTable[(BombBlaze[i]["Blaze"]["StartY"] -  BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][9] - 1
+			    mapTable[(BombBlaze[i]["Blaze"]["StartY"] -  BombBlaze[i]["DownImpact"] * BlockSize)/BlockSize + 1][BombBlaze[i]["Blaze"]["StartX"]/BlockSize + 1][10] = 1
+		    end
 			break
 		end
 		

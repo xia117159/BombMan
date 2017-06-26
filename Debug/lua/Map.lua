@@ -412,7 +412,7 @@ function DrawActorGesture(sx, sy, fr, gesturetype ,actortype)
 			actortype:setImagePos(ActorWidth*0, ActorWidth*1, ActorHeight*4, ActorHeight*5);				
 		elseif fr == 2 then 		
 			actortype:setImagePos(ActorWidth*1, ActorWidth*2, ActorHeight*4, ActorHeight*5);
-		end	
+		end
 	end
 
 end
@@ -1110,10 +1110,11 @@ function IintMapData()
 	DialogStatus = false;
 	GroundTypeRandNum = math.random(1,5); --地表随机
 	EnemyInit();
-	InitStartBG();--挑战模式，倒计时
+	-- InitStartBG();--挑战模式，倒计时
 	-- EnableEndBG(0);
-	-- EnableJustBG();
-	-- ExitJustBG();
+	EnableJustBG();
+    UserData["IsPassGame"] = 1
+	
 	ground:setImage(0, 0, BlockSize, BlockSize, 200*(GroundTypeRandNum - 1), 200*GroundTypeRandNum, 0, 100, 11.0);
 end
 
@@ -1162,6 +1163,9 @@ function LoadMapViewImageFile()
 		NowLoadPos = NowLoadPos + 1;
 	elseif NowLoadPos == 33 then
 		ImageLoad:LoadImage(PlotV,"Image/FrontGround.png","DrawFrontGround()", "Image_12");
+		NowLoadPos = NowLoadPos + 1;
+    elseif NowLoadPos == 34 then
+		ImageLoad:LoadImage(PlotV,"Image/Plot.png","DrawPlot()", "Image_13");
 		NowLoadPos = NowLoadPos + 1;	
 	end
 	
@@ -1218,7 +1222,9 @@ function DrawFrontGround()
 		GFrontBGIR:setRelativelyStartPos(10,0);
 		if GFrontBGIL["StartX"] <= -500 then
 			FrontGroundStatus = 0;
-			ISGameNotPause = true;--使游戏开始
+			ISGameNotPause = false;--使游戏开始
+            UserData["IsPassGame"] = 2 
+            imageStartY = 100
 			FrontGroundSS = false;
 		end
 	end
@@ -1542,6 +1548,7 @@ function ActorKey()
 	local KeyResult_Esc = KeyDetect(0x01);
 	local KeyResult_J = KeyDetect(0x24);
 	local KeyResult_K = KeyDetect(0x25);
+    local KeyResult_ENTER = KeyDetect(0x1C);
 	local ShortcutKey1_R = KeyDetect(DetectShortcutKey1);
 	local ShortcutKey2_R = KeyDetect(DetectShortcutKey2);
 	
@@ -1558,6 +1565,43 @@ function ActorKey()
 		end	
 		
 	end
+    
+    if KeyResult_Left == Press and UserData["IsPassGame"] == 3 then
+        if(chooseAssistant == 1) then
+            chooseAssistant = 2
+        elseif(chooseAssistant == 2) then
+            chooseAssistant = 1
+        end
+    end
+
+    if KeyResult_right == Press and UserData["IsPassGame"] == 3 then
+        if(chooseAssistant == 1) then
+            chooseAssistant = 2
+        elseif(chooseAssistant == 2) then
+            chooseAssistant = 1
+        end
+    end
+
+    if KeyResult_ENTER == Press and (UserData["IsPassGame"] == 2 or UserData["IsPassGame"] == 3) then
+        if(UserData["IsPassGame"] == 2) then
+            imageStartY = imageStartY + 68
+        end
+        if(UserData["IsPassGame"] == 3) then
+            if(imageStartY == 1188) then
+                if(chooseAssistant == 1) then
+                    UserData["AssistantProps"] = BoysAssistant
+                elseif(chooseAssistant == 2) then
+                    UserData["AssistantProps"] = GirlsAssistant
+                end
+                imageStartY = 1324
+            elseif(imageStartY == 1324) then
+                UserData["IsPassGame"] = 0
+            else
+                imageStartY = imageStartY + 68
+            end
+        end
+    end
+
 	if DialogStatus then
 		ExitResult = 0;
 		if DetectMousePos(ExitButton) == 1  then
@@ -1760,12 +1804,7 @@ function ActorKey()
 					end
 				end
 			end	
-	
-
 		end
-	
-
-		
 	end
 	if RewardCountStatus == 1 and GetMouseStatus() == MouseLeftDown then
 		goStartView();
@@ -1791,4 +1830,69 @@ function GetBuff(i)
 	elseif i == 7 then
 		UserData["HaveProject"] = 1
 	end
-end	
+end
+
+imageStartY = 1460;
+chooseAssistant = 1
+BackGroundAnimation = ImageClass:new();
+BackGroundAnimation:setImageFileSize(1000, 2620);
+PlotAnimation = ImageClass:new();
+PlotAnimation:setImageFileSize(1000, 2620);
+
+function DrawPlot()
+    if(UserData["IsPassGame"] == 1 and imageStartY < 2270 ) then
+        BackGroundAnimation:setImage(210 , 450  , 585 , 100 , 0 , 580 , 1360 , 1460 , 0.5);
+        BackGroundAnimation:DrawImage()
+        PlotAnimation:setImage(210 , 100  , 585 , 350 , 0 , 580 , imageStartY , imageStartY + 350 , 0.5);
+        PlotAnimation:DrawImage()
+        imageStartY = imageStartY + 10;
+    elseif( imageStartY >= 2270 and UserData["IsPassGame"] == 1) then
+        BackGroundAnimation:setImage(210 , 450  , 585 , 100 , 0 , 580 , 1360 , 1460 , 0.5);
+        BackGroundAnimation:DrawImage()
+        PlotAnimation:setImage(210 , 100 + (imageStartY - 2270) , 585 , 350 - (imageStartY - 2270) , 0 , 580 , imageStartY , imageStartY + 350 - (imageStartY - 2270), 0.5);
+        PlotAnimation:DrawImage()
+        
+        if(imageStartY == 2470) then
+            ExitJustBG();
+            UserData["IsPassGame"] = 0 
+        end
+        imageStartY = imageStartY + 10;
+    end
+    if(UserData["IsPassGame"] == 2) then
+        if(imageStartY == 644) then
+            UserData["IsPassGame"] = 0
+        end
+        BackGroundAnimation:setImage(0 , 0  , 1000 , 100 , 0 , 1000 , 0 , 100 , 0.6);
+        BackGroundAnimation:DrawImage()
+        PlotAnimation:setImage(0 , 0  , 1000 , 68 , 0 , 1000 , imageStartY , imageStartY + 68 , 0.5);
+        PlotAnimation:DrawImage()
+    end
+
+    if(UserData["IsPassGame"] == 3) then
+        if(imageStartY == 1188) then
+            BackGroundAnimation:setImage(0 , 0  , 1000 , 100 , 0 , 1000 , 0 , 100 , 0.6);
+            BackGroundAnimation:DrawImage()
+            if(chooseAssistant == 1) then
+                PlotAnimation:setImage(100 , 0  , 120 , 68 , 120 , 240 , imageStartY , imageStartY + 68 , 0.5);
+                PlotAnimation:DrawImage()
+                PlotAnimation:setImage(100 , 0  , 120 , 68 , 0 , 120 , imageStartY + 68 , imageStartY + 136 , 0.5);
+                PlotAnimation:DrawImage()
+            elseif(chooseAssistant == 2) then
+                PlotAnimation:setImage(100 , 0  , 120 , 68 , 0 , 120 , imageStartY , imageStartY + 68 , 0.5);
+                PlotAnimation:DrawImage()
+                PlotAnimation:setImage(100 , 0  , 120 , 68 , 120 , 240 , imageStartY + 68 , imageStartY + 136 , 0.5);
+                PlotAnimation:DrawImage()
+            end
+        end
+        if(imageStartY == 1324) then
+            BackGroundAnimation:setImage(0 , 0  , 1000 , 100 , 0 , 1000 , 0 , 100 , 0.6);
+            BackGroundAnimation:DrawImage()
+            PlotAnimation:setImage(0 , 0  , 1000 , 68 , 0 , 1000 , imageStartY , imageStartY + 68 , 0.5);
+            PlotAnimation:DrawImage()
+        end
+        BackGroundAnimation:setImage(0 , 0  , 1000 , 100 , 0 , 1000 , 0 , 100 , 0.6);
+        BackGroundAnimation:DrawImage()
+        PlotAnimation:setImage(0 , 0  , 1000 , 68 , 0 , 1000 , imageStartY , imageStartY + 68 , 0.5);
+        PlotAnimation:DrawImage()
+    end
+end
