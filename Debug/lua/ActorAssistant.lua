@@ -275,6 +275,13 @@ function  CheckingAvaliableAssistantPos(CenterRow,CenterColumn,SetType,RoundNumb
 end
 
 function InitAssistantPos(RoundNumber) --初始化助手位置RoundNumber代表扩散轮数
+	local ActorRow1;	--人物所占第一个位置的地图X坐标
+	local ActorRow2;	--人物所占第二个位置的地图X坐标
+	local ActorColumn1;	--人物所占第一个位置的地图Y坐标
+	local ActorColumn2;	--人物所占第二个位置的地图Y坐标
+    local ActorHaveUnitStatus;	--人物所占格数状况 1代表所占一格
+	ActorHaveUnitStatus,ActorRow1,ActorColumn1,ActorRow2,ActorColumn2 = GetObjectHaveBlock(actorinf:getAbsolutePosX(),actorinf:getAbsolutePosY());
+	
     if ActorHaveUnitStatus == 1 then
       if ActorHOneBoxNoIronCaculate(ActorRow1,ActorColumn1) == 3 then
          CheckingAvaliableAssistantPos(ActorRow1,ActorColumn1,1,RoundNumber);
