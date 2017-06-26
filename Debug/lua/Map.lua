@@ -259,7 +259,6 @@ function ReleaseMoving()
 	
 	elseif releasestatus == 2  then
 		local RemainNum = NowActorPosY % BlockSize;
-		--MessageBox(tostring(actorinf:getAbsolutePosX()),tostring(actorinf:getAbsolutePosY()) , MB_OK);
 		if  35 < RemainNum and RemainNum < 50 then
 			NeedISRevise = true;
 			ReviseNum = BlockSize-RemainNum;
@@ -1658,7 +1657,6 @@ function DrawShortcutBar()
 			GBBPUseBomb = false;
 			for i = 0,2 do
                 for j = 0,2 do
-                    MessageBox(GBBPUseGlobalY,GBBPUseGlobalX,MB_OK)
                     --if(GBBPUseGlobalY + 50 * j <= TotalHeightPixels and GBBPUseGlobalX + 50 * i <= TotalWidthPixels)
                     if(mapTable[(GBBPUseGlobalY + 50 * j) / 50 +1][(GBBPUseGlobalX + 50 * i) / 50 + 1][3] == 0 and 
                     (mapTable[(GBBPUseGlobalY + 50 * j) / 50 +1][(GBBPUseGlobalX + 50 * i) / 50 + 1][4] <=0 or mapTable[(GBBPUseGlobalY + 50 * j) / 50 +1][(GBBPUseGlobalX + 50 * i) / 50 + 1][4] > BoxRandRate) and 

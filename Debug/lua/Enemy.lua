@@ -93,13 +93,18 @@ function EnemyInit()
 end
 
 function DrawEnemy()
+	local SurvivalNumber = 0
 	for i = 1,AllEnemy.n do
 		if(AllEnemy[i]["IsSurvival"] == 1) then
 			if(ISGameNotPause == true) then
 				EnemyMove(i)
 			end
 			DrawEnemyFunc(i)
+			SurvivalNumber = SurvivalNumber + 1
 		end
+	end
+	if(SurvivalNumber == 0) then
+		BossSwitch = true;
 	end
 end
 
