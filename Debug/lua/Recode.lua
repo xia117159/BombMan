@@ -17,11 +17,9 @@ function Preserve()
 	io.write("AssistantPropsAmount = "..UserData["AssistantPropsAmount"].."\n")
 	
 	io.write("ShortCutBarAP = "..UserData["ShortCutBarAP"].."\n")
-	
-	io.write("Power = "..UserData["Power"].."\n")
-	
-	io.write("HaveBombNumber = "..UserData["HaveBombNumber"].."\n")
 
+	io.write("IsPassGame = "..UserData["IsPassGame"].."\n")
+	
 	io.close(file) --¹Ø±ÕÎÄ¼þ
 end
 
@@ -40,22 +38,23 @@ function Read()
 	
 	io.close(file)
 	
+	if table.getn(data) == 8 then
 	
-	UserData["GoldCoins"] = tonumber(string.match(data[1],"GoldCoins = (%w+)"))
+		UserData["GoldCoins"] = tonumber(string.match(data[1],"GoldCoins = (%w+)"))
+		
+		UserData["AssistantLock"] = tonumber(string.match(data[2],"AssistantLock = (%w+)"))
+		
+		UserData["AssistantProps"] = tonumber(string.match(data[3],"AssistantProps = (%w+)"))
+		
+		UserData["BigBombPropsAmount"] = tonumber(string.match(data[4],"BigBombPropsAmount = (%w+)"))
+		
+		UserData["ShortCutBarBBP"] = tonumber(string.match(data[5],"ShortCutBarBBP = (%w+)"))
+		
+		UserData["AssistantPropsAmount"] = tonumber(string.match(data[6],"AssistantPropsAmount = (%w+)"))
+		
+		UserData["ShortCutBarAP"] = tonumber(string.match(data[7],"ShortCutBarAP = (%w+)"))
+		
+		UserData["IsPassGame"] = tonumber(string.match(data[8],"IsPassGame = (%w+)"))
+	end
 	
-	UserData["AssistantLock"] = tonumber(string.match(data[2],"AssistantLock = (%w+)"))
-	
-	UserData["AssistantProps"] = tonumber(string.match(data[3],"AssistantProps = (%w+)"))
-	
-	UserData["BigBombPropsAmount"] = tonumber(string.match(data[4],"BigBombPropsAmount = (%w+)"))
-	
-	UserData["ShortCutBarBBP"] = tonumber(string.match(data[5],"ShortCutBarBBP = (%w+)"))
-	
-	UserData["AssistantPropsAmount"] = tonumber(string.match(data[6],"AssistantPropsAmount = (%w+)"))
-	
-	UserData["ShortCutBarAP"] = tonumber(string.match(data[7],"ShortCutBarAP = (%w+)"))
-	
-	UserData["Power"] = tonumber(string.match(data[8],"Power = (%w+)"))
-	
-	UserData["HaveBombNumber"] = tonumber(string.match(data[9],"HaveBombNumber = (%w+)"))
 end

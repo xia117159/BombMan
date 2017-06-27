@@ -337,7 +337,7 @@ function InitbpLotteryTB()
 		end
 	end
 end
-InitbpLotteryTB();
+
 
 function DrawbpLottery()
 	

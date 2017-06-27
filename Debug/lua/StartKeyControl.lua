@@ -111,6 +111,7 @@ end
 --跳转商城页面并进行相关设置的函数
 function goSaveView()
 	Preserve();
+	MessageBox("存档成功！","重要提示",MB_OK);
 	--加载商城界面
 	--NowView = ShopV;--设置视图位于商城
 end

@@ -321,7 +321,7 @@ function DrawDynamiteFunc(i)
 			DynamiteWall[i]["IsWrite"] = 0
 			DynamiteWall[i]["IsEnd"] = 0
 			mapTable[DynamiteWall[i]["Wall"]["StartY"]/BlockSize + 1][DynamiteWall[i]["Wall"]["StartX"]/BlockSize + 1][4] = 0
-			buffId = math.random(1,7);		
+			buffId = math.random(1,28);		
 			if(buffId > 0 and buffId <= 7) then
 				mapTable[DynamiteWall[i]["Wall"]["StartY"]/BlockSize + 1][DynamiteWall[i]["Wall"]["StartX"]/BlockSize + 1][8] = buffId
 			end	

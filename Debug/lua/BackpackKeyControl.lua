@@ -183,7 +183,9 @@ function bpViewKC()
 			elseif Result == MouseLeftDown then --鼠标左键按下
 				bpLotteryButton:setImagePos(400, 600,0, 200);
 				BPLRotateRateMAX = math.random(5, 7);
-				BPLRotateRateStatus = 1;
+				if UserData["GoldCoins"] >= LotteryGoldSpend then
+					BPLRotateRateStatus = 1;
+				end
 				bpLotteryButton["Event"] = 1;
 			elseif Result == MouseLeftUp then --鼠标左键松开
 				bpLotteryButton:setImagePos(0, 200,0, 200);
@@ -194,7 +196,6 @@ function bpViewKC()
 					bpLotteryButton["Event"] = 0;
 					
 					if UserData["AssistantLock"] == 0 then
-						
 						LotteryHAPResult();
 					else
 						LotteryNAPResult();

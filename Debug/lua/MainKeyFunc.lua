@@ -22,6 +22,13 @@ function KeyFunc()
 	elseif WinFocus == WM_KILLFOCUS then
 		ISGameNotPause = false;
 	end
+	
+	if UserData["AssistantPropsAmount"] == 0 then --助手所有个数
+		UserData["ShortCutBarAP"] = 0;
+	end
+	if UserData["BigBombPropsAmount"] == 0 then --助手所有个数
+		UserData["ShortCutBarBBP"] = 0;
+	end
 	if WinFocus == WM_SETFOCUS then
 		if NowView == LoadV then
 			LoadVKeyFunc();

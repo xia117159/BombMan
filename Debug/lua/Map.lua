@@ -847,6 +847,7 @@ function CheckingStoryModeOrChallengeMode(WinStatus)	-- WinStatus : 0´ú±í±»Boss×
 	if ChallengeOrStory == 0 then	--¾çÇéÄ£Ê½
 		if Glife >= 0 then
 			UserData["IsPassGame"] = 3;
+			imageStartY = 644
 		end
 	elseif ChallengeOrStory == 1 then	--ÌôÕ½Ä£Ê½
 		WinAndGoToEnd(WinStatus);
@@ -1202,7 +1203,7 @@ end
 
 
 function IintMapData(Modestatus)
-	initParams(24,40,1,math.random(20,30),0,550,false,false,math.random(20,100)); --³õÊ¼»¯µØÍ¼²ÎÊý	
+	initParams(24,40,1,math.random(1,20),0,550,false,false,math.random(20,100)); --³õÊ¼»¯µØÍ¼²ÎÊý	
 	ISGameNotPause = false;	--ÅÐ¶ÏÓÎÏ·ÊÇ·ñÃ»ÓÐÔÝÍ£
 	DialogStatus = false;
 	GroundTypeRandNum = math.random(1,5); --µØ±íËæ»ú
@@ -1215,10 +1216,22 @@ function IintMapData(Modestatus)
 	SettlementStatus = true;
 	gold = 0;
 	
+	--ÓÎÏ·buff³õÊ¼»¯
+	UserData["Power"] = 1;
+	UserData["HaveBombNumber"] = 1;
+	UserData["CanPassBomb"] = 0;
+	UserData["CanPassWall"] = 0;
+	UserData["TimeBomb"] = 0;
+	UserData["HaveProtect"] = 0;
+	UserData["SpeedX"] = 2;
+	UserData["SpeedY"] = 2;
+	
+	
 	if Modestatus == 0 and UserData["IsPassGame"] ~= 4 then	
 		ChallengeOrStory = 0;
 		EnableJustBG();
 		UserData["IsPassGame"] = 1 --¾çÇéÄ£Ê½
+		imageStartY = 1460
 	else
 		ChallengeOrStory = 1;
 		InitStartBG();--ÌôÕ½Ä£Ê½£¬µ¹¼ÆÊ±
@@ -1304,7 +1317,7 @@ GFGFontPrompt :setImage(250, 410 ,500, 90,  0, 500,601, 691, 1.49);
 
 
 
-GNumberDelay = 50;--ÑÓÊ±1s
+GNumberDelay = 100;--ÑÓÊ±1s
 CountDown = 0;
 CountDownStatus = 0; --µ¹¼ÆÊ±×´Ì¬Öµ
 FrontGroundStatus = 0;-- Ç°¾°¶¯×÷Öµ
@@ -1331,7 +1344,7 @@ function DrawFrontGround()
 		if GFrontBGIL["StartX"] >= 0 then
 			FrontGroundStatus = 0;
 			RewardCountStatus = 1;
-			ISGameNotPause = false;--Ê¹ÓÎÏ·¿ªÊ¼
+			ISGameNotPause = false;
 		end
 	elseif FrontGroundStatus == 3 then
 		GFrontBGIL:setRelativelyStartPos(-10,0);
@@ -1339,7 +1352,7 @@ function DrawFrontGround()
 		if GFrontBGIL["StartX"] <= -500 then
 			FrontGroundStatus = 0;
 			ISGameNotPause = false;--Ê¹ÓÎÏ·¿ªÊ¼
-			if Modestatus == 0 and UserData["IsPassGame"] ~= 4 then	
+			if UserData["IsPassGame"] ~= 4 then	
 				UserData["IsPassGame"] = 2 
 				imageStartY = 100
 			end
@@ -1359,7 +1372,9 @@ function DrawFrontGround()
 			GFGFontPrompt:DrawImage();
 			GFGFontPrompt :setImage(330, 60 ,340, 40,  0, 680,851, 931, 1.49);
 			GFGFontPrompt:DrawImage();
-			FuncDrawFBNumber(615,330, GetBitNum(RewardGoldNum,2),0.3);
+			if RewardGoldNum > 10 then
+				FuncDrawFBNumber(615,330, GetBitNum(RewardGoldNum,2),0.3);
+			end
 			FuncDrawFBNumber(580,330, GetBitNum(RewardGoldNum,1),0.3);
 		elseif RewardGoldNum <= 0 then
 			GFGFontPrompt :setImage(240, 410 ,520, 80,  0, 520, 931, 1011, 1.49);
@@ -1405,11 +1420,10 @@ end
 
 function InitStartBG()
 	TempZoomFGN = 0.7;
-	GNumberDelay = 0;
 	CountDownStatus = 1;
 	FrontGroundStatus = 0;-- Ç°¾°¶¯×÷Öµ
-	GNumberDelay = 0;--Ê£ÓàÊ±¼ä
-	CountDown = 0; --µ¹¼ÆÊ±
+	GNumberDelay = 100;--Ê£ÓàÊ±¼ä
+	CountDown = 2; --µ¹¼ÆÊ±
 	FrontGroundSS = true;
 	GFGFontPrompt :setImage(250, 410 ,500, 90,  0, 500,601, 691, 1.49);
 	GFrontBGIL:setAbsoluteStartPos(0, 0);
@@ -1769,6 +1783,7 @@ function ActorKey()
 		end
 	end
 	
+	
 	if KeyResult_Esc == Press and FrontGroundSS == false and FrontGroundES == false then
 		if GKeyStatus == 1 then
 			GKeyStatus = 0;
@@ -1845,6 +1860,7 @@ function ActorKey()
 		--¿ì½Ý¼ü1Æô¶¯ÊÂ¼þ
 		if ShortcutKey1_R == Press then
 			if UserData["ShortCutBarBBP"] == 1 and GWarnStatus == false and GBBPUseBomb == false and GKeyStatus == 0 then
+				UserData["BigBombPropsAmount"] = UserData["BigBombPropsAmount"] - 1;
 				GKeyStatus = 1;
 				releasestatus = 0;
 				movestatus = 0;
@@ -1852,6 +1868,7 @@ function ActorKey()
 				GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 + originY%50; --Ïà¶ÔÓÚ´°¿Ú,Éè¶¨Î»ÖÃ±ØÐëÎª50µÄÕûÊý±¶
 			elseif UserData["ShortCutBarAP"] == 1 then
 				if assistantinf["assistantDeath"] then
+					UserData["AssistantPropsAmount"] = UserData["AssistantPropsAmount"] - 1;
 					InitAssistantPos(4,1);
 					assistantinf["assistantDeath"] = false;
 				end
@@ -1861,6 +1878,7 @@ function ActorKey()
 		if ShortcutKey2_R == Press then
 			
 			if UserData["ShortCutBarBBP"] == 2 and GWarnStatus == false and GBBPUseBomb == false and GKeyStatus == 0 then
+				UserData["BigBombPropsAmount"] = UserData["BigBombPropsAmount"] - 1;
 				GKeyStatus = 1;
 				releasestatus = 0;
 				movestatus = 0;
@@ -1868,6 +1886,7 @@ function ActorKey()
 				GBBPUseY = actorinf:getWindowPosY() - 200 - actorinf:getWindowPosY()%50 + originY%50; --Ïà¶ÔÓÚ´°¿Ú,Éè¶¨Î»ÖÃ±ØÐëÎª50µÄÕûÊý±¶
 			elseif UserData["ShortCutBarAP"] == 2 then
 				if  assistantinf["assistantDeath"] then
+					UserData["AssistantPropsAmount"] = UserData["AssistantPropsAmount"] - 1;
 					InitAssistantPos(4,1);
 					assistantinf["assistantDeath"] = false;
 				end             
@@ -2092,11 +2111,14 @@ function DrawPlot()
     if(UserData["IsPassGame"] == 2) then
         if(imageStartY == 644) then
             UserData["IsPassGame"] = 0
+			imageStartY = 1460
+		else
+			BackGroundAnimation:setImage(0 , 0  , 1000 , 100 , 0 , 1000 , 0 , 100 , 0.6);
+			BackGroundAnimation:DrawImage()
+			PlotAnimation:setImage(0 , 0  , 1000 , 68 , 0 , 1000 , imageStartY , imageStartY + 68 , 0.5);
+			PlotAnimation:DrawImage()
         end
-        BackGroundAnimation:setImage(0 , 0  , 1000 , 100 , 0 , 1000 , 0 , 100 , 0.6);
-        BackGroundAnimation:DrawImage()
-        PlotAnimation:setImage(0 , 0  , 1000 , 68 , 0 , 1000 , imageStartY , imageStartY + 68 , 0.5);
-        PlotAnimation:DrawImage()
+        
     end
 
     if(UserData["IsPassGame"] == 3) then

@@ -36,12 +36,10 @@ LoadThisBackGroundImage();
 
 
 
-Read()
-
+Read();
+InitbpLotteryTB();
 
 BombInit();
-
-
 
 
 GoLoadView();

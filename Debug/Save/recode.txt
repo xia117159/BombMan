@@ -5,5 +5,4 @@ BigBombPropsAmount = 0
 ShortCutBarBBP = 0
 AssistantPropsAmount = 0
 ShortCutBarAP = 0
-Power = 9
-HaveBombNumber = 3
+IsPassGame = 0
